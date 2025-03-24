@@ -198,7 +198,7 @@ export const FinancePage: React.FC = () => {
                 <CardContent>
                   <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPie data={expensesData} cx="50%" cy="50%" labelLine={false} outerRadius={90}>
+                      <RechartsPie data={expensesData} cx="50%" cy="50%" outerRadius={90}>
                         {expensesData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
