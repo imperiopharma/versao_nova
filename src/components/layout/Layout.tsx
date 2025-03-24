@@ -21,10 +21,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, withPadding = true }) 
     location.pathname.includes('/pagamento');
   
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
       <Header />
       
-      <main className={`flex-grow pt-16 sm:pt-20 ${withPadding ? 'pb-8' : ''}`}>
+      <main className={`flex-grow w-full pt-16 sm:pt-20 ${withPadding ? 'pb-8' : ''} overflow-x-hidden`}>
         {children}
       </main>
       

@@ -78,10 +78,11 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    @apply overflow-x-hidden;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans overflow-x-hidden;
   }
   
   /* Custom scrollbar */
@@ -200,6 +201,38 @@
   .text-on-dark {
     @apply text-white text-shadow;
   }
+  
+  /* Responsive utilities */
+  .break-inside-avoid {
+    break-inside: avoid;
+  }
+  
+  /* Responsive text truncation */
+  .truncate-dynamic {
+    @apply truncate max-w-full;
+  }
+  
+  /* Responsive padding for small screens */
+  .responsive-p {
+    @apply p-2 sm:p-4 md:p-6;
+  }
+  
+  .responsive-px {
+    @apply px-2 sm:px-4 md:px-6;
+  }
+  
+  .responsive-py {
+    @apply py-2 sm:py-4 md:py-6;
+  }
+  
+  /* Responsive grid layouts */
+  .responsive-grid-2-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+  
+  .responsive-grid-1-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
 }
 
 @layer components {
@@ -243,5 +276,27 @@
   /* Banner content container */
   .banner-content {
     @apply bg-imperio-navy/70 p-5 rounded-lg backdrop-blur-sm shadow-lg max-w-lg;
+  }
+  
+  /* Responsive table container */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-lg;
+  }
+  
+  /* Admin panel components */
+  .admin-content-container {
+    @apply p-4 md:p-6 max-w-7xl mx-auto;
+  }
+  
+  .admin-card {
+    @apply border-none shadow-md rounded-lg overflow-hidden;
+  }
+  
+  .admin-heading {
+    @apply text-xl md:text-2xl font-bold;
+  }
+  
+  .admin-subheading {
+    @apply text-base md:text-lg font-semibold;
   }
 }

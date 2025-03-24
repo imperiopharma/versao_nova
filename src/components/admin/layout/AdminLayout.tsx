@@ -12,7 +12,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -75,14 +75,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
       {/* Sidebar - Hidden on mobile */}
-      <aside className="hidden md:flex md:w-64 flex-col bg-white shadow-md">
+      <aside className="hidden md:flex md:w-64 flex-shrink-0 flex-col bg-white shadow-md z-20">
         <div className="p-4 border-b">
-          <h1 className="text-xl font-bold text-imperio-navy">Admin Painel</h1>
+          <h1 className="text-xl font-bold text-imperio-navy truncate">Admin Painel</h1>
         </div>
         
-        <nav className="flex-1 overflow-y-auto py-4">
+        <nav className="flex-1 overflow-y-auto py-4 no-scrollbar">
           <ul className="space-y-1 px-2">
             {menuItems.map((item) => (
               <li key={item.name}>
@@ -93,7 +93,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     }`}>
                       <div className="flex items-center">
                         {item.icon}
-                        <span className="ml-3">{item.name}</span>
+                        <span className="ml-3 truncate">{item.name}</span>
                       </div>
                       <ChevronDown size={16} />
                     </div>
@@ -103,8 +103,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         <li key={subItem.name}>
                           <Link
                             to={subItem.path}
-                            className={`block px-4 py-2 rounded-md ${
-                              location.pathname === subItem.path 
+                            className={`block px-4 py-2 rounded-md truncate ${
+                              location.pathname === subItem.path || location.pathname.startsWith(subItem.path)
                                 ? 'bg-blue-50 text-imperio-navy font-medium' 
                                 : 'text-gray-700 hover:bg-gray-100'
                             }`}
@@ -125,7 +125,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     }`}
                   >
                     {item.icon}
-                    <span className="ml-3">{item.name}</span>
+                    <span className="ml-3 truncate">{item.name}</span>
                   </Link>
                 )}
               </li>
@@ -136,13 +136,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <div className="border-t p-4">
           <Link to="/admin/logout" className="flex items-center text-red-500 hover:text-red-600">
             <LogOut size={18} />
-            <span className="ml-3">Sair</span>
+            <span className="ml-3 truncate">Sair</span>
           </Link>
         </div>
       </aside>
       
       {/* Mobile sidebar - shown as Sheet */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-10 bg-white border-b p-4 flex items-center">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b p-4 flex items-center">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="mr-4">
@@ -164,12 +164,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </svg>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0">
+          <SheetContent side="left" className="p-0 w-[280px] max-w-[80vw]">
             <div className="p-4 border-b">
-              <h1 className="text-xl font-bold text-imperio-navy">Admin Painel</h1>
+              <h1 className="text-xl font-bold text-imperio-navy truncate">Admin Painel</h1>
             </div>
             
-            <nav className="py-4">
+            <nav className="py-4 overflow-y-auto max-h-[calc(100vh-8rem)]">
               <ul className="space-y-1 px-2">
                 {menuItems.map((item) => (
                   <li key={item.name}>
@@ -180,7 +180,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         }`}>
                           <div className="flex items-center">
                             {item.icon}
-                            <span className="ml-3">{item.name}</span>
+                            <span className="ml-3 truncate">{item.name}</span>
                           </div>
                           <ChevronDown size={16} />
                         </div>
@@ -190,8 +190,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                             <li key={subItem.name}>
                               <Link
                                 to={subItem.path}
-                                className={`block px-4 py-2 rounded-md ${
-                                  location.pathname === subItem.path 
+                                className={`block px-4 py-2 rounded-md truncate ${
+                                  location.pathname === subItem.path || location.pathname.startsWith(subItem.path)
                                     ? 'bg-blue-50 text-imperio-navy font-medium' 
                                     : 'text-gray-700 hover:bg-gray-100'
                                 }`}
@@ -212,7 +212,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         }`}
                       >
                         {item.icon}
-                        <span className="ml-3">{item.name}</span>
+                        <span className="ml-3 truncate">{item.name}</span>
                       </Link>
                     )}
                   </li>
@@ -223,17 +223,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <div className="border-t p-4">
               <Link to="/admin/logout" className="flex items-center text-red-500 hover:text-red-600">
                 <LogOut size={18} />
-                <span className="ml-3">Sair</span>
+                <span className="ml-3 truncate">Sair</span>
               </Link>
             </div>
           </SheetContent>
         </Sheet>
         
-        <h1 className="text-xl font-bold text-imperio-navy">Admin Painel</h1>
+        <h1 className="text-xl font-bold text-imperio-navy truncate">Admin Painel</h1>
       </div>
       
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-8 pt-20 md:pt-8">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 pt-20 md:pt-6">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>

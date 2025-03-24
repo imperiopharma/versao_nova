@@ -132,54 +132,54 @@ export const FinancePage: React.FC = () => {
   
   return (
     <AdminLayout>
-      <div className="py-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Financeiro</h1>
-          <div className="flex space-x-2">
-            <Button variant="outline">
-              <Calendar size={18} className="mr-2" />
+      <div className="py-4 space-y-4 md:py-6 md:space-y-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <h1 className="text-xl md:text-2xl font-bold">Financeiro</h1>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
+              <Calendar size={16} className="mr-2" />
               Jun 2023
             </Button>
-            <Button variant="outline">
-              <Download size={18} className="mr-2" />
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
+              <Download size={16} className="mr-2" />
               Exportar
             </Button>
           </div>
         </div>
         
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 w-full max-w-md mb-4">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="income">Receitas</TabsTrigger>
-            <TabsTrigger value="expenses">Despesas</TabsTrigger>
-            <TabsTrigger value="reports">Relatórios</TabsTrigger>
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full max-w-md mb-4">
+            <TabsTrigger value="overview" className="text-xs md:text-sm">Visão Geral</TabsTrigger>
+            <TabsTrigger value="income" className="text-xs md:text-sm">Receitas</TabsTrigger>
+            <TabsTrigger value="expenses" className="text-xs md:text-sm">Despesas</TabsTrigger>
+            <TabsTrigger value="reports" className="text-xs md:text-sm">Relatórios</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-4 md:space-y-6">
             {/* Cards de estatísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {overviewStats.map((stat) => (
-                <Card key={stat.title} className="border-none shadow-md">
-                  <CardContent className="p-6">
+                <Card key={stat.title} className="border-none shadow-md overflow-hidden">
+                  <CardContent className="p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <div className={`${stat.color} p-3 rounded-full ${stat.iconColor}`}>
+                      <div className={`${stat.color} p-2 md:p-3 rounded-full ${stat.iconColor}`}>
                         {stat.icon}
                       </div>
-                      <div className={`flex items-center space-x-1 text-sm ${
+                      <div className={`flex items-center space-x-1 text-xs md:text-sm ${
                         stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         <span>{stat.change}</span>
                         {stat.changeType === 'positive' ? (
-                          <ArrowUpRight className="h-4 w-4" />
+                          <ArrowUpRight className="h-3 w-3 md:h-4 md:w-4" />
                         ) : (
-                          <ArrowDownRight className="h-4 w-4" />
+                          <ArrowDownRight className="h-3 w-3 md:h-4 md:w-4" />
                         )}
                       </div>
                     </div>
-                    <div className="mt-4">
-                      <h3 className="text-lg font-medium text-gray-500">{stat.title}</h3>
-                      <p className="text-2xl font-bold">{stat.value}</p>
-                      <p className="text-xs text-gray-500 mt-1">{stat.period}</p>
+                    <div className="mt-3 md:mt-4">
+                      <h3 className="text-sm md:text-lg font-medium text-gray-500 truncate">{stat.title}</h3>
+                      <p className="text-lg md:text-2xl font-bold truncate">{stat.value}</p>
+                      <p className="text-xs text-gray-500 mt-1 truncate">{stat.period}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -187,16 +187,16 @@ export const FinancePage: React.FC = () => {
             </div>
             
             {/* Gráficos */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="border-none shadow-md">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <PieChart className="mr-2 h-5 w-5" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              <Card className="border-none shadow-md overflow-hidden">
+                <CardHeader className="p-4 md:p-6 pb-0">
+                  <CardTitle className="flex items-center text-base md:text-lg">
+                    <PieChart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                     Distribuição de Despesas
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="h-72">
+                <CardContent className="p-4 md:p-6">
+                  <div className="h-64 md:h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsPie data={expensesData} cx="50%" cy="50%" outerRadius={90}>
                         {expensesData.map((entry, index) => (
@@ -205,16 +205,16 @@ export const FinancePage: React.FC = () => {
                       </RechartsPie>
                     </ResponsiveContainer>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 mt-4">
                     {expensesData.map((item, index) => (
-                      <div key={item.name} className="flex items-center">
+                      <div key={item.name} className="flex items-center overflow-hidden">
                         <div
-                          className="w-3 h-3 rounded-full mr-2"
+                          className="w-3 h-3 rounded-full mr-2 flex-shrink-0"
                           style={{ backgroundColor: COLORS[index % COLORS.length] }}
                         ></div>
-                        <div className="flex justify-between w-full">
-                          <span className="text-sm">{item.name}</span>
-                          <span className="text-sm font-medium">{formatCurrency(item.value)}</span>
+                        <div className="flex justify-between w-full min-w-0">
+                          <span className="text-xs md:text-sm truncate">{item.name}</span>
+                          <span className="text-xs md:text-sm font-medium ml-1">{formatCurrency(item.value)}</span>
                         </div>
                       </div>
                     ))}
@@ -222,22 +222,35 @@ export const FinancePage: React.FC = () => {
                 </CardContent>
               </Card>
               
-              <Card className="border-none shadow-md">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <BarChart2 className="mr-2 h-5 w-5" />
+              <Card className="border-none shadow-md overflow-hidden">
+                <CardHeader className="p-4 md:p-6 pb-0">
+                  <CardTitle className="flex items-center text-base md:text-lg">
+                    <BarChart2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                     Vendas por Categoria
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="h-72">
+                <CardContent className="p-4 md:p-6">
+                  <div className="h-64 md:h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={salesByCategoryData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" />
-                        <YAxis tickFormatter={(value) => `${value / 1000}k`} />
+                      <BarChart 
+                        data={salesByCategoryData} 
+                        margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+                        layout="vertical"
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                        <XAxis 
+                          type="number" 
+                          tickFormatter={(value) => `${value / 1000}k`} 
+                          fontSize={12}
+                        />
+                        <YAxis 
+                          type="category" 
+                          dataKey="name" 
+                          width={70} 
+                          fontSize={12}
+                        />
                         <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                        <Bar dataKey="valor" fill="#001f3f" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="valor" fill="#001f3f" barSize={20} radius={[0, 4, 4, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -246,30 +259,30 @@ export const FinancePage: React.FC = () => {
             </div>
             
             {/* Transações Recentes */}
-            <Card className="border-none shadow-md">
-              <CardHeader>
-                <CardTitle>Transações Recentes</CardTitle>
+            <Card className="border-none shadow-md overflow-hidden">
+              <CardHeader className="p-4 md:p-6 pb-2">
+                <CardTitle className="text-base md:text-lg">Transações Recentes</CardTitle>
                 <CardDescription>Últimas movimentações financeiras</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-0 md:p-1 overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>ID</TableHead>
+                      <TableHead className="w-[70px]">ID</TableHead>
                       <TableHead>Descrição</TableHead>
-                      <TableHead>Data</TableHead>
-                      <TableHead>Método</TableHead>
-                      <TableHead>Valor</TableHead>
+                      <TableHead className="w-[100px]">Data</TableHead>
+                      <TableHead className="w-[100px] hidden sm:table-cell">Método</TableHead>
+                      <TableHead className="text-right w-[120px]">Valor</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {recentTransactions.map((transaction) => (
                       <TableRow key={transaction.id}>
                         <TableCell className="font-medium">{transaction.id}</TableCell>
-                        <TableCell>{transaction.descricao}</TableCell>
+                        <TableCell className="truncate max-w-[150px] sm:max-w-none">{transaction.descricao}</TableCell>
                         <TableCell>{transaction.data}</TableCell>
-                        <TableCell>{transaction.metodo}</TableCell>
-                        <TableCell className={transaction.tipo === 'receita' ? 'text-green-600' : 'text-red-600'}>
+                        <TableCell className="hidden sm:table-cell">{transaction.metodo}</TableCell>
+                        <TableCell className={`text-right ${transaction.tipo === 'receita' ? 'text-green-600' : 'text-red-600'}`}>
                           {transaction.tipo === 'receita' ? '+' : '-'} {formatCurrency(transaction.valor)}
                         </TableCell>
                       </TableRow>
@@ -277,48 +290,48 @@ export const FinancePage: React.FC = () => {
                   </TableBody>
                 </Table>
               </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button variant="ghost">Ver Todas as Transações</Button>
+              <CardFooter className="flex justify-end p-4">
+                <Button variant="ghost" size="sm">Ver Todas as Transações</Button>
               </CardFooter>
             </Card>
           </TabsContent>
           
-          <TabsContent value="income" className="space-y-6">
-            <Card className="border-none shadow-md">
+          <TabsContent value="income" className="space-y-4 md:space-y-6">
+            <Card className="border-none shadow-md overflow-hidden">
               <CardHeader>
                 <CardTitle>Receitas</CardTitle>
                 <CardDescription>Detalhamento de receitas do período</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-center py-20 text-gray-500">
+                <p className="text-center py-10 md:py-20 text-gray-500">
                   Conteúdo da aba Receitas será implementado aqui
                 </p>
               </CardContent>
             </Card>
           </TabsContent>
           
-          <TabsContent value="expenses" className="space-y-6">
-            <Card className="border-none shadow-md">
+          <TabsContent value="expenses" className="space-y-4 md:space-y-6">
+            <Card className="border-none shadow-md overflow-hidden">
               <CardHeader>
                 <CardTitle>Despesas</CardTitle>
                 <CardDescription>Detalhamento de despesas do período</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-center py-20 text-gray-500">
+                <p className="text-center py-10 md:py-20 text-gray-500">
                   Conteúdo da aba Despesas será implementado aqui
                 </p>
               </CardContent>
             </Card>
           </TabsContent>
           
-          <TabsContent value="reports" className="space-y-6">
-            <Card className="border-none shadow-md">
+          <TabsContent value="reports" className="space-y-4 md:space-y-6">
+            <Card className="border-none shadow-md overflow-hidden">
               <CardHeader>
                 <CardTitle>Relatórios</CardTitle>
                 <CardDescription>Relatórios financeiros disponíveis para download</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-center py-20 text-gray-500">
+                <p className="text-center py-10 md:py-20 text-gray-500">
                   Relatórios serão listados aqui
                 </p>
               </CardContent>

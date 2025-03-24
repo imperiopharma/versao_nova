@@ -19,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			screens: {
+				'xs': '480px', // Adicionando breakpoint para telas muito pequenas
+			},
 			fontFamily: {
 				sans: ['Inter var', 'sans-serif'],
 				display: ['SF Pro Display', 'Inter var', 'sans-serif'],
