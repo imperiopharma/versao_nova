@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Table,
@@ -9,7 +10,15 @@ import {
 } from "@/components/ui/table";
 import { OrderDetailsDialog } from './OrderDetailsDialog';
 import { OrderTableRow } from './OrderTableRow';
-import { Order, OrderFilters } from '@/types/orders';
+import { Order, OrderFilters, OrderStatus } from '@/types/orders';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Dados de exemplo para desenvolvimento
 const mockOrders: Order[] = [
@@ -134,6 +143,10 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  
   const handleViewOrder = (order: Order) => {
     setSelectedOrder(order);
     setIsOrderDetailsOpen(true);
@@ -144,11 +157,11 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
     setOrders(orders.filter(order => order.id !== orderId));
   };
   
-  const handleChangeOrderStatus = (orderId: string, newStatus: string) => {
+  const handleChangeOrderStatus = (orderId: string, newStatus: OrderStatus) => {
     // Na implementação real, aqui seria uma chamada à API
     setOrders(orders.map(order => 
       order.id === orderId 
-        ? { ...order, status: newStatus } 
+        ? { ...order, status: newStatus as OrderStatus } 
         : order
     ));
   };
@@ -158,6 +171,18 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
     if (activeFilters.status === 'all') return true;
     return order.status === activeFilters.status;
   });
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Generate page numbers for pagination
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div className="space-y-4">
@@ -175,14 +200,14 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredOrders.length === 0 ? (
+            {currentOrders.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-24 text-center">
                   Nenhum pedido encontrado com os filtros atuais.
                 </TableCell>
               </TableRow>
             ) : (
-              filteredOrders.map((order) => (
+              currentOrders.map((order) => (
                 <OrderTableRow
                   key={order.id}
                   order={order}
@@ -195,6 +220,37 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
           </TableBody>
         </Table>
       </div>
+
+      {filteredOrders.length > 0 && totalPages > 1 && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+            
+            {pageNumbers.map(number => (
+              <PaginationItem key={number}>
+                <PaginationLink
+                  isActive={currentPage === number}
+                  onClick={() => setCurrentPage(number)}
+                >
+                  {number}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
       
       {isOrderDetailsOpen && selectedOrder && (
         <OrderDetailsDialog
