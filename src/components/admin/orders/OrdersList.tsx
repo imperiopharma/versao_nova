@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Table,
@@ -29,6 +28,7 @@ import {
   XCircle 
 } from "lucide-react";
 import { OrderDetailsDialog } from './OrderDetailsDialog';
+import { formatCurrency, formatDate, getStatusConfig } from '@/lib/formatters';
 
 // Dados de exemplo para desenvolvimento
 const mockOrders = [
@@ -156,26 +156,6 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   
-  // Formatação de moeda
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
-  };
-  
-  // Formatação de data
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
-  
   const handleViewOrder = (order: any) => {
     setSelectedOrder(order);
     setIsOrderDetailsOpen(true);
@@ -200,26 +180,6 @@ export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
     if (activeFilters.status === 'all') return true;
     return order.status === activeFilters.status;
   });
-  
-  // Cores e textos para os status dos pedidos
-  const getStatusConfig = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return { color: 'bg-yellow-100 text-yellow-800', text: 'Aguardando Pagamento' };
-      case 'paid':
-        return { color: 'bg-blue-100 text-blue-800', text: 'Pagamento Aprovado' };
-      case 'preparing':
-        return { color: 'bg-purple-100 text-purple-800', text: 'Em Preparação' };
-      case 'shipped':
-        return { color: 'bg-indigo-100 text-indigo-800', text: 'Enviado' };
-      case 'delivered':
-        return { color: 'bg-green-100 text-green-800', text: 'Entregue' };
-      case 'canceled':
-        return { color: 'bg-red-100 text-red-800', text: 'Cancelado' };
-      default:
-        return { color: 'bg-gray-100 text-gray-800', text: 'Desconhecido' };
-    }
-  };
 
   return (
     <div className="space-y-4">
