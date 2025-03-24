@@ -3,9 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import { CheckoutProvider } from "./contexts/CheckoutContext";
+
+// Public pages
 import { HomePage } from "./pages/HomePage";
 import { BrandProductsPage } from "./pages/BrandProductsPage";
 import { CartPage } from "./pages/CartPage";
@@ -16,6 +18,13 @@ import { CheckoutPagamentoPage } from "./pages/CheckoutPagamentoPage";
 import { MarketplacePage } from "./pages/MarketplacePage";
 import { FreightInfoPage } from "./pages/FreightInfoPage";
 import NotFound from "./pages/NotFound";
+
+// Admin pages
+import { AdminDashboard } from "./pages/admin/Dashboard";
+import { OrdersPage } from "./pages/admin/OrdersPage";
+import { ProductsPage } from "./pages/admin/ProductsPage";
+import { CustomersPage } from "./pages/admin/CustomersPage";
+import { FinancePage } from "./pages/admin/FinancePage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +37,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
+              {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/marca/:brandId" element={<BrandProductsPage />} />
               <Route path="/marcas" element={<MarketplacePage />} />
@@ -37,6 +47,22 @@ const App = () => (
               <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
               <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
               <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
+              
+              {/* Admin routes - hidden from normal navigation */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/vendas" element={<AdminDashboard />} />
+              <Route path="/admin/pedidos" element={<OrdersPage />} />
+              <Route path="/admin/produtos" element={<ProductsPage />} />
+              <Route path="/admin/categorias" element={<AdminDashboard />} />
+              <Route path="/admin/marcas" element={<AdminDashboard />} />
+              <Route path="/admin/estoque" element={<AdminDashboard />} />
+              <Route path="/admin/clientes" element={<CustomersPage />} />
+              <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
+              <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
+              <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
+              <Route path="/admin/configuracoes" element={<AdminDashboard />} />
+              
+              {/* 404 route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
