@@ -16,7 +16,6 @@ import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
 import { PromoCardsSection } from '../components/home/PromoCardsSection';
 import { AppBanner } from '../components/home/AppBanner';
-import { CategoriesQuickAccess } from '../components/home/CategoriesQuickAccess';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 
 export const HomePage: React.FC = () => {
@@ -82,7 +81,7 @@ export const HomePage: React.FC = () => {
       id: 'emagrecedores',
       title: 'Emagrecedores',
       description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento com qualidade e segurança.',
-      icon: <Pill size={32} />,
+      icon: <Pill size={24} />,
       link: '/categoria/emagrecedores',
       color: 'from-imperio-extra-light-navy'
     },
@@ -90,7 +89,7 @@ export const HomePage: React.FC = () => {
       id: 'farmacia',
       title: 'Farmácia',
       description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde do dia a dia.',
-      icon: <ShoppingBag size={32} />,
+      icon: <ShoppingBag size={24} />,
       link: '/categoria/farmacia',
       color: 'from-imperio-extra-light-navy'
     },
@@ -98,7 +97,7 @@ export const HomePage: React.FC = () => {
       id: 'trend',
       title: 'Mais Vendidos',
       description: 'Conheça os produtos preferidos de nossos clientes. Qualidade comprovada.',
-      icon: <TrendingUp size={32} />,
+      icon: <TrendingUp size={24} />,
       link: '/mais-vendidos',
       color: 'from-blue-50'
     },
@@ -106,7 +105,7 @@ export const HomePage: React.FC = () => {
       id: 'premium',
       title: 'Premium',
       description: 'Produtos de altíssima qualidade e eficácia, com resultados comprovados.',
-      icon: <Award size={32} />,
+      icon: <Award size={24} />,
       link: '/premium',
       color: 'from-amber-50'
     }
@@ -137,6 +136,14 @@ export const HomePage: React.FC = () => {
       originalPrice: 349.90,
       salePrice: 299.90,
       image: 'https://via.placeholder.com/150x150?text=Trembolona'
+    },
+    {
+      id: 'testosterona',
+      name: 'Testosterona 200mg',
+      brand: 'Prime Labs',
+      originalPrice: 259.90,
+      salePrice: 219.90,
+      image: 'https://via.placeholder.com/150x150?text=Testosterona'
     }
   ];
 
@@ -145,11 +152,8 @@ export const HomePage: React.FC = () => {
       {/* Hero Banner */}
       <HeroBanner slides={heroSlides} />
       
-      {/* Promotional Cards - Moved right after the banner for better visibility */}
+      {/* Promotional Cards - Right after banner for better visibility */}
       <PromoCardsSection cards={promoCards} />
-      
-      {/* Categories Quick Access - Optimized for mobile scrolling */}
-      <CategoriesQuickAccess categories={brands.categories} />
       
       {/* Flash Sale Section - Highlight products on sale */}
       <FlashSaleSection items={flashSaleItems} />
@@ -169,4 +173,3 @@ export const HomePage: React.FC = () => {
     </Layout>
   );
 };
-
