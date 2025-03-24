@@ -10,7 +10,7 @@ import {
   Award 
 } from 'lucide-react';
 
-// Import new components
+// Import components
 import { HeroBanner } from '../components/home/HeroBanner';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
@@ -145,27 +145,28 @@ export const HomePage: React.FC = () => {
       {/* Hero Banner */}
       <HeroBanner slides={heroSlides} />
       
-      {/* Brands Section - First important section */}
+      {/* Promotional Cards - Moved right after the banner for better visibility */}
+      <PromoCardsSection cards={promoCards} />
+      
+      {/* Categories Quick Access - Optimized for mobile scrolling */}
+      <CategoriesQuickAccess categories={brands.categories} />
+      
+      {/* Flash Sale Section - Highlight products on sale */}
+      <FlashSaleSection items={flashSaleItems} />
+      
+      {/* Brands Section */}
       <BrandsSection 
         premium={brands.premium}
         national={brands.national}
         categories={brands.categories}
       />
       
-      {/* Flash Sale Section - Highlight products on sale */}
-      <FlashSaleSection items={flashSaleItems} />
-
-      {/* Promotional Cards - Features and category highlights */}
-      <PromoCardsSection cards={promoCards} />
-      
-      {/* Mobile App Banner - Encourage app downloads */}
+      {/* Mobile App Banner */}
       <AppBanner />
 
-      {/* Categories Quick Access - Optimized for mobile scrolling */}
-      <CategoriesQuickAccess categories={brands.categories} />
-
-      {/* Newsletter & Social Media - User engagement section */}
+      {/* Newsletter & Social Media */}
       <NewsletterSection />
     </Layout>
   );
 };
+
