@@ -25,22 +25,22 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
             <Link 
               key={card.id} 
               to={card.link} 
-              className={`imperio-card p-2.5 flex flex-col h-[120px] sm:h-[140px] bg-gradient-to-br ${card.color} to-white relative overflow-hidden group`}
+              className={`imperio-card p-2.5 flex flex-col h-[100px] sm:h-[120px] bg-gradient-to-br ${card.color} to-white relative overflow-hidden group`}
             >
               <div className="z-10">
-                <div className="text-imperio-navy p-1 rounded-full bg-white w-7 h-7 flex items-center justify-center mb-1 shadow-subtle">
+                <div className="text-imperio-navy p-1 rounded-full bg-white w-6 h-6 flex items-center justify-center mb-1 shadow-subtle">
                   {card.icon}
                 </div>
                 <h2 className="text-xs font-semibold text-imperio-navy mb-0.5">{card.title}</h2>
-                <p className="text-xs text-gray-600 line-clamp-2 text-[10px]">
+                <p className="text-[10px] text-gray-600 line-clamp-2">
                   {card.description}
                 </p>
-                <div className="flex items-center mt-auto text-imperio-navy font-medium text-xs group-hover:underline">
+                <div className="flex items-center mt-auto text-imperio-navy font-medium text-[10px] group-hover:underline">
                   <span>Conhecer</span>
-                  <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={10} className="ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-              <div className="absolute bottom-0 right-0 w-12 h-12 bg-imperio-navy/5 rounded-full -mb-6 -mr-6 transition-transform group-hover:scale-125"></div>
+              <div className="absolute bottom-0 right-0 w-10 h-10 bg-imperio-navy/5 rounded-full -mb-5 -mr-5 transition-transform group-hover:scale-125"></div>
             </Link>
           ))}
         </div>

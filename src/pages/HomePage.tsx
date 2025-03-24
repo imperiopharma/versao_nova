@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { 
@@ -15,7 +14,6 @@ import { HeroBanner } from '../components/home/HeroBanner';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
 import { PromoCardsSection } from '../components/home/PromoCardsSection';
-import { AppBanner } from '../components/home/AppBanner';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 
 export const HomePage: React.FC = () => {
@@ -152,21 +150,18 @@ export const HomePage: React.FC = () => {
       {/* Hero Banner */}
       <HeroBanner slides={heroSlides} />
       
-      {/* Promotional Cards - Right after banner for better visibility */}
-      <PromoCardsSection cards={promoCards} />
-      
-      {/* Flash Sale Section - Highlight products on sale */}
-      <FlashSaleSection items={flashSaleItems} />
-      
-      {/* Mobile App Banner */}
-      <AppBanner />
-      
-      {/* Brands Section */}
+      {/* Brands Section - Moved up per request */}
       <BrandsSection 
         premium={brands.premium}
         national={brands.national}
         categories={brands.categories}
       />
+      
+      {/* Promotional Cards - Right after banner for better visibility */}
+      <PromoCardsSection cards={promoCards} />
+      
+      {/* Flash Sale Section - Moved down per request */}
+      <FlashSaleSection items={flashSaleItems} />
       
       {/* Newsletter & Social Media */}
       <NewsletterSection />
