@@ -30,17 +30,22 @@ export const HomePage: React.FC = () => {
       { id: 'king-pharma', name: 'King Pharma', logo: 'https://via.placeholder.com/150x100?text=King+Pharma' },
       { id: 'cooper-pharma', name: 'Cooper Pharma', logo: 'https://via.placeholder.com/150x100?text=Cooper+Pharma' },
       { id: 'muscle-labs', name: 'Muscle Labs', logo: 'https://via.placeholder.com/150x100?text=Muscle+Labs' },
+      { id: 'ultra-pharma', name: 'Ultra Pharma', logo: 'https://via.placeholder.com/150x100?text=Ultra+Pharma' },
+      { id: 'prime-labs', name: 'Prime Labs', logo: 'https://via.placeholder.com/150x100?text=Prime+Labs' },
     ],
     national: [
       { id: 'growth', name: 'Growth', logo: 'https://via.placeholder.com/150x100?text=Growth' },
       { id: 'r-pharm', name: 'R.Pharm', logo: 'https://via.placeholder.com/150x100?text=R.Pharm' },
       { id: 'bio-pharma', name: 'Bio Pharma', logo: 'https://via.placeholder.com/150x100?text=Bio+Pharma' },
       { id: 'life-pharma', name: 'Life Pharma', logo: 'https://via.placeholder.com/150x100?text=Life+Pharma' },
+      { id: 'max-power', name: 'Max Power', logo: 'https://via.placeholder.com/150x100?text=Max+Power' },
     ],
     categories: [
       { id: 'cbd', name: 'CBD', icon: <Pill className="w-10 h-10 mb-3" /> },
       { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-10 h-10 mb-3" /> },
       { id: 'sarms', name: 'SARMs', icon: <Tablet className="w-10 h-10 mb-3" /> },
+      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-10 h-10 mb-3" /> },
+      { id: 'anabolizantes', name: 'Anabolizantes', icon: <Tablet className="w-10 h-10 mb-3" /> },
     ],
   };
 
@@ -288,7 +293,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Brands Section - Moved higher in the layout */}
+      {/* Brands Section */}
       <section className="py-8 bg-white">
         <div className="section-container">
           <div className="flex items-center justify-between mb-6">
@@ -305,7 +310,7 @@ export const HomePage: React.FC = () => {
           {/* Premium Brands */}
           <div className="mb-6">
             <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Premium</h3>
-            <div className="grid grid-cols-3 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {brands.premium.map((brand) => (
                 <Link 
                   key={brand.id} 
@@ -325,7 +330,7 @@ export const HomePage: React.FC = () => {
           {/* National Brands */}
           <div className="mb-6">
             <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Nacionais</h3>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {brands.national.map((brand) => (
                 <Link 
                   key={brand.id} 
@@ -345,7 +350,7 @@ export const HomePage: React.FC = () => {
           {/* Categories */}
           <div>
             <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Categorias</h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {brands.categories.map((category) => (
                 <Link 
                   key={category.id} 
