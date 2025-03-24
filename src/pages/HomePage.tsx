@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { 
@@ -73,39 +74,39 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Promotional cards 
+  // Promotional cards - updated to match the reference image
   const promoCards = [
     {
       id: 'emagrecedores',
       title: 'Emagrecedores',
       description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento.',
-      icon: <Pill size={18} />,
+      icon: <Pill size={20} />,
       link: '/categoria/emagrecedores',
-      color: 'from-imperio-extra-light-navy'
+      color: 'bg-blue-50'
     },
     {
       id: 'farmacia',
       title: 'Farmácia',
       description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde.',
-      icon: <ShoppingBag size={18} />,
+      icon: <ShoppingBag size={20} />,
       link: '/categoria/farmacia',
-      color: 'from-imperio-extra-light-navy'
+      color: 'bg-blue-50'
     },
     {
-      id: 'trend',
+      id: 'mais-vendidos',
       title: 'Mais Vendidos',
       description: 'Conheça os produtos preferidos de nossos clientes.',
-      icon: <TrendingUp size={18} />,
+      icon: <TrendingUp size={20} />,
       link: '/mais-vendidos',
-      color: 'from-blue-50'
+      color: 'bg-blue-50'
     },
     {
       id: 'premium',
       title: 'Premium',
       description: 'Produtos de altíssima qualidade e eficácia comprovada.',
-      icon: <Award size={18} />,
+      icon: <Award size={20} />,
       link: '/premium',
-      color: 'from-amber-50'
+      color: 'bg-amber-50'
     }
   ];
 
@@ -150,17 +151,17 @@ export const HomePage: React.FC = () => {
       {/* Hero Banner */}
       <HeroBanner slides={heroSlides} />
       
-      {/* Brands Section - Moved up per request */}
+      {/* Promotional Cards - Right after banner as requested */}
+      <PromoCardsSection cards={promoCards} />
+      
+      {/* Brands Section */}
       <BrandsSection 
         premium={brands.premium}
         national={brands.national}
         categories={brands.categories}
       />
       
-      {/* Promotional Cards - Right after banner for better visibility */}
-      <PromoCardsSection cards={promoCards} />
-      
-      {/* Flash Sale Section - Moved down per request */}
+      {/* Flash Sale Section - Moved down as requested */}
       <FlashSaleSection items={flashSaleItems} />
       
       {/* Newsletter & Social Media */}

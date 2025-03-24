@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Pill, ShoppingBag, TrendingUp, Award } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PromoCard {
   id: string;
@@ -17,30 +18,25 @@ interface PromoCardsSectionProps {
 }
 
 export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <section className="py-3 bg-white">
+    <section className="py-4 bg-white">
       <div className="section-container">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {cards.map((card) => (
             <Link 
               key={card.id} 
               to={card.link} 
-              className={`imperio-card p-2.5 flex flex-col h-[100px] sm:h-[120px] bg-gradient-to-br ${card.color} to-white relative overflow-hidden group`}
+              className={`p-4 flex flex-col rounded-xl ${card.color} hover:shadow-md transition-shadow`}
             >
-              <div className="z-10">
-                <div className="text-imperio-navy p-1 rounded-full bg-white w-6 h-6 flex items-center justify-center mb-1 shadow-subtle">
-                  {card.icon}
-                </div>
-                <h2 className="text-xs font-semibold text-imperio-navy mb-0.5">{card.title}</h2>
-                <p className="text-[10px] text-gray-600 line-clamp-2">
-                  {card.description}
-                </p>
-                <div className="flex items-center mt-auto text-imperio-navy font-medium text-[10px] group-hover:underline">
-                  <span>Conhecer</span>
-                  <ArrowRight size={10} className="ml-1 group-hover:translate-x-1 transition-transform" />
-                </div>
+              <div className="text-imperio-navy mb-2">
+                {card.icon}
               </div>
-              <div className="absolute bottom-0 right-0 w-10 h-10 bg-imperio-navy/5 rounded-full -mb-5 -mr-5 transition-transform group-hover:scale-125"></div>
+              <h2 className="text-sm font-bold text-imperio-navy mb-1">{card.title}</h2>
+              <p className="text-xs text-gray-600 line-clamp-2">
+                {card.description}
+              </p>
             </Link>
           ))}
         </div>
