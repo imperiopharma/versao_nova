@@ -36,7 +36,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <Tag className="text-imperio-red mr-2" size={20} />
-            <h2 className="text-lg font-bold text-imperio-navy">Promoções Especiais</h2>
+            <h2 className="text-lg font-bold text-imperio-navy">COMBOS</h2>
           </div>
           <Link 
             to="/ofertas" 
