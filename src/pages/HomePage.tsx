@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Capsule, Heart, Pill, ShoppingBag } from 'lucide-react';
+import { ArrowRight, Heart, Pill, ShoppingBag, Tablet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const HomePage: React.FC = () => {
@@ -22,7 +21,7 @@ export const HomePage: React.FC = () => {
     categories: [
       { id: 'cbd', name: 'CBD', icon: <Pill className="w-10 h-10 mb-3" /> },
       { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-10 h-10 mb-3" /> },
-      { id: 'sarms', name: 'SARMs', icon: <Capsule className="w-10 h-10 mb-3" /> },
+      { id: 'sarms', name: 'SARMs', icon: <Tablet className="w-10 h-10 mb-3" /> },
     ],
   };
 
