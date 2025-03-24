@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,6 +24,7 @@ import { OrdersPage } from "./pages/admin/OrdersPage";
 import { ProductsPage } from "./pages/admin/ProductsPage";
 import { CustomersPage } from "./pages/admin/CustomersPage";
 import { FinancePage } from "./pages/admin/FinancePage";
+import { SettingsPage } from './pages/admin/SettingsPage';
 
 const queryClient = new QueryClient();
 
@@ -48,7 +48,7 @@ const App = () => (
               <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
               <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
               
-              {/* Admin routes - hidden from normal navigation */}
+              {/* Admin routes */}
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/vendas" element={<AdminDashboard />} />
               <Route path="/admin/pedidos" element={<OrdersPage />} />
@@ -60,7 +60,7 @@ const App = () => (
               <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
               <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
               <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
-              <Route path="/admin/configuracoes" element={<AdminDashboard />} />
+              <Route path="/admin/configuracoes" element={<SettingsPage />} />
               
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />

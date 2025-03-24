@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog, 
@@ -64,7 +63,6 @@ export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({
   const [isOrderMessageOpen, setIsOrderMessageOpen] = useState(false);
   const { toast } = useToast();
   
-  // Formatação de moeda
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -72,7 +70,6 @@ export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({
     }).format(value);
   };
   
-  // Formatação de data
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('pt-BR', {
@@ -84,7 +81,6 @@ export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({
     }).format(date);
   };
   
-  // Cores e textos para os status dos pedidos
   const getStatusConfig = (status: string) => {
     switch (status) {
       case 'pending':
@@ -104,40 +100,47 @@ export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({
     }
   };
 
-  // Gerar a mensagem formatada do pedido para copiar
   const generateOrderMessage = () => {
-    const lines = [
-      `*PEDIDO ${order.orderNumber}*`,
-      `*Data:* ${formatDate(order.date)}`,
-      `*Status:* ${getStatusConfig(order.status).text}`,
-      '',
-      `*CLIENTE:*`,
-      `Nome: ${order.customer.name}`,
-      `Email: ${order.customer.email}`,
-      '',
-      `*PRODUTOS:*`
-    ];
+    const template = `*PEDIDO {orderNumber}*
+*Data:* {date}
+*Status:* {status}
 
-    // Adicionar itens do pedido
-    order.items.forEach((item: any) => {
-      lines.push(`${item.quantity}x ${item.name} - ${formatCurrency(item.price)} cada = ${formatCurrency(item.price * item.quantity)}`);
-    });
+*CLIENTE:*
+Nome: {customer.name}
+Email: {customer.email}
 
-    lines.push('');
-    lines.push(`*Método de Pagamento:* ${order.paymentMethod}`);
-    lines.push(`*Frete:* ${formatCurrency(order.shipping)}`);
+*PRODUTOS:*
+{products}
+
+*Método de Pagamento:* {paymentMethod}
+*Frete:* {shipping}
+*Desconto:* {discount}
+*Subtotal:* {subtotal}
+*TOTAL:* {total}`;
+
+    let message = template;
     
-    if (order.discount > 0) {
-      lines.push(`*Desconto:* ${formatCurrency(order.discount)}`);
-    }
+    message = message
+      .replace('{orderNumber}', order.orderNumber)
+      .replace('{date}', formatDate(order.date))
+      .replace('{status}', getStatusConfig(order.status).text)
+      .replace('{customer.name}', order.customer.name)
+      .replace('{customer.email}', order.customer.email)
+      .replace('{paymentMethod}', order.paymentMethod)
+      .replace('{shipping}', formatCurrency(order.shipping))
+      .replace('{discount}', formatCurrency(order.discount))
+      .replace('{subtotal}', formatCurrency(order.subtotal))
+      .replace('{total}', formatCurrency(order.total));
+
+    const productsText = order.items.map((item: any) => 
+      `${item.quantity}x ${item.name} - ${formatCurrency(item.price)} cada = ${formatCurrency(item.price * item.quantity)}`
+    ).join('\n');
     
-    lines.push(`*Subtotal:* ${formatCurrency(order.subtotal)}`);
-    lines.push(`*TOTAL:* ${formatCurrency(order.total)}`);
-    
-    return lines.join('\n');
+    message = message.replace('{products}', productsText);
+
+    return message;
   };
 
-  // Função para copiar a mensagem para a área de transferência
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generateOrderMessage())
       .then(() => {
