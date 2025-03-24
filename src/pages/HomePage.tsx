@@ -36,11 +36,11 @@ export const HomePage: React.FC = () => {
       { id: 'max-power', name: 'Max Power', logo: 'https://via.placeholder.com/150x100?text=Max+Power' },
     ],
     categories: [
-      { id: 'cbd', name: 'CBD', icon: <Pill className="w-10 h-10 mb-3" /> },
-      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-10 h-10 mb-3" /> },
-      { id: 'sarms', name: 'SARMs', icon: <Tablet className="w-10 h-10 mb-3" /> },
-      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-10 h-10 mb-3" /> },
-      { id: 'anabolizantes', name: 'Anabolizantes', icon: <Tablet className="w-10 h-10 mb-3" /> },
+      { id: 'cbd', name: 'CBD', icon: <Pill className="w-8 h-8 mb-2" /> },
+      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2" /> },
+      { id: 'sarms', name: 'SARMs', icon: <Tablet className="w-8 h-8 mb-2" /> },
+      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2" /> },
+      { id: 'anabolizantes', name: 'Anabolizantes', icon: <Tablet className="w-8 h-8 mb-2" /> },
     ],
   };
 
@@ -80,32 +80,32 @@ export const HomePage: React.FC = () => {
     {
       id: 'emagrecedores',
       title: 'Emagrecedores',
-      description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento com qualidade e segurança.',
-      icon: <Pill size={24} />,
+      description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento.',
+      icon: <Pill size={18} />,
       link: '/categoria/emagrecedores',
       color: 'from-imperio-extra-light-navy'
     },
     {
       id: 'farmacia',
       title: 'Farmácia',
-      description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde do dia a dia.',
-      icon: <ShoppingBag size={24} />,
+      description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde.',
+      icon: <ShoppingBag size={18} />,
       link: '/categoria/farmacia',
       color: 'from-imperio-extra-light-navy'
     },
     {
       id: 'trend',
       title: 'Mais Vendidos',
-      description: 'Conheça os produtos preferidos de nossos clientes. Qualidade comprovada.',
-      icon: <TrendingUp size={24} />,
+      description: 'Conheça os produtos preferidos de nossos clientes.',
+      icon: <TrendingUp size={18} />,
       link: '/mais-vendidos',
       color: 'from-blue-50'
     },
     {
       id: 'premium',
       title: 'Premium',
-      description: 'Produtos de altíssima qualidade e eficácia, com resultados comprovados.',
-      icon: <Award size={24} />,
+      description: 'Produtos de altíssima qualidade e eficácia comprovada.',
+      icon: <Award size={18} />,
       link: '/premium',
       color: 'from-amber-50'
     }
@@ -158,6 +158,9 @@ export const HomePage: React.FC = () => {
       {/* Flash Sale Section - Highlight products on sale */}
       <FlashSaleSection items={flashSaleItems} />
       
+      {/* Mobile App Banner */}
+      <AppBanner />
+      
       {/* Brands Section */}
       <BrandsSection 
         premium={brands.premium}
@@ -165,9 +168,6 @@ export const HomePage: React.FC = () => {
         categories={brands.categories}
       />
       
-      {/* Mobile App Banner */}
-      <AppBanner />
-
       {/* Newsletter & Social Media */}
       <NewsletterSection />
     </Layout>
