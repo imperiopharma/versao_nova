@@ -288,8 +288,83 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* Brands Section - Moved higher in the layout */}
+      <section className="py-8 bg-white">
+        <div className="section-container">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-imperio-navy">Nossas Marcas</h2>
+            <Link 
+              to="/marcas" 
+              className="text-sm font-medium text-imperio-navy flex items-center underline-animation"
+            >
+              Ver Todas
+              <ArrowRight size={16} className="ml-1" />
+            </Link>
+          </div>
+          
+          {/* Premium Brands */}
+          <div className="mb-6">
+            <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Premium</h3>
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5">
+              {brands.premium.map((brand) => (
+                <Link 
+                  key={brand.id} 
+                  to={`/marca/${brand.id}`}
+                  className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
+                >
+                  <img 
+                    src={brand.logo} 
+                    alt={brand.name} 
+                    className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
+          
+          {/* National Brands */}
+          <div className="mb-6">
+            <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Nacionais</h3>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+              {brands.national.map((brand) => (
+                <Link 
+                  key={brand.id} 
+                  to={`/marca/${brand.id}`}
+                  className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
+                >
+                  <img 
+                    src={brand.logo} 
+                    alt={brand.name} 
+                    className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
+          
+          {/* Categories */}
+          <div>
+            <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Categorias</h3>
+            <div className="grid grid-cols-3 gap-3">
+              {brands.categories.map((category) => (
+                <Link 
+                  key={category.id} 
+                  to={`/categoria/${category.id}`}
+                  className="imperio-card flex flex-col items-center text-center p-3 sm:p-5 hover-lift h-24 sm:h-28"
+                >
+                  <div className="text-imperio-navy">
+                    {category.icon}
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-medium">{category.name}</h4>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Flash Sale Section - Mobile Optimized */}
-      <section className="py-6 bg-white">
+      <section className="py-6 bg-imperio-gray">
         <div className="section-container">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
@@ -343,7 +418,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Promotional Cards - Responsive Grid */}
-      <section className="py-8 bg-imperio-gray">
+      <section className="py-8 bg-white">
         <div className="section-container">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {promoCards.map((card) => (
@@ -407,7 +482,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Categories Quick Access - Mobile-optimized scrollable section */}
-      <section className="py-8 bg-white">
+      <section className="py-8 bg-imperio-gray">
         <div className="section-container">
           <h2 className="text-xl font-semibold text-imperio-navy mb-4">Categorias Populares</h2>
           
@@ -439,161 +514,6 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Brands Section - Collapsible on Mobile */}
-      <section className="py-8 bg-imperio-gray">
-        <div className="section-container">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-imperio-navy">Nossas Marcas</h2>
-            {isMobile && (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    Ver Todas
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="h-[80vh]">
-                  <div className="py-4">
-                    <h3 className="text-lg font-medium text-imperio-navy mb-4">Todas as Marcas</h3>
-                    
-                    <div className="space-y-6">
-                      {/* Premium Brands */}
-                      <div>
-                        <h4 className="text-sm font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Premium</h4>
-                        <div className="grid grid-cols-2 gap-3">
-                          {brands.premium.map((brand) => (
-                            <Link 
-                              key={brand.id} 
-                              to={`/marca/${brand.id}`}
-                              className="imperio-card flex items-center justify-center h-20 hover-lift group"
-                            >
-                              <img 
-                                src={brand.logo} 
-                                alt={brand.name} 
-                                className="max-h-12 transition-transform group-hover:scale-105" 
-                              />
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* National Brands */}
-                      <div>
-                        <h4 className="text-sm font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Nacionais</h4>
-                        <div className="grid grid-cols-2 gap-3">
-                          {brands.national.map((brand) => (
-                            <Link 
-                              key={brand.id} 
-                              to={`/marca/${brand.id}`}
-                              className="imperio-card flex items-center justify-center h-20 hover-lift group"
-                            >
-                              <img 
-                                src={brand.logo} 
-                                alt={brand.name} 
-                                className="max-h-12 transition-transform group-hover:scale-105" 
-                              />
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            )}
-          </div>
-          
-          {/* Desktop Brands Display */}
-          <div className="hidden md:block">
-            {/* Premium Brands */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-imperio-navy mb-4 border-b pb-2">Marcas Premium</h3>
-              <div className="grid grid-cols-3 lg:grid-cols-5 gap-4">
-                {brands.premium.map((brand) => (
-                  <Link 
-                    key={brand.id} 
-                    to={`/marca/${brand.id}`}
-                    className="imperio-card flex items-center justify-center h-24 hover-lift group"
-                  >
-                    <img 
-                      src={brand.logo} 
-                      alt={brand.name} 
-                      className="max-h-16 transition-transform group-hover:scale-105" 
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
-            
-            {/* National Brands */}
-            <div>
-              <h3 className="text-lg font-medium text-imperio-navy mb-4 border-b pb-2">Marcas Nacionais</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {brands.national.map((brand) => (
-                  <Link 
-                    key={brand.id} 
-                    to={`/marca/${brand.id}`}
-                    className="imperio-card flex items-center justify-center h-24 hover-lift group"
-                  >
-                    <img 
-                      src={brand.logo} 
-                      alt={brand.name} 
-                      className="max-h-16 transition-transform group-hover:scale-105" 
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          {/* Mobile Brands Display - Scrollable */}
-          <div className="md:hidden">
-            {/* Premium Brands */}
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Premium</h3>
-              <div className="overflow-x-auto -mx-4 px-4 pb-2">
-                <div className="flex space-x-3" style={{ minWidth: 'fit-content' }}>
-                  {brands.premium.map((brand) => (
-                    <Link 
-                      key={brand.id} 
-                      to={`/marca/${brand.id}`}
-                      className="imperio-card flex items-center justify-center w-[140px] h-20 hover-lift group flex-shrink-0"
-                    >
-                      <img 
-                        src={brand.logo} 
-                        alt={brand.name} 
-                        className="max-h-12 transition-transform group-hover:scale-105" 
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* National Brands - Show first 4 */}
-            <div>
-              <h3 className="text-sm font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Nacionais</h3>
-              <div className="overflow-x-auto -mx-4 px-4 pb-2">
-                <div className="flex space-x-3" style={{ minWidth: 'fit-content' }}>
-                  {brands.national.slice(0, 4).map((brand) => (
-                    <Link 
-                      key={brand.id} 
-                      to={`/marca/${brand.id}`}
-                      className="imperio-card flex items-center justify-center w-[140px] h-20 hover-lift group flex-shrink-0"
-                    >
-                      <img 
-                        src={brand.logo} 
-                        alt={brand.name} 
-                        className="max-h-12 transition-transform group-hover:scale-105" 
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
       {/* Newsletter & Social Media */}
       <section className="py-8 bg-white">
         <div className="section-container">
