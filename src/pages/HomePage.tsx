@@ -20,6 +20,13 @@ import { NewsletterSection } from '../components/home/NewsletterSection';
 export const HomePage: React.FC = () => {
   // Brand data - would be fetched from API in a real app
   const brands = {
+    imported: [
+      { id: 'dragon-pharma', name: 'Dragon Pharma', logo: 'https://via.placeholder.com/150x100?text=Dragon+Pharma' },
+      { id: 'universal-nutrition', name: 'Universal Nutrition', logo: 'https://via.placeholder.com/150x100?text=Universal+Nutrition' },
+      { id: 'dymatize', name: 'Dymatize', logo: 'https://via.placeholder.com/150x100?text=Dymatize' },
+      { id: 'optimum', name: 'Optimum Nutrition', logo: 'https://via.placeholder.com/150x100?text=Optimum' },
+      { id: 'muscletech', name: 'MuscleTech', logo: 'https://via.placeholder.com/150x100?text=MuscleTech' },
+    ],
     premium: [
       { id: 'king-pharma', name: 'King Pharma', logo: 'https://via.placeholder.com/150x100?text=King+Pharma' },
       { id: 'cooper-pharma', name: 'Cooper Pharma', logo: 'https://via.placeholder.com/150x100?text=Cooper+Pharma' },
@@ -33,6 +40,13 @@ export const HomePage: React.FC = () => {
       { id: 'bio-pharma', name: 'Bio Pharma', logo: 'https://via.placeholder.com/150x100?text=Bio+Pharma' },
       { id: 'life-pharma', name: 'Life Pharma', logo: 'https://via.placeholder.com/150x100?text=Life+Pharma' },
       { id: 'max-power', name: 'Max Power', logo: 'https://via.placeholder.com/150x100?text=Max+Power' },
+    ],
+    various: [
+      { id: 'vitafor', name: 'Vitafor', logo: 'https://via.placeholder.com/150x100?text=Vitafor' },
+      { id: 'integral-medica', name: 'Integral Médica', logo: 'https://via.placeholder.com/150x100?text=Integral+Medica' },
+      { id: 'midway', name: 'Midway', logo: 'https://via.placeholder.com/150x100?text=Midway' },
+      { id: 'probiotica', name: 'Probiótica', logo: 'https://via.placeholder.com/150x100?text=Probiotica' },
+      { id: 'max-titanium', name: 'Max Titanium', logo: 'https://via.placeholder.com/150x100?text=Max+Titanium' },
     ],
     categories: [
       { id: 'cbd', name: 'CBD', icon: <Pill className="w-8 h-8 mb-2" /> },
@@ -156,8 +170,10 @@ export const HomePage: React.FC = () => {
       
       {/* Brands Section */}
       <BrandsSection 
+        imported={brands.imported}
         premium={brands.premium}
         national={brands.national}
+        various={brands.various}
         categories={brands.categories}
       />
       
