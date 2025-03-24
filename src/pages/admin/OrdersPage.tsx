@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { AdminLayout } from '@/components/admin/layout/AdminLayout';
 import { OrdersList } from '@/components/admin/orders/OrdersList';
 import { OrdersFilter } from '@/components/admin/orders/OrdersFilter';
-import { CardDescription, CardTitle } from '@/components/ui/card';
+import { OrderFilters } from '@/types/orders';
 
 export const OrdersPage: React.FC = () => {
-  const [activeFilters, setActiveFilters] = useState({
+  const [activeFilters, setActiveFilters] = useState<OrderFilters>({
     status: 'all',
     period: '30days'
   });

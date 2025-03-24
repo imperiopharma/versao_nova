@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/table";
 import { OrderDetailsDialog } from './OrderDetailsDialog';
 import { OrderTableRow } from './OrderTableRow';
-import { formatCurrency, formatDate, getStatusConfig } from '@/lib/formatters';
+import { Order, OrderFilters } from '@/types/orders';
 
 // Dados de exemplo para desenvolvimento
-const mockOrders = [
+const mockOrders: Order[] = [
   { 
     id: '12345',
     orderNumber: 'PED-12345',
@@ -126,18 +126,15 @@ const mockOrders = [
 ];
 
 interface OrdersListProps {
-  activeFilters: {
-    status: string;
-    period: string;
-  };
+  activeFilters: OrderFilters;
 }
 
 export const OrdersList: React.FC<OrdersListProps> = ({ activeFilters }) => {
-  const [orders, setOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = (order: Order) => {
     setSelectedOrder(order);
     setIsOrderDetailsOpen(true);
   };

@@ -11,9 +11,10 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency, formatDate, getStatusConfig } from '@/lib/formatters';
+import { Order } from '@/types/orders';
 
 interface OrderSummaryProps {
-  order: any;
+  order: Order;
 }
 
 export const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {

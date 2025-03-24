@@ -11,6 +11,7 @@ import { OrderSummary } from './OrderSummary';
 import { OrderActions } from './OrderActions';
 import { OrderMessage } from './OrderMessage';
 import { useOrderMessage } from './useOrderMessage';
+import { Order, OrderStatus } from '@/types/orders';
 
 // Default template - we'll get this from settings in a real implementation
 const defaultTemplate = `*PEDIDO {orderNumber}*
@@ -31,10 +32,10 @@ Email: {customer.email}
 *TOTAL:* {total}`;
 
 interface OrderDetailsDialogProps {
-  order: any;
+  order: Order;
   isOpen: boolean;
   onClose: () => void;
-  onStatusChange: (newStatus: string) => void;
+  onStatusChange: (newStatus: OrderStatus) => void;
 }
 
 export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({ 

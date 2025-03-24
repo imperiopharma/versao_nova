@@ -23,11 +23,12 @@ import {
   Trash2 
 } from "lucide-react";
 import { formatCurrency, formatDate, getStatusConfig } from '@/lib/formatters';
+import { Order, OrderStatus } from '@/types/orders';
 
 interface OrderTableRowProps {
-  order: any;
-  onViewOrder: (order: any) => void;
-  onChangeOrderStatus: (orderId: string, newStatus: string) => void;
+  order: Order;
+  onViewOrder: (order: Order) => void;
+  onChangeOrderStatus: (orderId: string, newStatus: OrderStatus) => void;
   onDeleteOrder: (orderId: string) => void;
 }
 

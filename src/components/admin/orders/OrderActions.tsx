@@ -16,10 +16,11 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { Order, OrderStatus } from '@/types/orders';
 
 interface OrderActionsProps {
-  order: any;
-  onStatusChange: (newStatus: string) => void;
+  order: Order;
+  onStatusChange: (newStatus: OrderStatus) => void;
   onViewOrderMessage: () => void;
 }
 

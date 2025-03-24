@@ -1,4 +1,6 @@
 
+import { OrderStatus, StatusConfig } from '@/types/orders';
+
 // Format currency to Brazilian Real (BRL)
 export const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -20,7 +22,7 @@ export const formatDate = (dateString: string) => {
 };
 
 // Get status configuration based on status code
-export const getStatusConfig = (status: string) => {
+export const getStatusConfig = (status: OrderStatus): StatusConfig => {
   switch (status) {
     case 'pending':
       return { color: 'bg-yellow-100 text-yellow-800', text: 'Aguardando Pagamento' };
