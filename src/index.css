@@ -104,7 +104,7 @@
   
   /* Utility classes */
   .glass-effect {
-    @apply bg-white/70 backdrop-blur-md;
+    @apply bg-white/90 backdrop-blur-md;
   }
   
   .text-balance {
@@ -190,6 +190,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* Text shadow for better readability on images */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Text on dark backgrounds */
+  .text-on-dark {
+    @apply text-white text-shadow;
+  }
 }
 
 @layer components {
@@ -223,5 +233,15 @@
   
   .input-mask {
     @apply w-full px-3 py-2 bg-white border border-input rounded-md shadow-sm focus:border-imperio-navy/50 focus:ring focus:ring-imperio-navy/20 focus:ring-opacity-50;
+  }
+  
+  /* Enhanced card styles */
+  .feature-card {
+    @apply p-6 rounded-xl bg-white shadow-subtle border border-gray-100 hover:shadow-elevation transition-all;
+  }
+  
+  /* Banner content container */
+  .banner-content {
+    @apply bg-imperio-navy/70 p-5 rounded-lg backdrop-blur-sm shadow-lg max-w-lg;
   }
 }

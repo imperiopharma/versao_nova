@@ -7,9 +7,10 @@ import { useLocation } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
+  withPadding?: boolean;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, withPadding = true }) => {
   const location = useLocation();
   
   // Skip mobile navbar on checkout pages
@@ -23,7 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <main className="flex-grow pt-20">
+      <main className={`flex-grow pt-20 ${withPadding ? 'pb-8' : ''}`}>
         {children}
       </main>
       

@@ -165,7 +165,7 @@ export const HomePage: React.FC = () => {
       {/* Hero Banner */}
       <HeroBanner slides={heroSlides} />
       
-      {/* Promotional Cards - Right after banner as requested */}
+      {/* Promotional Cards - Right after banner */}
       <PromoCardsSection cards={promoCards} />
       
       {/* Brands Section */}
@@ -177,7 +177,7 @@ export const HomePage: React.FC = () => {
         categories={brands.categories}
       />
       
-      {/* Flash Sale Section - Moved down as requested */}
+      {/* Flash Sale Section */}
       <FlashSaleSection items={flashSaleItems} />
       
       {/* Newsletter & Social Media */}

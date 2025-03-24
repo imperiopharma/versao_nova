@@ -28,7 +28,7 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
             <Link 
               key={card.id} 
               to={card.link} 
-              className={`p-4 flex flex-col rounded-xl ${card.color} hover:shadow-md transition-shadow`}
+              className={`p-4 flex flex-col rounded-xl ${card.color} hover:shadow-md transition-shadow border border-gray-100`}
             >
               <div className="text-imperio-navy mb-2">
                 {card.icon}

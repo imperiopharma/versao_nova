@@ -24,6 +24,27 @@ interface BrandsSectionProps {
 }
 
 export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national, imported, various, categories }) => {
+  const renderBrandGrid = (brands: Brand[], title: string) => (
+    <div className="mb-6">
+      <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">{title}</h3>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        {brands.map((brand) => (
+          <Link 
+            key={brand.id} 
+            to={`/marca/${brand.id}`}
+            className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
+          >
+            <img 
+              src={brand.logo} 
+              alt={brand.name} 
+              className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <section className="py-8 bg-white">
       <div className="section-container">
@@ -39,84 +60,16 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
         </div>
         
         {/* Imported Brands */}
-        <div className="mb-6">
-          <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Importadas</h3>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {imported.map((brand) => (
-              <Link 
-                key={brand.id} 
-                to={`/marca/${brand.id}`}
-                className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
+        {renderBrandGrid(imported, "Marcas Importadas")}
         
         {/* Premium Brands */}
-        <div className="mb-6">
-          <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Premium</h3>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {premium.map((brand) => (
-              <Link 
-                key={brand.id} 
-                to={`/marca/${brand.id}`}
-                className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
+        {renderBrandGrid(premium, "Marcas Premium")}
         
         {/* National Brands */}
-        <div className="mb-6">
-          <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Marcas Nacionais</h3>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {national.map((brand) => (
-              <Link 
-                key={brand.id} 
-                to={`/marca/${brand.id}`}
-                className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
+        {renderBrandGrid(national, "Marcas Nacionais")}
         
         {/* Various Brands */}
-        <div className="mb-6">
-          <h3 className="text-md font-medium text-imperio-navy mb-3 border-b pb-1">Diversos</h3>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {various.map((brand) => (
-              <Link 
-                key={brand.id} 
-                to={`/marca/${brand.id}`}
-                className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-12 sm:max-h-16 transition-transform group-hover:scale-105" 
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
+        {renderBrandGrid(various, "Diversos")}
         
         {/* Categories */}
         <div>
@@ -131,7 +84,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
                 <div className="text-imperio-navy">
                   {category.icon}
                 </div>
-                <h4 className="text-xs sm:text-sm font-medium">{category.name}</h4>
+                <h4 className="text-xs sm:text-sm font-medium mt-2">{category.name}</h4>
               </Link>
             ))}
           </div>
