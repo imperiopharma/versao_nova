@@ -70,7 +70,7 @@ export const CartPage: React.FC = () => {
     }
   };
   
-  const item = {
+  const itemAnimationVariant = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 }
   };
@@ -144,10 +144,10 @@ export const CartPage: React.FC = () => {
               initial="hidden"
               animate="show"
             >
-              {items.map((item, index) => (
+              {items.map((cartItem, index) => (
                 <motion.div 
-                  key={item.id}
-                  variants={item}
+                  key={cartItem.id}
+                  variants={itemAnimationVariant}
                   className="bg-white rounded-xl shadow-subtle p-5 flex flex-col sm:flex-row gap-5 border border-white hover:shadow-md transition-all duration-300 group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-imperio-extra-light-navy/0 to-imperio-extra-light-navy/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -155,18 +155,18 @@ export const CartPage: React.FC = () => {
                   <div className="flex-shrink-0 relative">
                     <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-2 shadow-sm">
                       <img 
-                        src={item.image || 'https://via.placeholder.com/100'} 
-                        alt={item.name}
+                        src={cartItem.image || 'https://via.placeholder.com/100'} 
+                        alt={cartItem.name}
                         className="w-20 h-20 object-cover rounded-md mx-auto"
                       />
                     </div>
                   </div>
                   
                   <div className="flex-grow">
-                    <h3 className="font-medium text-lg">{item.name}</h3>
+                    <h3 className="font-medium text-lg">{cartItem.name}</h3>
                     <p className="text-sm text-gray-500 flex items-center">
                       <Tag size={14} className="mr-1 text-imperio-navy/60" />
-                      {item.brand}
+                      {cartItem.brand}
                     </p>
                     
                     <div className="flex flex-wrap items-center justify-between mt-4 gap-3">
@@ -175,21 +175,21 @@ export const CartPage: React.FC = () => {
                           size="icon"
                           variant="outline"
                           className="h-8 w-8 rounded-l-md rounded-r-none border-r-0 border-imperio-navy/20 hover:bg-imperio-extra-light-navy hover:text-imperio-navy"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
+                          onClick={() => updateQuantity(cartItem.id, cartItem.quantity - 1)}
+                          disabled={cartItem.quantity <= 1}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
                         
                         <div className="h-8 px-3 min-w-[3rem] flex items-center justify-center border border-imperio-navy/20 bg-white text-imperio-navy font-medium">
-                          {item.quantity}
+                          {cartItem.quantity}
                         </div>
                         
                         <Button
                           size="icon"
                           variant="outline"
                           className="h-8 w-8 rounded-r-md rounded-l-none border-l-0 border-imperio-navy/20 hover:bg-imperio-extra-light-navy hover:text-imperio-navy"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(cartItem.id, cartItem.quantity + 1)}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
@@ -197,13 +197,13 @@ export const CartPage: React.FC = () => {
                       
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          {item.originalPrice && item.originalPrice > item.price && (
+                          {cartItem.originalPrice && cartItem.originalPrice > cartItem.price && (
                             <span className="text-sm text-gray-500 line-through block">
-                              {item.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                              {cartItem.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                             </span>
                           )}
                           <span className="font-bold text-lg text-imperio-navy">
-                            {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                            {(cartItem.price * cartItem.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                           </span>
                         </div>
                         
@@ -211,7 +211,7 @@ export const CartPage: React.FC = () => {
                           size="icon"
                           variant="outline"
                           className="h-9 w-9 text-imperio-red hover:bg-imperio-red/10 hover:text-imperio-red border-imperio-red/20 rounded-full transition-all"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(cartItem.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
