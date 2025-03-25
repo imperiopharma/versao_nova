@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -17,18 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   Edit, 
   MoreVertical, 
   Trash2, 
-  Search, 
   Eye, 
-  FileImage, 
-  Loader2 
+  FileImage
 } from "lucide-react";
 import { ProductDialog } from './ProductDialog';
-import { useToast } from '@/hooks/use-toast';
+import { useDataList } from '@/hooks/useDataList';
+import { SearchBar } from '../common/SearchBar';
 
 // Dados de exemplo para desenvolvimento
 const mockProducts = [
@@ -89,17 +86,7 @@ const mockProducts = [
   },
 ];
 
-interface ProductsListProps {
-  onOpenDialog?: () => void;
-}
-
-export const ProductsList: React.FC<ProductsListProps> = ({ onOpenDialog }) => {
-  const [products, setProducts] = useState(mockProducts);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
-  const { toast } = useToast();
-  
+export const ProductsList: React.FC = () => {
   // Formatação de moeda
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -108,44 +95,28 @@ export const ProductsList: React.FC<ProductsListProps> = ({ onOpenDialog }) => {
     }).format(value);
   };
   
-  const handleEditProduct = (product: any) => {
-    setSelectedProduct(product);
-    setIsProductDialogOpen(true);
-  };
-  
-  const handleDeleteProduct = (productId: number) => {
-    // Na implementação real, aqui seria uma chamada à API
-    setProducts(products.filter(product => product.id !== productId));
-    
-    toast({
-      title: "Produto excluído",
-      description: "O produto foi excluído com sucesso.",
-    });
-  };
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-  
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.sku.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const {
+    filteredData: filteredProducts,
+    searchQuery,
+    selectedItem: selectedProduct,
+    isDialogOpen: isProductDialogOpen,
+    handleEditItem: handleEditProduct,
+    handleDeleteItem: handleDeleteProduct,
+    handleSearchChange,
+    setIsDialogOpen: setIsProductDialogOpen,
+    setSelectedItem: setSelectedProduct
+  } = useDataList({
+    initialData: mockProducts,
+    searchFields: ['name', 'brand', 'sku']
+  });
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Buscar produtos..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
-      </div>
+      <SearchBar 
+        placeholder="Buscar produtos..." 
+        value={searchQuery} 
+        onChange={handleSearchChange} 
+      />
       
       <div className="rounded-md border">
         <Table>

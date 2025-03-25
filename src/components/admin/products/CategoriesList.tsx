@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -17,16 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   Edit, 
   MoreVertical, 
   Trash2, 
-  Search,
   MessageSquare
 } from "lucide-react";
 import { CategoryDialog } from './CategoryDialog';
-import { useToast } from '@/hooks/use-toast';
+import { useDataList } from '@/hooks/useDataList';
+import { SearchBar } from '../common/SearchBar';
 
 // Dados de exemplo para desenvolvimento
 const mockCategories = [
@@ -65,49 +63,28 @@ const mockCategories = [
 ];
 
 export const CategoriesList: React.FC = () => {
-  const [categories, setCategories] = useState(mockCategories);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
-  const { toast } = useToast();
-  
-  const handleEditCategory = (category: any) => {
-    setSelectedCategory(category);
-    setIsCategoryDialogOpen(true);
-  };
-  
-  const handleDeleteCategory = (categoryId: number) => {
-    // Na implementação real, aqui seria uma chamada à API
-    setCategories(categories.filter(category => category.id !== categoryId));
-    
-    toast({
-      title: "Categoria excluída",
-      description: "A categoria foi excluída com sucesso.",
-    });
-  };
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-  
-  const filteredCategories = categories.filter(category => 
-    category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const {
+    filteredData: filteredCategories,
+    searchQuery,
+    selectedItem: selectedCategory,
+    isDialogOpen: isCategoryDialogOpen,
+    handleEditItem: handleEditCategory,
+    handleDeleteItem: handleDeleteCategory,
+    handleSearchChange,
+    setIsDialogOpen: setIsCategoryDialogOpen,
+    setSelectedItem: setSelectedCategory
+  } = useDataList({
+    initialData: mockCategories,
+    searchFields: ['name', 'description']
+  });
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Buscar categorias..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
-      </div>
+      <SearchBar 
+        placeholder="Buscar categorias..." 
+        value={searchQuery} 
+        onChange={handleSearchChange} 
+      />
       
       <div className="rounded-md border">
         <Table>

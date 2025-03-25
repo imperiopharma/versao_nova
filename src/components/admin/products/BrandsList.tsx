@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -17,17 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   Edit, 
   MoreVertical, 
   Trash2, 
-  Search,
   Image,
   MessageSquare
 } from "lucide-react";
 import { BrandDialog } from './BrandDialog';
-import { useToast } from '@/hooks/use-toast';
+import { useDataList } from '@/hooks/useDataList';
+import { SearchBar } from '../common/SearchBar';
 
 // Dados de exemplo para desenvolvimento
 const mockBrands = [
@@ -69,54 +67,29 @@ const mockBrands = [
   },
 ];
 
-interface BrandsListProps {
-  onOpenDialog?: () => void;
-}
-
-export const BrandsList: React.FC<BrandsListProps> = ({ onOpenDialog }) => {
-  const [brands, setBrands] = useState(mockBrands);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
-  const [selectedBrand, setSelectedBrand] = useState<any | null>(null);
-  const { toast } = useToast();
-  
-  const handleEditBrand = (brand: any) => {
-    setSelectedBrand(brand);
-    setIsBrandDialogOpen(true);
-  };
-  
-  const handleDeleteBrand = (brandId: number) => {
-    // Na implementação real, aqui seria uma chamada à API
-    setBrands(brands.filter(brand => brand.id !== brandId));
-    
-    toast({
-      title: "Marca excluída",
-      description: "A marca foi excluída com sucesso.",
-    });
-  };
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-  
-  const filteredBrands = brands.filter(brand => 
-    brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    brand.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+export const BrandsList: React.FC = () => {
+  const {
+    filteredData: filteredBrands,
+    searchQuery,
+    selectedItem: selectedBrand,
+    isDialogOpen: isBrandDialogOpen,
+    handleEditItem: handleEditBrand,
+    handleDeleteItem: handleDeleteBrand,
+    handleSearchChange,
+    setIsDialogOpen: setIsBrandDialogOpen,
+    setSelectedItem: setSelectedBrand
+  } = useDataList({
+    initialData: mockBrands,
+    searchFields: ['name', 'description']
+  });
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Buscar marcas..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
-      </div>
+      <SearchBar 
+        placeholder="Buscar marcas..." 
+        value={searchQuery} 
+        onChange={handleSearchChange} 
+      />
       
       <div className="rounded-md border">
         <Table>
