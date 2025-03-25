@@ -10,7 +10,6 @@ import { HeroBanner } from '../components/home/HeroBanner';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { PromoCardsSection } from '../components/home/PromoCardsSection';
 import { NewsletterSection } from '../components/home/NewsletterSection';
-import { FlashSaleSection } from '../components/home/FlashSaleSection';
 
 export const HomePage: React.FC = () => {
   const [brands, setBrands] = useState<any>({
@@ -134,42 +133,6 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Produtos para o FlashSale
-  const flashSaleItems = [
-    {
-      id: 'combo1',
-      name: 'Combo Emagrecedor Premium',
-      brand: 'MultiHealth',
-      originalPrice: 299.90,
-      price: 249.90,
-      image: 'https://via.placeholder.com/300x300?text=Combo+1'
-    },
-    {
-      id: 'combo2',
-      name: 'Kit Vitaminas Essenciais',
-      brand: 'VitaPlus',
-      originalPrice: 179.90,
-      price: 149.90,
-      image: 'https://via.placeholder.com/300x300?text=Combo+2'
-    },
-    {
-      id: 'combo3',
-      name: 'Pacote Saúde Total',
-      brand: 'HealthForce',
-      originalPrice: 359.90,
-      price: 299.90,
-      image: 'https://via.placeholder.com/300x300?text=Combo+3'
-    },
-    {
-      id: 'combo4',
-      name: 'Proteína Premium + Creatina',
-      brand: 'PowerFit',
-      originalPrice: 249.90,
-      price: 199.90,
-      image: 'https://via.placeholder.com/300x300?text=Combo+4'
-    }
-  ];
-
   // Container animation variants
   const containerAnimation = {
     hidden: { opacity: 0 },
@@ -193,32 +156,12 @@ export const HomePage: React.FC = () => {
         <HeroBanner slides={heroSlides} />
       </motion.div>
       
-      {/* Promotional Cards com efeito de stagger */}
-      <motion.div
-        variants={containerAnimation}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-        <PromoCardsSection cards={promoCards} />
-      </motion.div>
-      
-      {/* Flash Sales Section */}
+      {/* Brands Section com animação suave - Movida para cima */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-      >
-        <FlashSaleSection items={flashSaleItems} />
-      </motion.div>
-      
-      {/* Brands Section com animação suave */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
       >
         <BrandsSection 
           imported={brands.imported}
@@ -227,6 +170,16 @@ export const HomePage: React.FC = () => {
           various={brands.various}
           categories={brands.categories}
         />
+      </motion.div>
+      
+      {/* Promotional Cards com efeito de stagger */}
+      <motion.div
+        variants={containerAnimation}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        <PromoCardsSection cards={promoCards} />
       </motion.div>
       
       {/* Newsletter Section com animação de fade-in */}
