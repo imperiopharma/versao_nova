@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { User, Phone, Mail, CreditCard, Shield, Sparkles } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { InputMask } from '@/components/ui/input-mask';
+import { User, Phone, Mail, CreditCard } from 'lucide-react';
 import { CustomerData } from '@/contexts/CheckoutContext';
+import { FormInput } from './FormInput';
+import { FormInputMask } from './FormInputMask';
+import { SectionHeader } from './SectionHeader';
+import { SecurityBadge } from './SecurityBadge';
 
 interface CustomerInfoFormProps {
   customerData: CustomerData;
@@ -39,136 +40,66 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         ))}
       </div>
       
-      <div className="flex items-center gap-3 mb-6 relative z-10">
-        <div className="bg-gradient-to-r from-imperio-navy to-imperio-light-navy p-3 rounded-xl shadow-md relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
-          <User size={22} className="text-white relative z-10" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold bg-gradient-to-r from-imperio-navy to-imperio-light-navy bg-clip-text text-transparent">
-            Informações Pessoais
-          </h2>
-          <p className="text-xs text-imperio-navy/60 mt-1">Preencha seus dados para finalizar seu pedido</p>
-        </div>
-      </div>
+      <SectionHeader 
+        icon={<User />}
+        title="Informações Pessoais"
+        description="Preencha seus dados para finalizar seu pedido"
+      />
       
-      {/* Badge de segurança com efeito de brilho */}
-      <div className="absolute top-6 right-6 bg-gradient-to-r from-imperio-extra-light-navy/80 to-imperio-extra-light-navy/30 backdrop-blur-sm rounded-full px-3 py-1 inline-flex items-center gap-1 border border-white/30 shadow-md relative overflow-hidden group z-10">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-[200%] animate-[shimmer_2s_infinite] pointer-events-none"></div>
-        <Shield size={14} className="text-imperio-navy" />
-        <span className="text-xs text-imperio-navy font-medium">Dados protegidos</span>
-        
-        <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-      </div>
+      <SecurityBadge />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
         <div className="md:col-span-2">
-          <Label htmlFor="name" className="mb-2 block font-medium text-imperio-navy/80 flex items-center">
-            <User size={16} className="mr-2 text-imperio-navy/60" />
-            Nome Completo *
-          </Label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-imperio-navy/40">
-              <User size={18} />
-            </div>
-            <Input
-              id="name"
-              placeholder="Digite seu nome completo"
-              className={`pl-10 border-imperio-navy/20 bg-white shadow-md rounded-xl transition-all hover:border-imperio-navy/40 focus:ring-imperio-navy/30 relative overflow-hidden ${formErrors.name ? 'border-imperio-red' : ''}`}
-              value={customerData.name}
-              onChange={(e) => handleChangeInput('name', e.target.value)}
-            />
-            <span className="absolute inset-0 bg-gradient-to-r from-imperio-extra-light-navy to-transparent opacity-10 rounded-xl pointer-events-none"></span>
-          </div>
-          {formErrors.name && (
-            <p className="text-imperio-red text-sm mt-1 flex items-center">
-              <Sparkles size={14} className="mr-1 text-imperio-red" />
-              {formErrors.name}
-            </p>
-          )}
+          <FormInput
+            id="name"
+            label="Nome Completo *"
+            icon={<User size={16} className="mr-2 text-imperio-navy/60" />}
+            placeholder="Digite seu nome completo"
+            value={customerData.name}
+            onChange={(e) => handleChangeInput('name', e.target.value)}
+            error={formErrors.name}
+          />
         </div>
         
         <div>
-          <Label htmlFor="cpf" className="mb-2 block font-medium text-imperio-navy/80 flex items-center">
-            <CreditCard size={16} className="mr-2 text-imperio-navy/60" />
-            CPF *
-          </Label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-imperio-navy/40">
-              <CreditCard size={18} />
-            </div>
-            <InputMask
-              id="cpf"
-              placeholder="000.000.000-00"
-              mask="999.999.999-99"
-              className={`pl-10 border-imperio-navy/20 bg-white shadow-md rounded-xl transition-all hover:border-imperio-navy/40 focus:ring-imperio-navy/30 relative overflow-hidden ${formErrors.cpf ? 'border-imperio-red' : ''}`}
-              value={customerData.cpf}
-              onValueChange={(value) => handleChangeInput('cpf', value)}
-            />
-            <span className="absolute inset-0 bg-gradient-to-r from-imperio-extra-light-navy to-transparent opacity-10 rounded-xl pointer-events-none"></span>
-          </div>
-          {formErrors.cpf && (
-            <p className="text-imperio-red text-sm mt-1 flex items-center">
-              <Sparkles size={14} className="mr-1 text-imperio-red" />
-              {formErrors.cpf}
-            </p>
-          )}
+          <FormInputMask
+            id="cpf"
+            label="CPF *"
+            icon={<CreditCard size={16} className="mr-2 text-imperio-navy/60" />}
+            placeholder="000.000.000-00"
+            mask="999.999.999-99"
+            value={customerData.cpf}
+            onValueChange={(value) => handleChangeInput('cpf', value)}
+            error={formErrors.cpf}
+          />
         </div>
         
         <div className="relative">
           <div className="absolute -z-10 w-32 h-32 bg-blue-500/5 rounded-full blur-xl -right-10 -bottom-10"></div>
-          <Label htmlFor="whatsapp" className="mb-2 block font-medium text-imperio-navy/80 flex items-center">
-            <Phone size={16} className="mr-2 text-imperio-navy/60" />
-            WhatsApp *
-          </Label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-imperio-navy/40">
-              <Phone size={18} />
-            </div>
-            <InputMask
-              id="whatsapp"
-              placeholder="(00) 00000-0000"
-              mask="(99) 99999-9999"
-              className={`pl-10 border-imperio-navy/20 bg-white shadow-md rounded-xl transition-all hover:border-imperio-navy/40 focus:ring-imperio-navy/30 relative overflow-hidden ${formErrors.whatsapp ? 'border-imperio-red' : ''}`}
-              value={customerData.whatsapp}
-              onValueChange={(value) => handleChangeInput('whatsapp', value)}
-            />
-            <span className="absolute inset-0 bg-gradient-to-r from-imperio-extra-light-navy to-transparent opacity-10 rounded-xl pointer-events-none"></span>
-          </div>
-          {formErrors.whatsapp && (
-            <p className="text-imperio-red text-sm mt-1 flex items-center">
-              <Sparkles size={14} className="mr-1 text-imperio-red" />
-              {formErrors.whatsapp}
-            </p>
-          )}
+          <FormInputMask
+            id="whatsapp"
+            label="WhatsApp *"
+            icon={<Phone size={16} className="mr-2 text-imperio-navy/60" />}
+            placeholder="(00) 00000-0000"
+            mask="(99) 99999-9999"
+            value={customerData.whatsapp}
+            onValueChange={(value) => handleChangeInput('whatsapp', value)}
+            error={formErrors.whatsapp}
+          />
         </div>
         
         <div className="relative">
           <div className="absolute -z-10 w-32 h-32 bg-red-500/5 rounded-full blur-xl -left-10 -bottom-10"></div>
-          <Label htmlFor="email" className="mb-2 block font-medium text-imperio-navy/80 flex items-center">
-            <Mail size={16} className="mr-2 text-imperio-navy/60" />
-            E-mail *
-          </Label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-imperio-navy/40">
-              <Mail size={18} />
-            </div>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              className={`pl-10 border-imperio-navy/20 bg-white shadow-md rounded-xl transition-all hover:border-imperio-navy/40 focus:ring-imperio-navy/30 relative overflow-hidden ${formErrors.email ? 'border-imperio-red' : ''}`}
-              value={customerData.email}
-              onChange={(e) => handleChangeInput('email', e.target.value)}
-            />
-            <span className="absolute inset-0 bg-gradient-to-r from-imperio-extra-light-navy to-transparent opacity-10 rounded-xl pointer-events-none"></span>
-          </div>
-          {formErrors.email && (
-            <p className="text-imperio-red text-sm mt-1 flex items-center">
-              <Sparkles size={14} className="mr-1 text-imperio-red" />
-              {formErrors.email}
-            </p>
-          )}
+          <FormInput
+            id="email"
+            label="E-mail *"
+            icon={<Mail size={16} className="mr-2 text-imperio-navy/60" />}
+            placeholder="seu@email.com"
+            value={customerData.email}
+            onChange={(e) => handleChangeInput('email', e.target.value)}
+            error={formErrors.email}
+            type="email"
+          />
         </div>
       </div>
       
