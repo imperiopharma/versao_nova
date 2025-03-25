@@ -21,7 +21,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   const [loadingCep, setLoadingCep] = useState(false);
 
   const fetchAddressFromCep = async (cep: string) => {
-    // Strip non-numeric characters
+    // Remove caracteres não numéricos
     const numericCep = cep.replace(/\D/g, '');
     
     if (numericCep.length !== 8) {
@@ -35,7 +35,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       const data = await response.json();
       
       if (data.erro) {
-        // Handle form errors in parent component
+        // Tratar erros de formulário no componente pai
         return;
       }
       
@@ -45,7 +45,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       handleChangeInput('state', data.uf);
       
     } catch (error) {
-      console.error('Error fetching address:', error);
+      console.error('Erro ao buscar endereço:', error);
     } finally {
       setLoadingCep(false);
     }
