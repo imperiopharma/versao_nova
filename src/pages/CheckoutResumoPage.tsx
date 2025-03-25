@@ -1,21 +1,15 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { useCheckout } from '../contexts/CheckoutContext';
 import { useCart } from '../contexts/CartContext';
 import { CheckoutSteps } from '../components/checkout/CheckoutSteps';
-import { ChevronLeft, ChevronRight, Edit2, ShieldCheck, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription, 
-  DialogFooter 
-} from '@/components/ui/dialog';
+import { ShippingAddressCard } from '../components/checkout/ShippingAddressCard';
+import { ShippingMethodCard } from '../components/checkout/ShippingMethodCard';
+import { OrderItemsCard } from '../components/checkout/OrderItemsCard';
+import { InsuranceOptionCard } from '../components/checkout/InsuranceOptionCard';
+import { CheckoutNavigation } from '../components/checkout/CheckoutNavigation';
 
 export const CheckoutResumoPage: React.FC = () => {
   const { 
@@ -34,7 +28,6 @@ export const CheckoutResumoPage: React.FC = () => {
     setHasInsurance 
   } = useCart();
   
-  const [showInsuranceDetails, setShowInsuranceDetails] = React.useState(false);
   const navigate = useNavigate();
   
   // Rolar para o topo quando a página carregar
@@ -48,19 +41,6 @@ export const CheckoutResumoPage: React.FC = () => {
       navigate('/checkout/dados');
     }
   }, [customerData, navigate, shippingMethod]);
-  
-  const getShippingMethodDisplay = () => {
-    switch (shippingMethod) {
-      case 'sedex':
-        return 'Sedex';
-      case 'pac':
-        return 'PAC';
-      case 'transportadora':
-        return 'Transportadora';
-      default:
-        return 'Não selecionado';
-    }
-  };
   
   const handleContinue = () => {
     setCheckoutStep(4);
@@ -77,228 +57,40 @@ export const CheckoutResumoPage: React.FC = () => {
         <h1 className="text-3xl font-semibold text-imperio-navy mb-8 text-center">Resumo do Pedido</h1>
         
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-semibold text-imperio-navy">Endereço de Entrega</h2>
-              <Button variant="ghost" size="sm" className="text-imperio-navy" asChild>
-                <Link to="/checkout/dados">
-                  <Edit2 size={18} className="mr-2" />
-                  Editar
-                </Link>
-              </Button>
-            </div>
-            
-            <div className="bg-imperio-extra-light-navy rounded-lg p-4 border border-imperio-navy/10">
-              <p className="font-medium">{customerData.name}</p>
-              <p>{customerData.street}, {customerData.number}</p>
-              {customerData.complement && <p>{customerData.complement}</p>}
-              <p>{customerData.neighborhood}, {customerData.city} - {customerData.state}</p>
-              <p>CEP: {customerData.cep}</p>
-              <div className="mt-3 pt-3 border-t border-imperio-navy/10">
-                <p>CPF: {customerData.cpf}</p>
-                <p>WhatsApp: {customerData.whatsapp}</p>
-                <p>Email: {customerData.email}</p>
-              </div>
-            </div>
-          </div>
+          {/* Endereço de Entrega */}
+          <ShippingAddressCard customerData={customerData} />
           
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-semibold text-imperio-navy">Frete escolhido</h2>
-              <Button variant="ghost" size="sm" className="text-imperio-navy" asChild>
-                <Link to="/checkout/dados">
-                  <Edit2 size={18} className="mr-2" />
-                  Editar
-                </Link>
-              </Button>
-            </div>
-            
-            <div className="bg-imperio-extra-light-navy rounded-lg p-4 border border-imperio-navy/10">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">{getShippingMethodDisplay()}</span>
-                <span className="font-semibold text-imperio-navy text-lg">
-                  {shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                </span>
-              </div>
-            </div>
-          </div>
+          {/* Método de Envio */}
+          <ShippingMethodCard 
+            shippingMethod={shippingMethod} 
+            shippingCost={shippingCost} 
+          />
           
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
-            <h2 className="text-xl font-semibold mb-4 text-imperio-navy border-b pb-3">Itens do pedido</h2>
-            
-            <div className="max-h-60 overflow-y-auto mb-4 pr-2">
-              {items.map((item) => (
-                <div 
-                  key={item.id} 
-                  className="flex justify-between py-3 border-b border-gray-100 last:border-b-0"
-                >
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-gray-500">{item.brand}</p>
-                    <p className="text-sm">
-                      Quantidade: {item.quantity} × {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-imperio-navy">
-                      {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex justify-between mb-2">
-                <span>Subtotal</span>
-                <span>{subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-              </div>
-              
-              {discount > 0 && (
-                <div className="flex justify-between mb-2 text-green-600">
-                  <span>Desconto</span>
-                  <span>-{discount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                </div>
-              )}
-              
-              <div className="flex justify-between mb-2">
-                <span>Frete</span>
-                <span>{shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-              </div>
-              
-              {hasInsurance && (
-                <div className="flex justify-between mb-2 text-imperio-navy">
-                  <span>Seguro de Envio (20%)</span>
-                  <span>+{(total * 0.2).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                </div>
-              )}
-              
-              <div className="flex justify-between font-semibold text-lg mt-2 pt-2 border-t border-gray-200">
-                <span>Total</span>
-                <span className="text-imperio-navy font-bold">{(hasInsurance ? total * 1.2 : total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-              </div>
-            </div>
-          </div>
+          {/* Itens do Pedido */}
+          <OrderItemsCard 
+            items={items}
+            subtotal={subtotal}
+            discount={discount}
+            shippingCost={shippingCost}
+            hasInsurance={hasInsurance}
+            total={total}
+          />
           
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-semibold text-imperio-navy">Seguro opcional</h2>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-imperio-navy"
-                onClick={() => setShowInsuranceDetails(true)}
-              >
-                <Info size={18} className="mr-2" />
-                Detalhes
-              </Button>
-            </div>
-            
-            <div className="flex items-start space-x-3 p-4 border border-imperio-navy/20 rounded-lg bg-imperio-extra-light-navy">
-              <Checkbox 
-                id="insurance" 
-                checked={hasInsurance}
-                onCheckedChange={(checked) => setHasInsurance(checked === true)}
-                className="mt-1"
-              />
-              <div>
-                <label htmlFor="insurance" className="font-medium cursor-pointer">
-                  Adicionar Seguro de Envio (+20% do valor total)
-                </label>
-                <p className="text-sm text-gray-600 mt-1">
-                  Protege seu pedido contra extravio ou avarias durante o transporte.
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Opção de Seguro */}
+          <InsuranceOptionCard 
+            hasInsurance={hasInsurance}
+            setHasInsurance={setHasInsurance}
+          />
           
-          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
-            <Button
-              variant="outline"
-              asChild
-              className="sm:order-1 border-imperio-navy text-imperio-navy hover:bg-imperio-extra-light-navy"
-            >
-              <Link to="/checkout/dados">
-                <ChevronLeft size={18} className="mr-2" />
-                Editar Dados
-              </Link>
-            </Button>
-            
-            <Button 
-              onClick={handleContinue}
-              className="bg-imperio-navy hover:bg-imperio-light-navy text-white sm:order-2"
-            >
-              Ir para Pagamento
-              <ChevronRight size={18} className="ml-2" />
-            </Button>
-          </div>
+          {/* Navegação do Checkout */}
+          <CheckoutNavigation 
+            onContinue={handleContinue}
+            backLink="/checkout/dados"
+            backText="Editar Dados"
+            continueText="Ir para Pagamento"
+          />
         </div>
       </div>
-      
-      <Dialog open={showInsuranceDetails} onOpenChange={setShowInsuranceDetails}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Detalhes do Seguro de Envio</DialogTitle>
-            <DialogDescription>
-              Informações sobre a cobertura do seguro para seu pedido.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <ShieldCheck className="text-imperio-navy flex-shrink-0 mt-1" size={20} />
-              <div>
-                <h3 className="font-medium">O que cobre?</h3>
-                <p className="text-sm text-gray-600">
-                  O seguro cobre extravio, roubo, furto e danos físicos às mercadorias durante o transporte.
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <ShieldCheck className="text-imperio-navy flex-shrink-0 mt-1" size={20} />
-              <div>
-                <h3 className="font-medium">Valor do seguro</h3>
-                <p className="text-sm text-gray-600">
-                  O valor do seguro é de 20% sobre o valor total do pedido (subtotal + frete).
-                  Em caso de sinistro, o valor total é reembolsado ou um novo produto é enviado.
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <ShieldCheck className="text-imperio-navy flex-shrink-0 mt-1" size={20} />
-              <div>
-                <h3 className="font-medium">Como acionar?</h3>
-                <p className="text-sm text-gray-600">
-                  Em caso de problemas, entre em contato conosco em até 7 dias após a 
-                  data prevista de entrega, com fotos da embalagem (se recebida danificada) 
-                  ou comprovante de não recebimento.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowInsuranceDetails(false)}
-              className="sm:w-full"
-            >
-              Fechar
-            </Button>
-            <Button 
-              onClick={() => {
-                setHasInsurance(true);
-                setShowInsuranceDetails(false);
-              }}
-              className="bg-imperio-navy hover:bg-imperio-light-navy text-white sm:w-full"
-            >
-              Adicionar Seguro
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
 };
