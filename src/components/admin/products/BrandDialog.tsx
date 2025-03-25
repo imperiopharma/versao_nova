@@ -22,7 +22,8 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
     slug: brand?.slug || '',
     description: brand?.description || '',
     status: brand?.status || 'active',
-    logoUrl: brand?.logoUrl || ''
+    logoUrl: brand?.logoUrl || '',
+    category: brand?.category || 'national'
   };
   
   const { 
@@ -33,6 +34,7 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
   } = useDialogForm({
     initialData,
     entityName: 'Brand',
+    entityId: brand?.id,
     isEditing,
     onClose
   });
@@ -79,6 +81,18 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
         options={[
           { value: 'active', label: 'Ativo' },
           { value: 'inactive', label: 'Inativo' }
+        ]}
+      />
+      
+      <SelectField
+        label="Categoria"
+        value={formData.category}
+        onValueChange={(value) => handleSelectChange('category', value)}
+        options={[
+          { value: 'imported', label: 'Importada' },
+          { value: 'premium', label: 'Premium' },
+          { value: 'national', label: 'Nacional' },
+          { value: 'various', label: 'Diversos' }
         ]}
       />
       

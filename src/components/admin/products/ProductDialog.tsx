@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useProductStore } from '@/hooks/useProductStore';
 import {
   BasicInfoTab,
   PriceStockTab,
@@ -29,10 +30,12 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
   onClose 
 }) => {
   const { toast } = useToast();
+  const { addProduct, updateProduct, brands, categories } = useProductStore();
   const isEditing = !!product;
   
   // Form state
   const [formData, setFormData] = useState({
+    id: product?.id || '',
     name: product?.name || '',
     sku: product?.sku || '',
     brand: product?.brand || '',
@@ -43,6 +46,7 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
     sellingPrice: product?.sellingPrice || '',
     promoPrice: product?.promoPrice || '',
     stock: product?.stock || '',
+    image: product?.image || 'https://via.placeholder.com/300x300?text=Produto'
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -62,8 +66,27 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically save the data to your backend
-    console.log('Saving product:', formData);
+    
+    // Prepara o produto para ser salvo
+    const productToSave = {
+      ...formData,
+      // Converte valores de string para número
+      price: parseFloat(formData.sellingPrice) || 0,
+      originalPrice: parseFloat(formData.costPrice) || 0,
+      sellingPrice: parseFloat(formData.sellingPrice) || 0,
+      costPrice: parseFloat(formData.costPrice) || 0,
+      promoPrice: parseFloat(formData.promoPrice) || 0,
+      stock: parseInt(formData.stock as string) || 0,
+    };
+
+    // Salva no store
+    if (isEditing) {
+      updateProduct(productToSave);
+    } else {
+      addProduct(productToSave);
+    }
+    
+    console.log('Saving product:', productToSave);
     
     toast({
       title: isEditing ? "Produto atualizado" : "Produto adicionado",
@@ -95,6 +118,8 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
                 formData={formData}
                 handleInputChange={handleInputChange}
                 handleSelectChange={handleSelectChange}
+                brands={brands}
+                categories={categories}
               />
             </TabsContent>
             

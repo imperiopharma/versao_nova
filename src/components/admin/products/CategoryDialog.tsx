@@ -32,6 +32,7 @@ export const CategoryDialog: React.FC<CategoryDialogProps> = ({
   } = useDialogForm({
     initialData,
     entityName: 'Category',
+    entityId: category?.id,
     isEditing,
     onClose
   });
