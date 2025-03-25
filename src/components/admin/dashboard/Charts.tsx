@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, Bar, BarChart as RechartsBarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface LineChartProps {
@@ -51,14 +51,14 @@ export const LineChart: React.FC<LineChartProps> = ({ data, loading }) => {
   );
 };
 
-export const BarChart: React.FC<BarChartProps> = ({ data, loading }) => {
+export const ChartBars: React.FC<BarChartProps> = ({ data, loading }) => {
   if (loading) {
     return <Skeleton className="w-full h-full" />;
   }
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
+      <RechartsBarChart
         data={data}
         margin={{
           top: 10,
@@ -79,7 +79,7 @@ export const BarChart: React.FC<BarChartProps> = ({ data, loading }) => {
         />
         <Bar dataKey="receita" name="Receita" fill="#1e40af" radius={[4, 4, 0, 0]} maxBarSize={40} />
         <Bar dataKey="despesa" name="Despesa" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
-      </BarChart>
+      </RechartsBarChart>
     </ResponsiveContainer>
   );
 };

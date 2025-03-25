@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { AdminLayout } from '@/components/admin/layout/AdminLayout';
 import { DashboardStats } from '@/components/admin/dashboard/DashboardStats';
 import { RecentOrdersTable } from '@/components/admin/dashboard/RecentOrdersTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { BarChart, LineChart } from '@/components/admin/dashboard/Charts';
+import { ChartBars, LineChart } from '@/components/admin/dashboard/Charts';
 import { GrowthMetric } from '@/components/admin/dashboard/GrowthMetric';
 
 export const AdminDashboard: React.FC = () => {
@@ -28,24 +27,19 @@ export const AdminDashboard: React.FC = () => {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
-        // Buscar produtos para calcular vendas totais
         const { data: products, error: productsError } = await supabase
           .from('products')
           .select('*');
 
         if (productsError) throw productsError;
 
-        // Aqui vamos calcular métricas reais com base nos produtos
         const totalProducts = products?.length || 0;
         const totalSales = products.reduce((acc, product) => acc + (product.price || 0), 0);
         
-        // Em um sistema real, calcularíamos isso com vendas reais
-        // Por enquanto, vamos usar dados calculados dos produtos disponíveis
-        const revenue = totalSales * 0.75; // Simulando receita como 75% das vendas
-        const totalOrders = Math.round(totalProducts * 1.5); // Simulando pedidos
-        const newCustomers = Math.round(totalOrders * 0.4); // Simulando novos clientes
+        const revenue = totalSales * 0.75;
+        const totalOrders = Math.round(totalProducts * 1.5);
+        const newCustomers = Math.round(totalOrders * 0.4);
         
-        // Criar dados simulados para gráficos baseados em produtos reais
         const monthlySales = generateMonthlySalesData(totalSales);
         const weeklyBalance = generateWeeklyBalanceData(revenue);
         
@@ -72,11 +66,9 @@ export const AdminDashboard: React.FC = () => {
     fetchDashboardData();
   }, []);
 
-  // Gerar dados de vendas mensais baseados no total de vendas real
   const generateMonthlySalesData = (totalSales: number) => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     
-    // Distribuir o valor total ao longo dos meses com alguma variação
     const monthlyTotal = totalSales / 12;
     
     return months.map(month => {
@@ -90,10 +82,9 @@ export const AdminDashboard: React.FC = () => {
     });
   };
 
-  // Gerar dados de balanço semanal baseados na receita real
   const generateWeeklyBalanceData = (totalRevenue: number) => {
     const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-    const weeklyRevenue = totalRevenue / 4; // Distribuir pelo mês
+    const weeklyRevenue = totalRevenue / 4;
     const dailyRevenue = weeklyRevenue / 7;
     
     return days.map(day => {
@@ -108,14 +99,12 @@ export const AdminDashboard: React.FC = () => {
     });
   };
 
-  // Gerar pedidos recentes baseados em produtos reais
   const generateRecentOrders = (products: any[]) => {
     if (!products || products.length === 0) return [];
     
     const statuses = ['pending', 'paid', 'preparing', 'shipped', 'delivered'];
     const recentDates = [];
     
-    // Gerar datas recentes para pedidos
     for (let i = 0; i < 5; i++) {
       const date = new Date();
       date.setDate(date.getDate() - Math.floor(Math.random() * 7));
@@ -149,7 +138,6 @@ export const AdminDashboard: React.FC = () => {
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         
-        {/* Stats Cards */}
         <DashboardStats 
           totalSales={dashboardData.totalSales}
           salesGrowth={dashboardData.salesGrowth}
@@ -162,7 +150,6 @@ export const AdminDashboard: React.FC = () => {
           loading={loading}
         />
         
-        {/* Sales Charts */}
         <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -178,12 +165,11 @@ export const AdminDashboard: React.FC = () => {
               <CardTitle>Balanço Semanal</CardTitle>
             </CardHeader>
             <CardContent className="h-80">
-              <BarChart data={dashboardData.weeklyBalance} loading={loading} />
+              <ChartBars data={dashboardData.weeklyBalance} loading={loading} />
             </CardContent>
           </Card>
         </div>
         
-        {/* Recent Orders and Customer Growth */}
         <div className="grid gap-4 grid-cols-1 md:grid-cols-7">
           <Card className="md:col-span-4">
             <CardHeader>

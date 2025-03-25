@@ -68,3 +68,46 @@ export const formatPhone = (phone: string): string => {
   // Formata como telefone: (00) 00000-0000
   return numericPhone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
 };
+
+// Configurações de status para pedidos
+export const getStatusConfig = (status: string) => {
+  const statusMap: Record<string, { color: string; label: string; bgColor: string }> = {
+    'pending': { 
+      color: 'text-amber-700', 
+      bgColor: 'bg-amber-100', 
+      label: 'Pendente' 
+    },
+    'paid': { 
+      color: 'text-blue-700', 
+      bgColor: 'bg-blue-100', 
+      label: 'Pago' 
+    },
+    'preparing': { 
+      color: 'text-indigo-700', 
+      bgColor: 'bg-indigo-100', 
+      label: 'Preparando' 
+    },
+    'shipped': { 
+      color: 'text-purple-700', 
+      bgColor: 'bg-purple-100', 
+      label: 'Enviado' 
+    },
+    'delivered': { 
+      color: 'text-green-700', 
+      bgColor: 'bg-green-100', 
+      label: 'Entregue' 
+    },
+    'canceled': { 
+      color: 'text-red-700', 
+      bgColor: 'bg-red-100', 
+      label: 'Cancelado' 
+    },
+    'default': { 
+      color: 'text-gray-700', 
+      bgColor: 'bg-gray-100', 
+      label: 'Desconhecido' 
+    }
+  };
+
+  return statusMap[status] || statusMap.default;
+};
