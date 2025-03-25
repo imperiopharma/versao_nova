@@ -59,3 +59,9 @@ export const logoutItem = {
   path: '/admin/logout',
   icon: <LogOut size={18} />
 };
+
+// Credenciais de administrador (para simulação)
+export const adminCredentials = {
+  email: 'admin@exemplo.com',
+  password: 'admin123'
+};

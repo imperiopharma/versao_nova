@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,12 +20,16 @@ import { FreightInfoPage } from "./pages/FreightInfoPage";
 import NotFound from "./pages/NotFound";
 
 // Admin pages
+import { AdminLoginPage } from "./pages/admin/LoginPage";
 import { AdminDashboard } from "./pages/admin/Dashboard";
 import { OrdersPage } from "./pages/admin/OrdersPage";
 import { ProductsPage } from "./pages/admin/ProductsPage";
 import { CustomersPage } from "./pages/admin/CustomersPage";
 import { FinancePage } from "./pages/admin/FinancePage";
 import { SettingsPage } from './pages/admin/SettingsPage';
+
+// Private route components
+import { AdminAuthGuard } from "./components/auth/AdminAuthGuard";
 
 const queryClient = new QueryClient();
 
@@ -48,19 +53,27 @@ const App = () => (
               <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
               <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
               
-              {/* Admin routes */}
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/vendas" element={<AdminDashboard />} />
-              <Route path="/admin/pedidos" element={<OrdersPage />} />
-              <Route path="/admin/produtos" element={<ProductsPage />} />
-              <Route path="/admin/categorias" element={<AdminDashboard />} />
-              <Route path="/admin/marcas" element={<AdminDashboard />} />
-              <Route path="/admin/estoque" element={<AdminDashboard />} />
-              <Route path="/admin/clientes" element={<CustomersPage />} />
-              <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
-              <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
-              <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
-              <Route path="/admin/configuracoes" element={<SettingsPage />} />
+              {/* Admin login route - public access */}
+              <Route path="/admin/login" element={<AdminLoginPage />} />
+              
+              {/* Protected admin routes */}
+              <Route element={<AdminAuthGuard />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/vendas" element={<AdminDashboard />} />
+                <Route path="/admin/pedidos" element={<OrdersPage />} />
+                <Route path="/admin/produtos" element={<ProductsPage />} />
+                <Route path="/admin/categorias" element={<AdminDashboard />} />
+                <Route path="/admin/marcas" element={<AdminDashboard />} />
+                <Route path="/admin/estoque" element={<AdminDashboard />} />
+                <Route path="/admin/clientes" element={<CustomersPage />} />
+                <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
+                <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
+                <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
+                <Route path="/admin/configuracoes" element={<SettingsPage />} />
+              </Route>
+              
+              {/* Admin logout route */}
+              <Route path="/admin/logout" element={<AdminLogout />} />
               
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />
