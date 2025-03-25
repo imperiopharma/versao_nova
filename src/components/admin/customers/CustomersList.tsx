@@ -1,61 +1,29 @@
 
-import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Eye, 
-  MoreVertical, 
-  Edit, 
-  ShoppingBag, 
-  Trash2, 
-  Send, 
-  UserCog 
-} from "lucide-react";
-import { CustomerDialog } from './CustomerDialog';
-import { CustomerDetailsDialog } from './CustomerDetailsDialog';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { PlusCircle, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DataTable } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Customer } from '@/types/customer';
+import { CustomerDialog } from './CustomerDialog';
 
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  total_orders: number;
-  total_spent: number;
-  last_order_date: string | null;
-  status: 'active' | 'inactive';
-}
-
-interface CustomersListProps {
-  searchQuery: string;
-}
-
-export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => {
+export const CustomersList = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [showAddCustomerDialog, setShowAddCustomerDialog] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [showEditCustomerDialog, setShowEditCustomerDialog] = useState(false);
   const { toast } = useToast();
-  
-  // Carregar clientes do Supabase
+
+  // Buscar clientes do Supabase
   useEffect(() => {
     const fetchCustomers = async () => {
       setLoading(true);
@@ -63,58 +31,68 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
         const { data, error } = await supabase
           .from('customers')
           .select('*');
+
+        if (error) throw error;
+
+        if (data) {
+          // Mapear os dados para o formato esperado pelo componente
+          const formattedCustomers: Customer[] = data.map(customer => ({
+            id: customer.id,
+            name: customer.name,
+            email: customer.email,
+            phone: customer.phone || '',
+            status: customer.status as 'active' | 'inactive',
+            total_spent: customer.total_spent || 0,
+            total_orders: customer.total_orders || 0,
+            last_order_date: customer.last_order_date,
+            created_at: customer.created_at,
+            updated_at: customer.updated_at
+          }));
           
-        if (error) {
-          throw error;
+          setCustomers(formattedCustomers);
+          setFilteredCustomers(formattedCustomers);
         }
-        
-        setCustomers(data || []);
       } catch (error) {
         console.error('Erro ao buscar clientes:', error);
         toast({
           title: 'Erro',
           description: 'Não foi possível carregar os clientes.',
-          variant: 'destructive',
+          variant: 'destructive'
         });
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchCustomers();
   }, [toast]);
-  
-  // Formatação de moeda
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
-  };
-  
-  // Formatação de data
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Nunca';
+
+  // Função para filtrar clientes com base na pesquisa e status
+  useEffect(() => {
+    let result = [...customers];
     
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).format(date);
-  };
-  
-  const handleEditCustomer = (customer: Customer) => {
-    setSelectedCustomer(customer);
-    setIsEditDialogOpen(true);
-  };
-  
-  const handleViewCustomer = (customer: Customer) => {
-    setSelectedCustomer(customer);
-    setIsDetailsDialogOpen(true);
-  };
-  
+    // Filtrar por status
+    if (activeFilter !== 'all') {
+      result = result.filter(customer => customer.status === activeFilter);
+    }
+    
+    // Filtrar por termo de pesquisa
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(customer => 
+        customer.name.toLowerCase().includes(query) || 
+        customer.email.toLowerCase().includes(query) ||
+        (customer.phone && customer.phone.includes(query))
+      );
+    }
+    
+    setFilteredCustomers(result);
+  }, [customers, searchQuery, activeFilter]);
+
+  // Função para deletar um cliente
   const handleDeleteCustomer = async (customerId: string) => {
+    if (!confirm('Tem certeza de que deseja excluir este cliente?')) return;
+    
     try {
       const { error } = await supabase
         .from('customers')
@@ -123,197 +101,146 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
         
       if (error) throw error;
       
-      setCustomers(customers.filter(customer => customer.id !== customerId));
+      // Atualizar estado local removendo o cliente excluído
+      setCustomers(prev => prev.filter(c => c.id !== customerId));
       
       toast({
         title: 'Cliente excluído',
-        description: 'O cliente foi excluído com sucesso.',
+        description: 'O cliente foi excluído com sucesso.'
       });
     } catch (error) {
       console.error('Erro ao excluir cliente:', error);
       toast({
         title: 'Erro',
         description: 'Não foi possível excluir o cliente.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   };
-  
-  const handleChangeStatus = async (customerId: string, newStatus: 'active' | 'inactive') => {
-    try {
-      const { error } = await supabase
-        .from('customers')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', customerId);
-        
-      if (error) throw error;
-      
-      setCustomers(customers.map(customer => 
-        customer.id === customerId 
-          ? { ...customer, status: newStatus } 
-          : customer
-      ));
-      
-      toast({
-        title: 'Status atualizado',
-        description: `O cliente agora está ${newStatus === 'active' ? 'ativo' : 'inativo'}.`,
-      });
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível atualizar o status do cliente.',
-        variant: 'destructive',
-      });
-    }
+
+  // Função para editar um cliente
+  const handleEditCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setShowEditCustomerDialog(true);
   };
-  
-  const filteredCustomers = customers.filter(customer => 
-    customer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.phone?.includes(searchQuery)
-  );
+
+  // Componente de tabela para clientes
+  const CustomerTable = ({ customers }: { customers: Customer[] }) => {
+    if (loading) {
+      return (
+        <div className="space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      );
+    }
+
+    if (customers.length === 0) {
+      return (
+        <div className="text-center p-8 text-muted-foreground">
+          Nenhum cliente encontrado. Comece adicionando um novo cliente.
+        </div>
+      );
+    }
+
+    return (
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="text-left p-3 font-semibold text-sm">Nome</th>
+            <th className="text-left p-3 font-semibold text-sm">Email</th>
+            <th className="text-left p-3 font-semibold text-sm">Telefone</th>
+            <th className="text-left p-3 font-semibold text-sm">Status</th>
+            <th className="text-right p-3 font-semibold text-sm">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {customers.map((customer) => (
+            <tr key={customer.id} className="border-b hover:bg-muted/50">
+              <td className="p-3">{customer.name}</td>
+              <td className="p-3">{customer.email}</td>
+              <td className="p-3">{customer.phone || '-'}</td>
+              <td className="p-3">
+                <span className={`px-2 py-1 rounded text-xs ${
+                  customer.status === 'active' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {customer.status === 'active' ? 'Ativo' : 'Inativo'}
+                </span>
+              </td>
+              <td className="p-3 text-right">
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    onClick={() => handleEditCustomer(customer)}
+                  >
+                    Editar
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => handleDeleteCustomer(customer.id)}
+                  >
+                    Excluir
+                  </Button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Contato</TableHead>
-              <TableHead className="text-center">Pedidos</TableHead>
-              <TableHead className="text-right">Total Gasto</TableHead>
-              <TableHead>Último Pedido</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-center">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  Carregando clientes...
-                </TableCell>
-              </TableRow>
-            ) : filteredCustomers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  Nenhum cliente encontrado.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredCustomers.map((customer) => (
-                <TableRow key={customer.id}>
-                  <TableCell className="font-medium">{customer.name}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div>{customer.email}</div>
-                      <div className="text-sm text-muted-foreground">{customer.phone}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">{customer.total_orders || 0}</TableCell>
-                  <TableCell className="text-right">{formatCurrency(customer.total_spent || 0)}</TableCell>
-                  <TableCell>{formatDate(customer.last_order_date)}</TableCell>
-                  <TableCell className="text-center">
-                    <Badge 
-                      variant="outline" 
-                      className={`${
-                        customer.status === 'active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      } border-none`}
-                    >
-                      {customer.status === 'active' ? 'Ativo' : 'Inativo'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-center items-center space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => handleViewCustomer(customer)}
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span className="sr-only">Ver cliente</span>
-                      </Button>
-                      
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreVertical className="h-4 w-4" />
-                            <span className="sr-only">Mais ações</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleViewCustomer(customer)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            Ver Detalhes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditCustomer(customer)}>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Editar Cliente
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <ShoppingBag className="h-4 w-4 mr-2" />
-                            Ver Pedidos
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Send className="h-4 w-4 mr-2" />
-                            Enviar E-mail
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => 
-                            handleChangeStatus(customer.id, customer.status === 'active' ? 'inactive' : 'active')
-                          }>
-                            <UserCog className="h-4 w-4 mr-2" />
-                            {customer.status === 'active' 
-                              ? 'Desativar Conta' 
-                              : 'Ativar Conta'
-                            }
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem 
-                            className="text-red-600"
-                            onClick={() => handleDeleteCustomer(customer.id)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Excluir Cliente
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="relative w-64">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar clientes..."
+            className="pl-8"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Button onClick={() => setShowAddCustomerDialog(true)}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Novo Cliente
+        </Button>
       </div>
-      
-      {isEditDialogOpen && selectedCustomer && (
-        <CustomerDialog 
-          customer={selectedCustomer}
-          isOpen={isEditDialogOpen}
-          onClose={() => {
-            setIsEditDialogOpen(false);
-            setSelectedCustomer(null);
-          }}
+
+      <Card>
+        <Tabs defaultValue="all" value={activeFilter} onValueChange={setActiveFilter}>
+          <TabsList className="px-4 pt-4">
+            <TabsTrigger value="all">Todos</TabsTrigger>
+            <TabsTrigger value="active">Ativos</TabsTrigger>
+            <TabsTrigger value="inactive">Inativos</TabsTrigger>
+          </TabsList>
+          <CardContent className="p-0 pt-2">
+            <CustomerTable customers={filteredCustomers} />
+          </CardContent>
+        </Tabs>
+      </Card>
+
+      {showAddCustomerDialog && (
+        <CustomerDialog
+          isOpen={showAddCustomerDialog}
+          onClose={() => setShowAddCustomerDialog(false)}
         />
       )}
-      
-      {isDetailsDialogOpen && selectedCustomer && (
-        <CustomerDetailsDialog 
+
+      {showEditCustomerDialog && selectedCustomer && (
+        <CustomerDialog
           customer={selectedCustomer}
-          isOpen={isDetailsDialogOpen}
+          isOpen={showEditCustomerDialog}
           onClose={() => {
-            setIsDetailsDialogOpen(false);
+            setShowEditCustomerDialog(false);
             setSelectedCustomer(null);
-          }}
-          onEdit={() => {
-            setIsDetailsDialogOpen(false);
-            setIsEditDialogOpen(true);
           }}
         />
       )}

@@ -20,24 +20,31 @@ export const useOrders = (activeFilters: OrderFilters) => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
+        // Consulta pedidos e une com os clientes
         const { data, error } = await supabase
           .from('orders')
           .select(`
             *,
-            customers (*)
+            customer:customers(*)
           `);
           
         if (error) throw error;
         
+        if (!data || data.length === 0) {
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
+        
         // Formatar pedidos para usar no componente
-        const formattedOrders = data.map(order => ({
+        const formattedOrders: Order[] = data.map(order => ({
           id: order.id,
           orderNumber: order.order_number,
           date: order.created_at,
           customer: {
-            id: order.customers?.id,
-            name: order.customers?.name || 'Cliente desconhecido',
-            email: order.customers?.email || '',
+            id: order.customer?.id || '',
+            name: order.customer?.name || 'Cliente desconhecido',
+            email: order.customer?.email || '',
           },
           subtotal: order.subtotal || 0,
           shipping: order.shipping || 0,

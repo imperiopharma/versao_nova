@@ -20,14 +20,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  status: 'active' | 'inactive';
-}
+import { Customer } from '@/types/customer';
 
 interface CustomerDialogProps {
   customer?: Customer;
@@ -72,7 +65,7 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
     setLoading(true);
     
     try {
-      if (isEditing) {
+      if (isEditing && customer) {
         // Atualizar cliente existente
         const { error } = await supabase
           .from('customers')
