@@ -9,7 +9,7 @@ interface PromoCard {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode | (() => React.ReactNode);
   link: string;
   color: string;
 }
@@ -44,6 +44,11 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
     }
   };
   
+  // Função auxiliar para renderizar o ícone
+  const renderIcon = (icon: React.ReactNode | (() => React.ReactNode)) => {
+    return typeof icon === 'function' ? icon() : icon;
+  };
+  
   return (
     <section className="py-3 sm:py-4 relative overflow-hidden">
       <div className="section-container">
@@ -76,7 +81,7 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
                 className={`relative p-3 sm:p-4 flex flex-col rounded-lg ${card.color} hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden h-full group`}
               >
                 <div className="bg-white/50 backdrop-blur-sm rounded-full p-1.5 sm:p-2 w-fit mb-1.5 sm:mb-2 text-imperio-navy">
-                  {card.icon}
+                  {renderIcon(card.icon)}
                 </div>
                 
                 <h2 className="text-xs sm:text-sm font-bold text-imperio-navy mb-0.5 sm:mb-1 relative z-10">{card.title}</h2>

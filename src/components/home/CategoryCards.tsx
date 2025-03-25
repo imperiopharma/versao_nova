@@ -9,7 +9,7 @@ interface Category {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode | (() => React.ReactNode);
   link: string;
   color: string;
 }
@@ -24,6 +24,11 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 300 } }
+  };
+  
+  // Função auxiliar para renderizar o ícone
+  const renderIcon = (icon: React.ReactNode | (() => React.ReactNode)) => {
+    return typeof icon === 'function' ? icon() : icon;
   };
   
   return (
@@ -50,7 +55,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
               >
                 <div className="flex items-center">
                   <div className={`rounded-full ${category.id === 'emagrecedores' ? 'bg-blue-500' : 'bg-red-500'} p-2 mr-3 text-white`}>
-                    {category.icon}
+                    {renderIcon(category.icon)}
                   </div>
                   <div>
                     <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
