@@ -31,4 +31,5 @@ export interface ProductInputData {
   stock?: number | string;
   status?: string;
   image?: string;
+  [key: string]: any; // Adiciona um índice para permitir acesso dinâmico a propriedades
 }

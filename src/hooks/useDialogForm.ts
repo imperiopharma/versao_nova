@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useProductStore } from './useProductStore';
+import { ProductInputData } from '@/types/product';
 
 interface UseDialogFormProps<T> {
   initialData: T;
@@ -50,9 +51,9 @@ export function useDialogForm<T>({
     // Salva os dados no store apropriado com base no tipo de entidade
     if (entityName === 'Product') {
       if (isEditing) {
-        productStore.updateProduct(dataToSave);
+        productStore.updateProduct(dataToSave as unknown as ProductInputData);
       } else {
-        productStore.addProduct(dataToSave);
+        productStore.addProduct(dataToSave as unknown as ProductInputData);
       }
     } else if (entityName === 'Brand') {
       if (isEditing) {
