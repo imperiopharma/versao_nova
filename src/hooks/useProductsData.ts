@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProductCommon } from './useProductCommon';
@@ -44,6 +43,12 @@ export function useProductsData() {
     }
   };
 
+  // Gerar SKU automaticamente baseado na quantidade de produtos + 1
+  const generateSku = () => {
+    const nextNumber = products.length + 1;
+    return `PROD${String(nextNumber).padStart(4, '0')}`;
+  };
+
   // Adicionar um produto ao Supabase
   const addProduct = async (product: any) => {
     try {
@@ -57,11 +62,14 @@ export function useProductsData() {
         ...productData 
       } = product;
       
+      // Gerar SKU automaticamente se não fornecido
+      const sku = productData.sku || generateSku();
+      
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseProduct = {
         name: productData.name || 'Produto sem nome',
         description: productData.description || '',
-        sku: productData.sku || '',
+        sku: sku,
         brand: productData.brand || '',
         category: productData.category || '',
         price: Number(sellingPrice) || 0,
@@ -69,7 +77,7 @@ export function useProductsData() {
         cost_price: Number(costPrice) || 0,
         selling_price: Number(sellingPrice) || 0,
         promo_price: Number(promoPrice) || 0,
-        stock: Number(productData.stock) || 0,
+        stock: 1, // Valor padrão para estoque (não é mais usado ativamente)
         status: productData.status || 'active',
         image: productData.image || ''
       };
@@ -186,6 +194,7 @@ export function useProductsData() {
     fetchProducts,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    generateSku
   };
 }

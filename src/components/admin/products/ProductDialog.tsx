@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -30,7 +30,7 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
   onClose 
 }) => {
   const { toast } = useToast();
-  const { addProduct, updateProduct, brands, categories } = useProductStore();
+  const { addProduct, updateProduct, brands, categories, products } = useProductStore();
   const isEditing = !!product;
   
   // Form state
@@ -48,6 +48,20 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
     stock: product?.stock || '',
     image: product?.image || 'https://via.placeholder.com/300x300?text=Produto'
   });
+
+  // Atualiza o SKU automaticamente ao abrir o formulário para um novo produto
+  useEffect(() => {
+    if (!isEditing) {
+      // Gera um SKU sequencial baseado no número de produtos
+      const nextNumber = products.length + 1;
+      const generatedSku = `PROD${String(nextNumber).padStart(4, '0')}`;
+      
+      setFormData(prev => ({
+        ...prev,
+        sku: generatedSku
+      }));
+    }
+  }, [isEditing, products.length]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -76,7 +90,7 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
       sellingPrice: parseFloat(formData.sellingPrice) || 0,
       costPrice: parseFloat(formData.costPrice) || 0,
       promoPrice: parseFloat(formData.promoPrice) || 0,
-      stock: parseInt(formData.stock as string) || 0,
+      stock: 1 // Valor padrão para estoque (não mais obrigatório)
     };
 
     // Salva no store
@@ -109,7 +123,7 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
           <Tabs defaultValue="basic">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
-              <TabsTrigger value="price">Preços e Estoque</TabsTrigger>
+              <TabsTrigger value="price">Preços</TabsTrigger>
               <TabsTrigger value="images">Imagens</TabsTrigger>
             </TabsList>
             

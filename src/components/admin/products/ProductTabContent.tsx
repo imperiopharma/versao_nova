@@ -24,22 +24,13 @@ export const BasicInfoTab: React.FC<BasicTabProps> = ({
 }) => {
   return (
     <div className="space-y-4 py-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <TextField
           id="product-name"
           label="Nome do Produto"
           value={formData.name}
           onChange={handleInputChange}
           placeholder="Nome do produto"
-          required
-        />
-        
-        <TextField
-          id="product-sku"
-          label="SKU"
-          value={formData.sku}
-          onChange={handleInputChange}
-          placeholder="SKU do produto"
           required
         />
       </div>
@@ -89,8 +80,7 @@ export const BasicInfoTab: React.FC<BasicTabProps> = ({
         onValueChange={(value) => handleSelectChange('status', value)}
         options={[
           { value: 'active', label: 'Ativo' },
-          { value: 'inactive', label: 'Inativo' },
-          { value: 'out_of_stock', label: 'Sem Estoque' }
+          { value: 'inactive', label: 'Inativo' }
         ]}
       />
     </div>
@@ -126,7 +116,7 @@ export const PriceStockTab: React.FC<BasicTabProps> = ({
         />
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <TextField
           id="product-promoPrice"
           label="Preço Promocional (R$)"
@@ -135,16 +125,6 @@ export const PriceStockTab: React.FC<BasicTabProps> = ({
           placeholder="0.00"
           type="number"
           description="Preço durante promoções (deixe em branco se não houver)"
-        />
-        
-        <TextField
-          id="product-stock"
-          label="Quantidade em Estoque"
-          value={formData.stock}
-          onChange={handleInputChange}
-          placeholder="0"
-          type="number"
-          required
         />
       </div>
     </div>
@@ -178,6 +158,9 @@ export const ImagesTab: React.FC = () => {
         </p>
         <p className="text-xs text-gray-500">
           PNG, JPG ou WEBP (Máximo 5MB por imagem)
+        </p>
+        <p className="mt-2 text-xs text-amber-600">
+          O upload de imagem é opcional. O produto pode ser salvo sem uma imagem.
         </p>
         <Button className="mt-4" variant="outline" type="button">
           Selecionar Arquivos
