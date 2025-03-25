@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { Pill, Heart, BarChart3, ShoppingBag, Zap, PhoneCall, Truck, Map, Calendar, CreditCard } from 'lucide-react';
@@ -16,6 +17,7 @@ import { VipMembershipSection } from '../components/home/VipMembershipSection';
 import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
+import { GuaranteesSection } from '../components/home/GuaranteesSection';
 
 export const HomePage: React.FC = () => {
   const [brands, setBrands] = useState<any>({
@@ -86,6 +88,18 @@ export const HomePage: React.FC = () => {
       image: 'https://via.placeholder.com/300x300?text=Kit+2'
     }
   ];
+
+  const heroSlides = [
+    {
+      image: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png",
+    },
+    {
+      image: "https://via.placeholder.com/1200x800?text=Slide+2",
+    },
+    {
+      image: "https://via.placeholder.com/1200x800?text=Slide+3",
+    }
+  ];
   
   useEffect(() => {
     const fetchData = async () => {
@@ -97,6 +111,7 @@ export const HomePage: React.FC = () => {
         
         if (brandsError) throw brandsError;
         
+        // Processamento dos dados mantido igual
         const importedBrands = brandsData
           .filter(brand => brand.category === 'imported')
           .map(brand => ({
@@ -145,85 +160,49 @@ export const HomePage: React.FC = () => {
     fetchData();
   }, []);
 
-  const heroSlides = [
-    {
-      image: "https://via.placeholder.com/1200x800?text=Slide+1",
-    },
-    {
-      image: "https://via.placeholder.com/1200x800?text=Slide+2",
-    },
-    {
-      image: "https://via.placeholder.com/1200x800?text=Slide+3",
-    }
-  ];
-
   const categories = [
     {
       id: 'emagrecedores',
       title: 'Emagrecedores',
-      description: 'Produtos para perda de peso',
-      icon: <Zap size={24} />,
+      description: 'Produtos para a perda de peso',
+      icon: <Pill size={20} />,
       link: '/categoria/emagrecedores',
-      color: 'bg-red-500'
+      color: 'bg-white'
     },
     {
       id: 'farmacia',
       title: 'Farmácia',
-      description: 'Medicamentos e produtos de saúde',
-      icon: <Heart size={24} />,
+      description: 'Medicamentos e suplementos essenciais',
+      icon: <Heart size={20} />,
       link: '/categoria/farmacia',
-      color: 'bg-blue-500'
-    },
-    {
-      id: 'suplementos',
-      title: 'Suplementos',
-      description: 'Vitaminas e suplementos',
-      icon: <BarChart3 size={24} />,
-      link: '/categoria/suplementos',
-      color: 'bg-green-500'
-    },
-    {
-      id: 'ofertas',
-      title: 'Ofertas',
-      description: 'Promoções especiais',
-      icon: <ShoppingBag size={24} />,
-      link: '/ofertas',
-      color: 'bg-purple-500'
+      color: 'bg-white'
     }
   ];
 
   const serviceCards = [
     {
-      id: 'atendimento',
-      title: 'Atendimento',
-      description: 'Suporte disponível 24h',
+      id: 'faq',
+      title: 'FAQ',
+      description: 'Perguntas frequentes',
       icon: <PhoneCall size={20} />,
-      link: '/atendimento',
+      link: '/faq',
       color: 'bg-blue-100'
     },
     {
-      id: 'entrega',
-      title: 'Entrega Rápida',
-      description: 'Para todo o Brasil',
+      id: 'fretes',
+      title: 'Fretes',
+      description: 'Consulte nossas opções',
       icon: <Truck size={20} />,
-      link: '/entregas',
+      link: '/fretes',
       color: 'bg-green-100'
     },
     {
-      id: 'localizacao',
-      title: 'Localização',
-      description: 'Estamos no Paraguai',
-      icon: <Map size={20} />,
-      link: '/onde-estamos',
+      id: 'pedidos',
+      title: 'Ciclos Prontos',
+      description: 'Combos preparados',
+      icon: <Calendar size={20} />,
+      link: '/ciclos',
       color: 'bg-yellow-100'
-    },
-    {
-      id: 'pagamento',
-      title: 'Pagamento',
-      description: 'Várias formas disponíveis',
-      icon: <CreditCard size={20} />,
-      link: '/pagamentos',
-      color: 'bg-red-100'
     }
   ];
 
@@ -252,10 +231,6 @@ export const HomePage: React.FC = () => {
       
       <PromoCardsSection cards={serviceCards} />
       
-      <FeaturedProducts products={featuredProducts} />
-      
-      <FlashSaleSection items={flashSaleItems} />
-      
       <BrandsSection 
         premium={brands.premium}
         national={brands.national}
@@ -263,6 +238,12 @@ export const HomePage: React.FC = () => {
         various={brands.various}
         categories={brands.categories}
       />
+      
+      <FeaturedProducts products={featuredProducts} />
+      
+      <FlashSaleSection items={flashSaleItems} />
+      
+      <GuaranteesSection />
       
       <VipMembershipSection />
       

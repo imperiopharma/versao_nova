@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -25,9 +26,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   return (
     <section className="py-4">
       <div className="section-container">
-        <h2 className="text-xl font-bold text-imperio-navy mb-4">Categorias em Destaque</h2>
-        
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
@@ -40,15 +39,18 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             >
               <Link 
                 to={category.link} 
-                className={`${category.color} rounded-xl p-4 flex items-center w-full text-white shadow-sm`}
+                className={`${category.color} rounded-lg p-3 flex items-center justify-between w-full border border-gray-100 shadow-sm bg-white`}
               >
-                <div className="rounded-full bg-white/20 p-2 mr-3">
-                  {category.icon}
+                <div className="flex items-center">
+                  <div className={`rounded-full ${category.id === 'emagrecedores' ? 'bg-blue-500' : 'bg-red-500'} p-2 mr-3 text-white`}>
+                    {category.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-imperio-navy">{category.title}</h3>
+                    <p className="text-xs text-gray-600">{category.description}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg">{category.title}</h3>
-                  <p className="text-sm opacity-90">{category.description}</p>
-                </div>
+                <ChevronRight className="text-gray-400" size={18} />
               </Link>
             </motion.div>
           ))}
