@@ -51,7 +51,7 @@ export const BasicInfoTab: React.FC<{
           value={formData.brand || ''}
           onValueChange={(value) => handleSelectChange('brand', value)}
           options={[
-            { value: '', label: 'Selecione uma marca' },
+            { value: "selecione", label: 'Selecione uma marca' }, // Alterado para não usar string vazia
             ...brands.map(brand => ({
               value: brand.name,
               label: brand.name
@@ -64,7 +64,7 @@ export const BasicInfoTab: React.FC<{
           value={formData.category || ''}
           onValueChange={(value) => handleSelectChange('category', value)}
           options={[
-            { value: '', label: 'Selecione uma categoria' },
+            { value: "selecione", label: 'Selecione uma categoria' }, // Alterado para não usar string vazia
             ...categories.map(category => ({
               value: category.name,
               label: category.name

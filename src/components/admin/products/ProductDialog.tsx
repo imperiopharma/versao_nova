@@ -72,9 +72,12 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
   };
 
   const handleSelectChange = (name: string, value: string) => {
+    // Se o valor for o valor do placeholder ("selecione"), tratamos como string vazia no estado interno
+    const finalValue = value === "selecione" ? "" : value;
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: finalValue
     }));
   };
 
