@@ -52,9 +52,7 @@ export const HomePage: React.FC = () => {
         items={flashSaleItems}
       />
       
-      <BrandsSection 
-        brands={brands}
-      />
+      <BrandsSection />
       
       <GuaranteesSection />
       

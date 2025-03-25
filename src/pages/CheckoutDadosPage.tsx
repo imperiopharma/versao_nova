@@ -12,19 +12,17 @@ import { useToast } from '@/hooks/use-toast';
 import { CheckoutPageHeader } from '@/components/checkout/CheckoutPageHeader';
 import { CartSummary } from '@/components/checkout/CartSummary';
 import { CheckoutNavigation } from '@/components/checkout/CheckoutNavigation';
+import { useCheckout } from '@/contexts/CheckoutContext';
 
 export const CheckoutDadosPage: React.FC = () => {
   const navigate = useNavigate();
   const { items, itemCount, total } = useCart();
   const { toast } = useToast();
+  const { customerData } = useCheckout();
   const { 
-    formData, 
-    validationErrors,
-    handleChange, 
-    handleBlur,
-    validateDadosStep,
-    isValidatingCEP,
-    handleCEPBlur
+    formErrors, 
+    handleChangeInput, 
+    handleSubmit 
   } = useCheckoutForm();
 
   useEffect(() => {
@@ -39,10 +37,7 @@ export const CheckoutDadosPage: React.FC = () => {
   }, [items, navigate]);
 
   const handleContinue = () => {
-    if (validateDadosStep()) {
-      navigate('/checkout/pagamento');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    handleSubmit({ preventDefault: () => {} } as React.FormEvent);
   };
 
   return (
@@ -65,24 +60,20 @@ export const CheckoutDadosPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2 space-y-8">
             <CustomerInfoForm 
-              formData={formData}
-              validationErrors={validationErrors}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
+              customerData={customerData}
+              handleChangeInput={handleChangeInput}
+              formErrors={formErrors}
             />
             
             <AddressForm 
-              formData={formData}
-              validationErrors={validationErrors}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              isValidatingCEP={isValidatingCEP}
-              handleCEPBlur={handleCEPBlur}
+              customerData={customerData}
+              handleChangeInput={handleChangeInput}
+              formErrors={formErrors}
             />
             
             <HowFoundUsForm 
-              formData={formData}
-              handleChange={handleChange}
+              customerData={customerData}
+              handleChangeInput={handleChangeInput}
             />
             
             <CheckoutNavigation 
