@@ -23,6 +23,8 @@ export const LoginPage: React.FC = () => {
     loading, 
     error, 
     setError,
+    setLoading,
+    toast,
     handleEmailChange, 
     handlePasswordChange, 
     handleLogin 

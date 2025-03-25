@@ -97,6 +97,8 @@ export const useAuth = ({
     setEmail,
     setPassword,
     setError,
+    setLoading,
+    toast,
     handleEmailChange,
     handlePasswordChange,
     handleLogin
