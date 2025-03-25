@@ -22,20 +22,27 @@ import {
   MoreVertical, 
   Trash2, 
   Image,
-  MessageSquare
+  MessageSquare,
+  Plus
 } from "lucide-react";
 import { BrandDialog } from './BrandDialog';
 import { SearchBar } from '../common/SearchBar';
 import { useProductStore } from '@/hooks/useProductStore';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 export const BrandsList: React.FC = () => {
-  const { brands } = useProductStore();
+  const { brands, deleteBrand } = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<any>(null);
   const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
   const [brandToDelete, setBrandToDelete] = useState<string | null>(null);
-  const { updateBrand, addBrand } = useProductStore();
+  const { toast } = useToast();
+
+  const handleAddBrand = () => {
+    setSelectedBrand(null);
+    setIsBrandDialogOpen(true);
+  };
 
   const handleEditBrand = (brand: any) => {
     setSelectedBrand(brand);
@@ -46,10 +53,15 @@ export const BrandsList: React.FC = () => {
     setBrandToDelete(brandId);
   };
 
-  const confirmDeleteBrand = () => {
-    // Implementação real de deleção seria aqui
-    console.log("Brand deleted:", brandToDelete);
-    setBrandToDelete(null);
+  const confirmDeleteBrand = async () => {
+    if (!brandToDelete) return;
+    
+    try {
+      await deleteBrand(brandToDelete);
+      setBrandToDelete(null);
+    } catch (error) {
+      console.error("Erro ao excluir marca:", error);
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,11 +78,16 @@ export const BrandsList: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <SearchBar 
-        placeholder="Buscar marcas..." 
-        value={searchQuery} 
-        onChange={handleSearchChange} 
-      />
+      <div className="flex justify-between items-center">
+        <SearchBar 
+          placeholder="Buscar marcas..." 
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+        />
+        <Button onClick={handleAddBrand} className="ml-auto">
+          <Plus className="mr-2 h-4 w-4" /> Adicionar Marca
+        </Button>
+      </div>
       
       <div className="rounded-md border">
         <Table>
