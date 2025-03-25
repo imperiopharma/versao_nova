@@ -65,6 +65,8 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
     setLoading(true);
     
     try {
+      console.log('Enviando dados para Supabase:', isEditing ? 'Atualização' : 'Novo cliente', formData);
+      
       if (isEditing && customer) {
         // Atualizar cliente existente
         const { error } = await supabase
@@ -78,7 +80,10 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
           })
           .eq('id', customer.id);
           
-        if (error) throw error;
+        if (error) {
+          console.error('Erro Supabase:', error);
+          throw error;
+        }
         
         toast({
           title: 'Cliente atualizado',
@@ -86,7 +91,7 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
         });
       } else {
         // Criar novo cliente
-        const { error } = await supabase
+        const { error, data } = await supabase
           .from('customers')
           .insert({
             name: formData.name,
@@ -95,9 +100,15 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
             status: formData.status,
             total_spent: 0,
             total_orders: 0
-          });
+          })
+          .select();
           
-        if (error) throw error;
+        if (error) {
+          console.error('Erro Supabase:', error);
+          throw error;
+        }
+        
+        console.log('Cliente adicionado com sucesso:', data);
         
         toast({
           title: 'Cliente adicionado',

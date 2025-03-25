@@ -28,7 +28,8 @@ export function useProductStore() {
     categories,
     fetchCategories,
     addCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
   } = useCategoriesData();
 
   // Buscar todos os dados no carregamento inicial
@@ -67,5 +68,6 @@ export function useProductStore() {
     deleteBrand,
     addCategory,
     updateCategory,
+    deleteCategory,
   };
 }

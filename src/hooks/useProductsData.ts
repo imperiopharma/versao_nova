@@ -48,7 +48,14 @@ export function useProductsData() {
   const addProduct = async (product: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
-      const { id, ...productData } = product;
+      const { 
+        id, 
+        originalPrice, 
+        costPrice, 
+        sellingPrice, 
+        promoPrice, 
+        ...productData 
+      } = product;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseProduct = {
@@ -57,12 +64,12 @@ export function useProductsData() {
         sku: productData.sku || '',
         brand: productData.brand || '',
         category: productData.category || '',
-        price: productData.price || productData.sellingPrice || 0,
-        original_price: productData.originalPrice || productData.costPrice || 0,
-        cost_price: productData.costPrice || 0,
-        selling_price: productData.sellingPrice || 0,
-        promo_price: productData.promoPrice || 0,
-        stock: productData.stock || 0,
+        price: Number(sellingPrice) || 0,
+        original_price: Number(costPrice) || 0,
+        cost_price: Number(costPrice) || 0,
+        selling_price: Number(sellingPrice) || 0,
+        promo_price: Number(promoPrice) || 0,
+        stock: Number(productData.stock) || 0,
         status: productData.status || 'active',
         image: productData.image || ''
       };
@@ -72,7 +79,7 @@ export function useProductsData() {
       const { data, error } = await supabase
         .from('products')
         .insert(supabaseProduct)
-        .select('*')
+        .select()
         .single();
 
       if (error) {
@@ -112,23 +119,30 @@ export function useProductsData() {
   // Atualizar um produto no Supabase
   const updateProduct = async (product: any) => {
     try {
-      const { id } = product;
+      const { 
+        id, 
+        originalPrice, 
+        costPrice, 
+        sellingPrice, 
+        promoPrice, 
+        ...productData 
+      } = product;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseProduct = {
-        name: product.name || 'Produto sem nome',
-        description: product.description || '',
-        sku: product.sku || '',
-        brand: product.brand || '',
-        category: product.category || '',
-        price: product.price || product.sellingPrice || 0,
-        original_price: product.originalPrice || product.costPrice || 0,
-        cost_price: product.costPrice || 0,
-        selling_price: product.sellingPrice || 0,
-        promo_price: product.promoPrice || 0,
-        stock: product.stock || 0,
-        status: product.status || 'active',
-        image: product.image || '',
+        name: productData.name || 'Produto sem nome',
+        description: productData.description || '',
+        sku: productData.sku || '',
+        brand: productData.brand || '',
+        category: productData.category || '',
+        price: Number(sellingPrice) || 0,
+        original_price: Number(costPrice) || 0,
+        cost_price: Number(costPrice) || 0,
+        selling_price: Number(sellingPrice) || 0,
+        promo_price: Number(promoPrice) || 0,
+        stock: Number(productData.stock) || 0,
+        status: productData.status || 'active',
+        image: productData.image || '',
         updated_at: formatDateForSupabase()
       };
 

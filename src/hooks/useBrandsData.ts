@@ -41,7 +41,7 @@ export function useBrandsData() {
   const addBrand = async (brand: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
-      const { id, ...brandData } = brand;
+      const { id, logoUrl, ...brandData } = brand;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabbaseBrand = {
@@ -49,17 +49,24 @@ export function useBrandsData() {
         slug: brandData.slug,
         description: brandData.description,
         category: brandData.category,
-        logo_url: brandData.logoUrl,
+        logo_url: logoUrl,
         status: brandData.status
       };
+
+      console.log('Enviando para Supabase:', supabbaseBrand);
 
       const { data, error } = await supabase
         .from('brands')
         .insert(supabbaseBrand)
-        .select('*')
+        .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro Supabase:', error);
+        throw error;
+      }
+
+      console.log('Resposta Supabase:', data);
 
       const formattedBrand = {
         id: data.id,
@@ -72,6 +79,7 @@ export function useBrandsData() {
       };
 
       setBrands(prev => [...prev, formattedBrand]);
+      showSuccessToast('Marca adicionada', 'A marca foi adicionada com sucesso.');
       return formattedBrand;
     } catch (error) {
       handleError(error, 'Erro ao adicionar marca');
@@ -82,16 +90,16 @@ export function useBrandsData() {
   // Atualizar uma marca no Supabase
   const updateBrand = async (brand: any) => {
     try {
-      const { id } = brand;
+      const { id, logoUrl, ...brandData } = brand;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabbaseBrand = {
-        name: brand.name,
-        slug: brand.slug,
-        description: brand.description,
-        category: brand.category,
-        logo_url: brand.logoUrl,
-        status: brand.status,
+        name: brandData.name,
+        slug: brandData.slug,
+        description: brandData.description,
+        category: brandData.category,
+        logo_url: logoUrl,
+        status: brandData.status,
         updated_at: formatDateForSupabase()
       };
 
@@ -103,6 +111,7 @@ export function useBrandsData() {
       if (error) throw error;
 
       setBrands(prev => prev.map(b => b.id === id ? { ...brand } : b));
+      showSuccessToast('Marca atualizada', 'A marca foi atualizada com sucesso.');
       return brand;
     } catch (error) {
       handleError(error, 'Erro ao atualizar marca');

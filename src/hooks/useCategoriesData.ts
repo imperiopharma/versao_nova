@@ -5,7 +5,7 @@ import { useProductCommon } from './useProductCommon';
 
 export function useCategoriesData() {
   const [categories, setCategories] = useState<any[]>([]);
-  const { handleError, formatDateForSupabase } = useProductCommon();
+  const { handleError, formatDateForSupabase, showSuccessToast } = useProductCommon();
 
   // Buscar categorias do Supabase
   const fetchCategories = async () => {
@@ -49,13 +49,20 @@ export function useCategoriesData() {
         status: categoryData.status
       };
 
+      console.log('Enviando categoria para Supabase:', supabaseCategory);
+
       const { data, error } = await supabase
         .from('categories')
         .insert(supabaseCategory)
-        .select('*')
+        .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro Supabase:', error);
+        throw error;
+      }
+
+      console.log('Resposta Supabase:', data);
 
       const formattedCategory = {
         id: data.id,
@@ -66,6 +73,7 @@ export function useCategoriesData() {
       };
 
       setCategories(prev => [...prev, formattedCategory]);
+      showSuccessToast('Categoria adicionada', 'A categoria foi adicionada com sucesso.');
       return formattedCategory;
     } catch (error) {
       handleError(error, 'Erro ao adicionar categoria');
@@ -76,14 +84,14 @@ export function useCategoriesData() {
   // Atualizar uma categoria no Supabase
   const updateCategory = async (category: any) => {
     try {
-      const { id } = category;
+      const { id, ...categoryData } = category;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseCategory = {
-        name: category.name,
-        slug: category.slug,
-        description: category.description,
-        status: category.status,
+        name: categoryData.name,
+        slug: categoryData.slug,
+        description: categoryData.description,
+        status: categoryData.status,
         updated_at: formatDateForSupabase()
       };
 
@@ -95,9 +103,28 @@ export function useCategoriesData() {
       if (error) throw error;
 
       setCategories(prev => prev.map(c => c.id === id ? { ...category } : c));
+      showSuccessToast('Categoria atualizada', 'A categoria foi atualizada com sucesso.');
       return category;
     } catch (error) {
       handleError(error, 'Erro ao atualizar categoria');
+      throw error;
+    }
+  };
+
+  // Adicionar função para excluir categoria
+  const deleteCategory = async (categoryId: string) => {
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', categoryId);
+
+      if (error) throw error;
+
+      setCategories(prev => prev.filter(c => c.id !== categoryId));
+      showSuccessToast('Categoria excluída', 'A categoria foi excluída com sucesso.');
+    } catch (error) {
+      handleError(error, 'Erro ao excluir categoria');
       throw error;
     }
   };
@@ -107,6 +134,7 @@ export function useCategoriesData() {
     setCategories,
     fetchCategories,
     addCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
   };
 }
