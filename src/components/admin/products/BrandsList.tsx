@@ -27,6 +27,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { BrandDialog } from './BrandDialog';
+import { useToast } from '@/hooks/use-toast';
 
 // Dados de exemplo para desenvolvimento
 const mockBrands = [
@@ -68,11 +69,16 @@ const mockBrands = [
   },
 ];
 
-export const BrandsList: React.FC = () => {
+interface BrandsListProps {
+  onOpenDialog?: () => void;
+}
+
+export const BrandsList: React.FC<BrandsListProps> = ({ onOpenDialog }) => {
   const [brands, setBrands] = useState(mockBrands);
   const [searchQuery, setSearchQuery] = useState('');
   const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<any | null>(null);
+  const { toast } = useToast();
   
   const handleEditBrand = (brand: any) => {
     setSelectedBrand(brand);
@@ -82,6 +88,11 @@ export const BrandsList: React.FC = () => {
   const handleDeleteBrand = (brandId: number) => {
     // Na implementação real, aqui seria uma chamada à API
     setBrands(brands.filter(brand => brand.id !== brandId));
+    
+    toast({
+      title: "Marca excluída",
+      description: "A marca foi excluída com sucesso.",
+    });
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

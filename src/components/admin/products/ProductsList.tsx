@@ -28,6 +28,7 @@ import {
   Loader2 
 } from "lucide-react";
 import { ProductDialog } from './ProductDialog';
+import { useToast } from '@/hooks/use-toast';
 
 // Dados de exemplo para desenvolvimento
 const mockProducts = [
@@ -88,11 +89,16 @@ const mockProducts = [
   },
 ];
 
-export const ProductsList: React.FC = () => {
+interface ProductsListProps {
+  onOpenDialog?: () => void;
+}
+
+export const ProductsList: React.FC<ProductsListProps> = ({ onOpenDialog }) => {
   const [products, setProducts] = useState(mockProducts);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const { toast } = useToast();
   
   // Formatação de moeda
   const formatCurrency = (value: number) => {
@@ -110,6 +116,11 @@ export const ProductsList: React.FC = () => {
   const handleDeleteProduct = (productId: number) => {
     // Na implementação real, aqui seria uma chamada à API
     setProducts(products.filter(product => product.id !== productId));
+    
+    toast({
+      title: "Produto excluído",
+      description: "O produto foi excluído com sucesso.",
+    });
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

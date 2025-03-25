@@ -12,9 +12,27 @@ import { BrandsList } from '@/components/admin/products/BrandsList';
 import { CategoriesList } from '@/components/admin/products/CategoriesList';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
+import { ProductDialog } from '@/components/admin/products/ProductDialog';
+import { BrandDialog } from '@/components/admin/products/BrandDialog';
+import { CategoryDialog } from '@/components/admin/products/CategoryDialog';
 
 export const ProductsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('products');
+  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+  const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+
+  const handleAddProduct = () => {
+    setIsProductDialogOpen(true);
+  };
+
+  const handleAddBrand = () => {
+    setIsBrandDialogOpen(true);
+  };
+
+  const handleAddCategory = () => {
+    setIsCategoryDialogOpen(true);
+  };
 
   return (
     <AdminLayout>
@@ -23,21 +41,21 @@ export const ProductsPage: React.FC = () => {
           <h1 className="text-2xl font-bold">Gerenciar Produtos</h1>
           
           {activeTab === 'products' && (
-            <Button className="flex items-center gap-1">
+            <Button className="flex items-center gap-1" onClick={handleAddProduct}>
               <PlusCircle size={18} />
               <span>Adicionar Produto</span>
             </Button>
           )}
           
           {activeTab === 'brands' && (
-            <Button className="flex items-center gap-1">
+            <Button className="flex items-center gap-1" onClick={handleAddBrand}>
               <PlusCircle size={18} />
               <span>Adicionar Marca</span>
             </Button>
           )}
           
           {activeTab === 'categories' && (
-            <Button className="flex items-center gap-1">
+            <Button className="flex items-center gap-1" onClick={handleAddCategory}>
               <PlusCircle size={18} />
               <span>Adicionar Categoria</span>
             </Button>
@@ -52,17 +70,38 @@ export const ProductsPage: React.FC = () => {
           </TabsList>
           
           <TabsContent value="products">
-            <ProductsList />
+            <ProductsList onOpenDialog={() => setIsProductDialogOpen(true)} />
           </TabsContent>
           
           <TabsContent value="brands">
-            <BrandsList />
+            <BrandsList onOpenDialog={() => setIsBrandDialogOpen(true)} />
           </TabsContent>
           
           <TabsContent value="categories">
-            <CategoriesList />
+            <CategoriesList onOpenDialog={() => setIsCategoryDialogOpen(true)} />
           </TabsContent>
         </Tabs>
+        
+        {isProductDialogOpen && (
+          <ProductDialog
+            isOpen={isProductDialogOpen}
+            onClose={() => setIsProductDialogOpen(false)}
+          />
+        )}
+        
+        {isBrandDialogOpen && (
+          <BrandDialog
+            isOpen={isBrandDialogOpen}
+            onClose={() => setIsBrandDialogOpen(false)}
+          />
+        )}
+        
+        {isCategoryDialogOpen && (
+          <CategoryDialog
+            isOpen={isCategoryDialogOpen}
+            onClose={() => setIsCategoryDialogOpen(false)}
+          />
+        )}
       </div>
     </AdminLayout>
   );
