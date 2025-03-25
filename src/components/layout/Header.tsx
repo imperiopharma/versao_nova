@@ -63,30 +63,35 @@ export const Header: React.FC = () => {
                   <Link 
                     to="/categoria/injetaveis" 
                     className="block px-4 py-2 hover:bg-imperio-extra-light-navy transition-colors"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     Produtos Injetáveis
                   </Link>
                   <Link 
                     to="/categoria/orais" 
                     className="block px-4 py-2 hover:bg-imperio-extra-light-navy transition-colors"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     Produtos Orais
                   </Link>
                   <Link 
                     to="/categoria/emagrecedores" 
                     className="block px-4 py-2 hover:bg-imperio-extra-light-navy transition-colors"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     Emagrecedores
                   </Link>
                   <Link 
                     to="/categoria/cbd" 
                     className="block px-4 py-2 hover:bg-imperio-extra-light-navy transition-colors"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     CBD
                   </Link>
                   <Link 
                     to="/categoria/farmacia" 
                     className="block px-4 py-2 hover:bg-imperio-extra-light-navy transition-colors"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     Produtos de Farmácia
                   </Link>
@@ -157,30 +162,35 @@ export const Header: React.FC = () => {
                 <Link 
                   to="/categoria/injetaveis" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
                   Produtos Injetáveis
                 </Link>
                 <Link 
                   to="/categoria/orais" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
                   Produtos Orais
                 </Link>
                 <Link 
                   to="/categoria/emagrecedores" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
                   Emagrecedores
                 </Link>
                 <Link 
                   to="/categoria/cbd" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
                   CBD
                 </Link>
                 <Link 
                   to="/categoria/farmacia" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
                   Produtos de Farmácia
                 </Link>

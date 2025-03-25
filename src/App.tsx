@@ -11,6 +11,7 @@ import { AdminLogout } from "./components/auth/AdminLogout";
 // Public pages
 import { HomePage } from "./pages/HomePage";
 import { BrandProductsPage } from "./pages/BrandProductsPage";
+import { CategoryProductsPage } from "./pages/CategoryProductsPage";
 import { CartPage } from "./pages/CartPage";
 import { LoginPage } from "./pages/LoginPage";
 import { CheckoutDadosPage } from "./pages/CheckoutDadosPage";
@@ -47,6 +48,7 @@ const App = () => (
               {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/marca/:brandId" element={<BrandProductsPage />} />
+              <Route path="/categoria/:categoryId" element={<CategoryProductsPage />} />
               <Route path="/marcas" element={<MarketplacePage />} />
               <Route path="/fretes" element={<FreightInfoPage />} />
               <Route path="/carrinho" element={<CartPage />} />

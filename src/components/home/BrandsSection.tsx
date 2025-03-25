@@ -33,7 +33,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
             key={brand.id} 
             to={`/marca/${brand.id}`}
             className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
-            onClick={(e) => {
+            onClick={() => {
               // Garantir rolagem suave para o topo
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
