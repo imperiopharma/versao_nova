@@ -52,20 +52,22 @@ export function useProductsData() {
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseProduct = {
-        name: productData.name,
-        description: productData.description,
-        sku: productData.sku,
-        brand: productData.brand,
-        category: productData.category,
-        price: productData.price || productData.sellingPrice,
-        original_price: productData.originalPrice || productData.costPrice,
-        cost_price: productData.costPrice,
-        selling_price: productData.sellingPrice,
-        promo_price: productData.promoPrice,
-        stock: productData.stock,
-        status: productData.status,
-        image: productData.image
+        name: productData.name || 'Produto sem nome',
+        description: productData.description || '',
+        sku: productData.sku || '',
+        brand: productData.brand || '',
+        category: productData.category || '',
+        price: productData.price || productData.sellingPrice || 0,
+        original_price: productData.originalPrice || productData.costPrice || 0,
+        cost_price: productData.costPrice || 0,
+        selling_price: productData.sellingPrice || 0,
+        promo_price: productData.promoPrice || 0,
+        stock: productData.stock || 0,
+        status: productData.status || 'active',
+        image: productData.image || ''
       };
+
+      console.log('Dados enviados para o Supabase:', supabaseProduct);
 
       const { data, error } = await supabase
         .from('products')
@@ -73,7 +75,12 @@ export function useProductsData() {
         .select('*')
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro do Supabase:', error);
+        throw error;
+      }
+
+      console.log('Resposta do Supabase:', data);
 
       const formattedProduct = {
         id: data.id,
@@ -96,6 +103,7 @@ export function useProductsData() {
       showSuccessToast("Produto adicionado", "O produto foi adicionado com sucesso.");
       return formattedProduct;
     } catch (error) {
+      console.error('Erro completo:', error);
       handleError(error, 'Erro ao adicionar produto');
       throw error;
     }
@@ -108,19 +116,19 @@ export function useProductsData() {
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseProduct = {
-        name: product.name,
-        description: product.description,
-        sku: product.sku,
-        brand: product.brand,
-        category: product.category,
-        price: product.price || product.sellingPrice,
-        original_price: product.originalPrice || product.costPrice,
-        cost_price: product.costPrice,
-        selling_price: product.sellingPrice,
-        promo_price: product.promoPrice,
-        stock: product.stock,
-        status: product.status,
-        image: product.image,
+        name: product.name || 'Produto sem nome',
+        description: product.description || '',
+        sku: product.sku || '',
+        brand: product.brand || '',
+        category: product.category || '',
+        price: product.price || product.sellingPrice || 0,
+        original_price: product.originalPrice || product.costPrice || 0,
+        cost_price: product.costPrice || 0,
+        selling_price: product.sellingPrice || 0,
+        promo_price: product.promoPrice || 0,
+        stock: product.stock || 0,
+        status: product.status || 'active',
+        image: product.image || '',
         updated_at: formatDateForSupabase()
       };
 

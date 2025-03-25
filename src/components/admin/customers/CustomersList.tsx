@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -29,70 +29,60 @@ import {
 } from "lucide-react";
 import { CustomerDialog } from './CustomerDialog';
 import { CustomerDetailsDialog } from './CustomerDetailsDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-// Dados de exemplo para desenvolvimento
-const mockCustomers = [
-  { 
-    id: 1, 
-    name: 'João Silva', 
-    email: 'joao.silva@email.com', 
-    phone: '(11) 99999-1234', 
-    orders: 12,
-    totalSpent: 3450.80,
-    lastOrder: '2023-06-15',
-    status: 'active'
-  },
-  { 
-    id: 2, 
-    name: 'Maria Santos', 
-    email: 'maria.santos@email.com', 
-    phone: '(11) 98888-4321', 
-    orders: 8,
-    totalSpent: 2180.45,
-    lastOrder: '2023-06-10',
-    status: 'active'
-  },
-  { 
-    id: 3, 
-    name: 'Carlos Oliveira', 
-    email: 'carlos.oliveira@email.com', 
-    phone: '(21) 97777-5678', 
-    orders: 3,
-    totalSpent: 750.20,
-    lastOrder: '2023-06-05',
-    status: 'active'
-  },
-  { 
-    id: 4, 
-    name: 'Ana Souza', 
-    email: 'ana.souza@email.com', 
-    phone: '(21) 96666-8765', 
-    orders: 5,
-    totalSpent: 1250.75,
-    lastOrder: '2023-05-28',
-    status: 'active'
-  },
-  { 
-    id: 5, 
-    name: 'Pedro Costa', 
-    email: 'pedro.costa@email.com', 
-    phone: '(31) 95555-4567', 
-    orders: 0,
-    totalSpent: 0,
-    lastOrder: null,
-    status: 'inactive'
-  },
-];
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  total_orders: number;
+  total_spent: number;
+  last_order_date: string | null;
+  status: 'active' | 'inactive';
+}
 
 interface CustomersListProps {
   searchQuery: string;
 }
 
 export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => {
-  const [customers, setCustomers] = useState(mockCustomers);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<any | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const { toast } = useToast();
+  
+  // Carregar clientes do Supabase
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('customers')
+          .select('*');
+          
+        if (error) {
+          throw error;
+        }
+        
+        setCustomers(data || []);
+      } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível carregar os clientes.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCustomers();
+  }, [toast]);
   
   // Formatação de moeda
   const formatCurrency = (value: number) => {
@@ -114,25 +104,74 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
     }).format(date);
   };
   
-  const handleEditCustomer = (customer: any) => {
+  const handleEditCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setIsEditDialogOpen(true);
   };
   
-  const handleViewCustomer = (customer: any) => {
+  const handleViewCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setIsDetailsDialogOpen(true);
   };
   
-  const handleDeleteCustomer = (customerId: number) => {
-    // Na implementação real, aqui seria uma chamada à API
-    setCustomers(customers.filter(customer => customer.id !== customerId));
+  const handleDeleteCustomer = async (customerId: string) => {
+    try {
+      const { error } = await supabase
+        .from('customers')
+        .delete()
+        .eq('id', customerId);
+        
+      if (error) throw error;
+      
+      setCustomers(customers.filter(customer => customer.id !== customerId));
+      
+      toast({
+        title: 'Cliente excluído',
+        description: 'O cliente foi excluído com sucesso.',
+      });
+    } catch (error) {
+      console.error('Erro ao excluir cliente:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível excluir o cliente.',
+        variant: 'destructive',
+      });
+    }
+  };
+  
+  const handleChangeStatus = async (customerId: string, newStatus: 'active' | 'inactive') => {
+    try {
+      const { error } = await supabase
+        .from('customers')
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .eq('id', customerId);
+        
+      if (error) throw error;
+      
+      setCustomers(customers.map(customer => 
+        customer.id === customerId 
+          ? { ...customer, status: newStatus } 
+          : customer
+      ));
+      
+      toast({
+        title: 'Status atualizado',
+        description: `O cliente agora está ${newStatus === 'active' ? 'ativo' : 'inativo'}.`,
+      });
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível atualizar o status do cliente.',
+        variant: 'destructive',
+      });
+    }
   };
   
   const filteredCustomers = customers.filter(customer => 
-    customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.phone.includes(searchQuery)
+    customer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.phone?.includes(searchQuery)
   );
 
   return (
@@ -151,7 +190,13 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCustomers.length === 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-24 text-center">
+                  Carregando clientes...
+                </TableCell>
+              </TableRow>
+            ) : filteredCustomers.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-24 text-center">
                   Nenhum cliente encontrado.
@@ -167,9 +212,9 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
                       <div className="text-sm text-muted-foreground">{customer.phone}</div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-center">{customer.orders}</TableCell>
-                  <TableCell className="text-right">{formatCurrency(customer.totalSpent)}</TableCell>
-                  <TableCell>{formatDate(customer.lastOrder)}</TableCell>
+                  <TableCell className="text-center">{customer.total_orders || 0}</TableCell>
+                  <TableCell className="text-right">{formatCurrency(customer.total_spent || 0)}</TableCell>
+                  <TableCell>{formatDate(customer.last_order_date)}</TableCell>
                   <TableCell className="text-center">
                     <Badge 
                       variant="outline" 
@@ -219,7 +264,9 @@ export const CustomersList: React.FC<CustomersListProps> = ({ searchQuery }) => 
                             Enviar E-mail
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => 
+                            handleChangeStatus(customer.id, customer.status === 'active' ? 'inactive' : 'active')
+                          }>
                             <UserCog className="h-4 w-4 mr-2" />
                             {customer.status === 'active' 
                               ? 'Desativar Conta' 

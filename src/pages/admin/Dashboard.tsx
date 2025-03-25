@@ -7,9 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { ChartBars, LineChart } from '@/components/admin/dashboard/Charts';
 import { GrowthMetric } from '@/components/admin/dashboard/GrowthMetric';
+import { useToast } from '@/hooks/use-toast';
 
 export const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
   const [dashboardData, setDashboardData] = useState({
     totalSales: 0,
     totalOrders: 0,
@@ -28,24 +30,43 @@ export const AdminDashboard: React.FC = () => {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
+        // Buscar produtos
         const { data: products, error: productsError } = await supabase
           .from('products')
           .select('*');
 
         if (productsError) throw productsError;
 
-        // Calcular métricas reais com base nos produtos
+        // Buscar clientes
+        const { data: customers, error: customersError } = await supabase
+          .from('customers')
+          .select('*');
+
+        if (customersError) throw customersError;
+
+        // Buscar pedidos
+        const { data: orders, error: ordersError } = await supabase
+          .from('orders')
+          .select(`
+            *,
+            customers (*)
+          `);
+
+        if (ordersError) throw ordersError;
+
+        // Calcular métricas com base nos dados reais
         const totalProducts = products?.length || 0;
-        const totalSales = products ? products.reduce((acc, product) => acc + (product.price || 0), 0) : 0;
+        const totalSales = orders 
+          ? orders.reduce((acc, order) => acc + (order.total || 0), 0) 
+          : 0;
         
-        // Calcular métricas derivadas - em um sistema real, estas viriam de tabelas de pedidos
-        const revenue = totalSales * 0.75; // Em um sistema real, isto seria calculado a partir de dados reais de vendas
-        const totalOrders = Math.max(1, totalProducts); // Para evitar zeros na interface
-        const newCustomers = Math.max(1, Math.round(totalOrders * 0.4)); // Simulação baseada em produtos reais
+        const revenue = totalSales;
+        const totalOrders = orders?.length || 0;
+        const newCustomers = customers?.length || 0;
         
-        // Dados de gráficos - gerados com base em produtos reais
-        const monthlySales = generateMonthlySalesData(totalSales);
-        const weeklyBalance = generateWeeklyBalanceData(revenue);
+        // Dados de gráficos com base nos dados reais
+        const monthlySales = generateMonthlySalesData(orders || []);
+        const weeklyBalance = generateWeeklyBalanceData(orders || []);
         
         setDashboardData({
           totalSales,
@@ -56,40 +77,59 @@ export const AdminDashboard: React.FC = () => {
           customersGrowth: 0,
           ordersGrowth: 0,
           revenueGrowth: 0,
-          recentOrders: generateOrdersFromProducts(products || []),
+          recentOrders: formatOrders(orders || []),
           monthlySales,
           weeklyBalance
         });
       } catch (error) {
         console.error('Erro ao buscar dados do dashboard:', error);
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível carregar os dados do dashboard.',
+          variant: 'destructive'
+        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchDashboardData();
-  }, []);
+  }, [toast]);
 
-  // Gera dados de vendas mensais com base no valor total real
-  const generateMonthlySalesData = (totalSales: number) => {
-    if (totalSales === 0) {
-      return Array(12).fill(0).map((_, index) => ({
-        name: getMonthName(index),
-        value: 0
-      }));
-    }
+  // Formatar pedidos para a tabela de pedidos recentes
+  const formatOrders = (orders) => {
+    return orders.map(order => ({
+      id: order.id,
+      orderNumber: order.order_number,
+      date: order.created_at,
+      customer: {
+        name: order.customers?.name || 'Cliente não encontrado',
+        email: order.customers?.email || 'N/A'
+      },
+      subtotal: order.subtotal || 0,
+      shipping: order.shipping || 0,
+      discount: order.discount || 0,
+      total: order.total || 0,
+      paymentMethod: order.payment_method || 'N/A',
+      status: order.status || 'pending'
+    })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
+  };
 
+  // Gera dados de vendas mensais com base em pedidos reais
+  const generateMonthlySalesData = (orders) => {
     const months = Array(12).fill(0).map((_, index) => getMonthName(index));
+    const monthlyData = months.map(month => ({ name: month, value: 0 }));
     
-    // Distribuição uniforme entre os meses se não houver dados históricos reais
-    const monthlyTotal = totalSales / 12;
-    
-    return months.map(month => {
-      return {
-        name: month,
-        value: monthlyTotal
-      };
+    // Agrupar vendas por mês
+    orders.forEach(order => {
+      if (order.created_at) {
+        const date = new Date(order.created_at);
+        const month = date.getMonth();
+        monthlyData[month].value += order.total || 0;
+      }
     });
+    
+    return monthlyData;
   };
 
   // Função auxiliar para obter nome do mês
@@ -98,70 +138,31 @@ export const AdminDashboard: React.FC = () => {
     return months[index];
   };
 
-  // Gera dados de balanço semanal com base na receita real
-  const generateWeeklyBalanceData = (totalRevenue: number) => {
-    if (totalRevenue === 0) {
-      return Array(7).fill(0).map((_, index) => ({
-        name: getDayName(index),
-        receita: 0,
-        despesa: 0
-      }));
-    }
-
+  // Gera dados de balanço semanal com base em pedidos reais
+  const generateWeeklyBalanceData = (orders) => {
     const days = Array(7).fill(0).map((_, index) => getDayName(index));
-    const weeklyRevenue = totalRevenue / 4;
-    const dailyRevenue = weeklyRevenue / 7;
+    const weeklyData = days.map(day => ({ name: day, receita: 0, despesa: 0 }));
     
-    return days.map(day => {
-      return {
-        name: day,
-        receita: dailyRevenue,
-        despesa: dailyRevenue * 0.4 // Proporção estimada de despesas
-      };
+    // Suponhamos que 40% das receitas são despesas
+    orders.forEach(order => {
+      if (order.created_at) {
+        const date = new Date(order.created_at);
+        const day = date.getDay();
+        const dayIndex = day === 0 ? 6 : day - 1; // Ajustar para começar em segunda (0) até domingo (6)
+        
+        const value = order.total || 0;
+        weeklyData[dayIndex].receita += value;
+        weeklyData[dayIndex].despesa += value * 0.4; // 40% das receitas
+      }
     });
+    
+    return weeklyData;
   };
 
   // Função auxiliar para obter nome do dia
   const getDayName = (index: number) => {
     const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
     return days[index];
-  };
-
-  // Gera pedidos básicos a partir dos produtos reais disponíveis
-  const generateOrdersFromProducts = (products: any[]) => {
-    if (!products || products.length === 0) return [];
-    
-    const statuses = ['pending', 'paid', 'preparing', 'shipped', 'delivered'];
-    const recentDates = [];
-    
-    // Gerar datas recentes para os pedidos
-    for (let i = 0; i < Math.min(5, products.length); i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      recentDates.push(date.toISOString());
-    }
-    
-    // Usar produtos reais para gerar exemplos de pedidos
-    return products.slice(0, 5).map((product, index) => {
-      return {
-        id: `PED-${1000 + index}`,
-        orderNumber: `PED-${1000 + index}`,
-        date: recentDates[index % recentDates.length],
-        customer: {
-          name: `Cliente ${index + 1}`,
-          email: `cliente${index + 1}@exemplo.com`
-        },
-        items: [
-          { id: product.id, name: product.name, price: product.price || 0, quantity: 1 }
-        ],
-        subtotal: product.price || 0,
-        shipping: 15.00,
-        discount: 0,
-        total: (product.price || 0) + 15.00,
-        paymentMethod: 'PIX',
-        status: statuses[index % statuses.length]
-      };
-    });
   };
 
   return (

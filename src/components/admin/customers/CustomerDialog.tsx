@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -18,9 +18,19 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: 'active' | 'inactive';
+}
 
 interface CustomerDialogProps {
-  customer?: any;
+  customer?: Customer;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -31,6 +41,92 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
   onClose 
 }) => {
   const isEditing = !!customer;
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    name: customer?.name || '',
+    email: customer?.email || '',
+    phone: customer?.phone || '',
+    status: customer?.status || 'active',
+  });
+  
+  const [loading, setLoading] = useState(false);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id.replace('customer-', '')]: value
+    }));
+  };
+  
+  const handleSelectChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      status: value as 'active' | 'inactive'
+    }));
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      if (isEditing) {
+        // Atualizar cliente existente
+        const { error } = await supabase
+          .from('customers')
+          .update({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            status: formData.status,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', customer.id);
+          
+        if (error) throw error;
+        
+        toast({
+          title: 'Cliente atualizado',
+          description: 'Os dados do cliente foram atualizados com sucesso.'
+        });
+      } else {
+        // Criar novo cliente
+        const { error } = await supabase
+          .from('customers')
+          .insert({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            status: formData.status,
+            total_spent: 0,
+            total_orders: 0
+          });
+          
+        if (error) throw error;
+        
+        toast({
+          title: 'Cliente adicionado',
+          description: 'O cliente foi adicionado com sucesso.'
+        });
+      }
+      
+      // Força atualização da página para mostrar os novos dados
+      window.location.reload();
+      
+      onClose();
+    } catch (error: any) {
+      console.error('Erro ao salvar cliente:', error);
+      toast({
+        title: 'Erro',
+        description: error.message || 'Não foi possível salvar o cliente.',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -41,13 +137,15 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="customer-name">Nome Completo</Label>
             <Input 
               id="customer-name" 
-              defaultValue={customer?.name || ''} 
+              value={formData.name}
+              onChange={handleChange}
               placeholder="Nome do cliente"
+              required
             />
           </div>
           
@@ -56,8 +154,10 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
             <Input 
               id="customer-email" 
               type="email"
-              defaultValue={customer?.email || ''} 
+              value={formData.email}
+              onChange={handleChange}
               placeholder="email@exemplo.com"
+              required
             />
           </div>
           
@@ -65,14 +165,18 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
             <Label htmlFor="customer-phone">Telefone</Label>
             <Input 
               id="customer-phone" 
-              defaultValue={customer?.phone || ''} 
+              value={formData.phone}
+              onChange={handleChange}
               placeholder="(00) 00000-0000"
             />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="customer-status">Status</Label>
-            <Select defaultValue={customer?.status || 'active'}>
+            <Select 
+              value={formData.status} 
+              onValueChange={handleSelectChange}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
@@ -83,29 +187,15 @@ export const CustomerDialog: React.FC<CustomerDialogProps> = ({
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="customer-password">Senha</Label>
-            <Input 
-              id="customer-password" 
-              type="password"
-              placeholder={isEditing ? "••••••••" : "Senha"}
-            />
-            {isEditing && (
-              <p className="text-xs text-muted-foreground">
-                Deixe em branco para manter a senha atual
-              </p>
-            )}
-          </div>
-        </div>
-        
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
-          </DialogClose>
-          <Button type="submit">
-            {isEditing ? 'Salvar Alterações' : 'Adicionar Cliente'}
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" type="button">Cancelar</Button>
+            </DialogClose>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Adicionar Cliente'}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
