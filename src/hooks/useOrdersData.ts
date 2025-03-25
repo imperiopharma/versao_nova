@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Order, OrderFilters, OrderStatus } from '@/types/orders';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,12 +9,10 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   
-  // Função para buscar pedidos
   const fetchOrders = async () => {
     setLoading(true);
     try {
       console.log('Buscando pedidos do Supabase...');
-      // Busca pedidos com dados do cliente
       const { data, error } = await supabase
         .from('orders')
         .select(`
@@ -36,7 +33,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         return [];
       }
       
-      // Buscar itens dos pedidos
       const ordersWithItems = await Promise.all(
         data.map(async (order) => {
           const { data: itemsData, error: itemsError } = await supabase
@@ -79,16 +75,14 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
     }
   };
   
-  // Função para criar um novo pedido
   const createOrder = async (orderData: Partial<Order>) => {
     try {
       setLoading(true);
       console.log('Criando novo pedido:', orderData);
       
-      // Primeiro, verifica se o cliente existe ou cria um novo
-      let customerId = orderData.customer?.id;
+      let customerId = null;
       
-      if (!customerId && orderData.customer) {
+      if (orderData.customer) {
         const { data: customerData, error: customerError } = await supabase
           .from('customers')
           .select('id')
@@ -115,10 +109,8 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         }
       }
       
-      // Gera um número de pedido único
       const orderNumber = `PED${Date.now().toString().slice(-6)}`;
       
-      // Cria o pedido
       const { data: newOrder, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -136,7 +128,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       
       if (orderError) throw orderError;
       
-      // Adiciona os itens do pedido, se existirem
       if (orderData.items && orderData.items.length > 0) {
         const orderItems = orderData.items.map(item => ({
           order_id: newOrder.id,
@@ -158,7 +149,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         description: `Pedido ${orderNumber} criado com sucesso!`
       });
       
-      // Atualiza a lista de pedidos
       await fetchOrders();
       
       return newOrder;
@@ -177,7 +167,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
     }
   };
   
-  // Função para atualizar um pedido existente
   const updateOrderStatus = async (orderId: string, newStatus: OrderStatus) => {
     try {
       setLoading(true);
@@ -193,7 +182,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       
       if (error) throw error;
       
-      // Atualiza o estado local
       setOrders(prev => 
         prev.map(order => 
           order.id === orderId 
@@ -223,13 +211,11 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
     }
   };
   
-  // Função para excluir um pedido
   const deleteOrder = async (orderId: string) => {
     try {
       setLoading(true);
       console.log(`Excluindo pedido ${orderId}`);
       
-      // Primeiro exclui os itens do pedido
       const { error: itemsError } = await supabase
         .from('order_items')
         .delete()
@@ -237,7 +223,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       
       if (itemsError) throw itemsError;
       
-      // Depois exclui o pedido
       const { error } = await supabase
         .from('orders')
         .delete()
@@ -245,7 +230,6 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       
       if (error) throw error;
       
-      // Atualiza o estado local
       setOrders(prev => prev.filter(order => order.id !== orderId));
       
       toast({
@@ -269,13 +253,11 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
     }
   };
   
-  // Funções auxiliares para mapear os dados do Supabase para o formato da aplicação
   const mapOrderFromSupabase = (order: any): Order => ({
     id: order.id,
     orderNumber: order.order_number,
     date: order.created_at,
     customer: {
-      id: order.customer?.id || '',
       name: order.customer?.name || 'Cliente desconhecido',
       email: order.customer?.email || '',
       phone: order.customer?.phone || '',
@@ -300,12 +282,10 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
     }));
   };
   
-  // Carrega os pedidos quando o componente é montado ou os filtros mudam
   useEffect(() => {
     fetchOrders();
   }, [activeFilters?.status, activeFilters?.period]);
   
-  // Filtra os pedidos com base nos filtros ativos
   const filteredOrders = activeFilters 
     ? orders.filter(order => {
         if (activeFilters.status === 'all') return true;

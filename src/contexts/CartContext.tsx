@@ -24,6 +24,8 @@ type CartContextType = {
   setCouponCode: (code: string | null) => void;
   shippingMethod: string | null;
   shippingCost: number;
+  shipping: number;
+  setShipping: (cost: number) => void;
   setShippingMethod: (method: string | null) => void;
   hasInsurance: boolean;
   setHasInsurance: (hasInsurance: boolean) => void;
@@ -37,6 +39,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [couponCode, setCouponCode] = useState<string | null>(null);
   const [shippingMethod, setShippingMethod] = useState<string | null>(null);
   const [shippingCost, setShippingCost] = useState<number>(0);
+  const [shipping, setShipping] = useState<number>(0);
   const [hasInsurance, setHasInsurance] = useState<boolean>(false);
   
   // Load cart from localStorage on initial render
@@ -92,6 +95,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCouponCode(null);
     setShippingMethod(null);
     setShippingCost(0);
+    setShipping(0);
     setHasInsurance(false);
   };
   
@@ -103,7 +107,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const discount = couponCode === 'DESCONTO10' ? subtotal * 0.1 : 0;
   
   const calculateTotal = (): number => {
-    let total = subtotal - discount + shippingCost;
+    let total = subtotal - discount + shipping;
     if (hasInsurance) {
       total += total * 0.2; // Add 20% for insurance
     }
@@ -146,6 +150,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setCouponCode,
         shippingMethod,
         shippingCost,
+        shipping,
+        setShipping,
         setShippingMethod,
         hasInsurance,
         setHasInsurance,

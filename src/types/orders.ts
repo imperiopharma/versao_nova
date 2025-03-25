@@ -7,7 +7,7 @@
 export interface Customer {
   name: string;
   email: string;
-  // These fields can be extended with phone, address, etc. as needed
+  phone?: string;
 }
 
 // Order item representing a product in an order
