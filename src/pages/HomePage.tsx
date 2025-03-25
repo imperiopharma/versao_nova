@@ -1,77 +1,94 @@
 
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
-import { useHomeData } from '@/hooks/useHomeData';
-
-// Import components
 import { HeroBanner } from '../components/home/HeroBanner';
-import { BrandsSection } from '../components/home/BrandsSection';
 import { CategoryCards } from '../components/home/CategoryCards';
 import { FeaturedProducts } from '../components/home/FeaturedProducts';
-import { NewsletterSection } from '../components/home/NewsletterSection';
-import { PromoCardsSection } from '../components/home/PromoCardsSection';
+import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
-import { PromoHeader } from '../components/home/PromoHeader';
-import { VipMembershipSection } from '../components/home/VipMembershipSection';
+import { GuaranteesSection } from '../components/home/GuaranteesSection';
+import { PromoCardsSection } from '../components/home/PromoCardsSection';
+import { NewsletterSection } from '../components/home/NewsletterSection';
 import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
-import { GuaranteesSection } from '../components/home/GuaranteesSection';
+import { VipMembershipSection } from '../components/home/VipMembershipSection';
+import { AppBanner } from '../components/home/AppBanner';
+import { PromoHeader } from '../components/home/PromoHeader';
+import { useHero } from '@/hooks/useHero';
+import { useHomeData } from '@/hooks/useHomeData';
+import { useProducts } from '@/hooks/useProducts';
+import { useBrands } from '@/hooks/useBrands';
+import { useFaq } from '@/hooks/useFaq';
+import { mockCategories } from '@/data/mock/categories';
+import { Category } from '@/types/category';
 
 export const HomePage: React.FC = () => {
-  const { 
-    brands, 
-    featuredProducts, 
-    flashSaleItems, 
-    heroSlides, 
-    categories, 
-    serviceCards, 
-    faqItems 
-  } = useHomeData();
+  const { heroData } = useHero();
+  const { homeData } = useHomeData();
+  const { featuredProducts, flashSaleItems } = useProducts();
+  const { brands } = useBrands();
+  const { faqItems } = useFaq();
   
+  const categories: Category[] = mockCategories;
+
   return (
     <Layout>
-      <PromoHeader />
+      {homeData.showPromoHeader && (
+        <PromoHeader 
+          text={homeData.promoHeaderText || "Frete grátis em compras acima de R$ 200,00"}
+        />
+      )}
       
-      <HeroBanner slides={heroSlides} />
-      
-      {/* Parte 1: Categorias e Serviços */}
-      <div className="py-2">
-        <CategoryCards categories={categories} />
-        <PromoCardsSection cards={serviceCards} />
-      </div>
-      
-      {/* Parte 2: Marcas */}
-      <BrandsSection 
-        premium={brands.premium}
-        national={brands.national}
-        imported={brands.imported}
-        various={brands.various}
-        categories={brands.categories}
+      <HeroBanner 
+        title={heroData.title}
+        subtitle={heroData.subtitle}
+        ctaText={heroData.ctaText}
+        ctaLink={heroData.ctaLink}
+        backgroundImage={heroData.backgroundImage}
       />
       
-      {/* Parte 3: Produtos */}
-      <div className="py-2">
-        <FeaturedProducts products={featuredProducts} />
-        <FlashSaleSection items={flashSaleItems} />
-      </div>
+      <CategoryCards categories={categories} />
       
-      {/* Parte 4: Garantias */}
+      <FeaturedProducts 
+        title="Produtos em Destaque"
+        subtitle="Conheça nossos produtos mais vendidos"
+        products={featuredProducts}
+      />
+      
+      <FlashSaleSection 
+        title="Ofertas Imperdíveis"
+        subtitle="Por tempo limitado"
+        items={flashSaleItems}
+      />
+      
+      <BrandsSection 
+        title="Nossas Marcas" 
+        brands={brands}
+      />
+      
       <GuaranteesSection />
       
-      {/* Parte 5: Informações Adicionais */}
-      <div className="py-2">
-        <VipMembershipSection />
-        <div className="py-2"></div>
-        <AboutSection />
-        <div className="py-2"></div>
-        <LocationSection />
-        <div className="py-2"></div>
-        <FaqSection items={faqItems} />
-      </div>
+      <PromoCardsSection />
       
-      {/* Parte 6: Newsletter */}
+      {homeData.showVipSection && (
+        <VipMembershipSection />
+      )}
+      
+      <AboutSection />
+      
+      <LocationSection />
+      
+      <FaqSection 
+        title="Perguntas Frequentes"
+        items={faqItems}
+      />
+      
       <NewsletterSection />
+      
+      {homeData.showAppBanner && (
+        <AppBanner />
+      )}
     </Layout>
   );
 };

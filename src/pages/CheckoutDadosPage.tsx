@@ -1,90 +1,137 @@
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
-import { useCheckout } from '../contexts/CheckoutContext';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useCheckoutForm } from '../hooks/useCheckoutForm';
+import { CustomerInfoForm } from '../components/checkout/CustomerInfoForm';
+import { AddressForm } from '../components/checkout/AddressForm';
+import { HowFoundUsForm } from '../components/checkout/HowFoundUsForm';
 import { CheckoutSteps } from '../components/checkout/CheckoutSteps';
-import { CustomerInfoForm } from '@/components/checkout/CustomerInfoForm';
-import { AddressForm } from '@/components/checkout/AddressForm';
-import { HowFoundUsForm } from '@/components/checkout/HowFoundUsForm';
-import { ShippingMethodForm } from '@/components/checkout/ShippingMethodForm';
-import { useCheckoutForm } from '@/hooks/useCheckoutForm';
+import { useToast } from '@/hooks/use-toast';
 import { CheckoutPageHeader } from '@/components/checkout/CheckoutPageHeader';
 import { CartSummary } from '@/components/checkout/CartSummary';
 import { CheckoutNavigation } from '@/components/checkout/CheckoutNavigation';
 
 export const CheckoutDadosPage: React.FC = () => {
-  const { customerData } = useCheckout();
-  const { setShippingMethod, items, total } = useCart();
-  const { formErrors, handleChangeInput, handleSubmit } = useCheckoutForm();
-  
-  // Rolar para o topo quando a página carregar
+  const navigate = useNavigate();
+  const { items, itemCount, total } = useCart();
+  const { toast } = useToast();
+  const { 
+    formData, 
+    validationErrors,
+    handleChange, 
+    handleBlur,
+    validateDadosStep,
+    isValidatingCEP,
+    handleCEPBlur
+  } = useCheckoutForm();
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-  
+    // Redirecionar para o carrinho se estiver vazio
+    if (items.length === 0) {
+      navigate('/carrinho');
+      toast({
+        title: "Carrinho vazio",
+        description: "Adicione produtos ao carrinho para continuar com a compra.",
+      });
+    }
+  }, [items, navigate]);
+
+  const handleContinue = () => {
+    if (validateDadosStep()) {
+      navigate('/checkout/pagamento');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <Layout>
-      <div className="section-container py-6 md:py-12 animate-fade-in relative overflow-hidden bg-gradient-to-b from-white to-imperio-extra-light-navy/20">
-        {/* Elementos decorativos - efeitos de luz e gradientes */}
-        <div className="absolute -right-40 -top-40 w-96 h-96 bg-gradient-to-br from-blue-500/20 via-white/10 to-red-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-subtle"></div>
-        <div className="absolute -left-40 -bottom-40 w-96 h-96 bg-gradient-to-tl from-blue-500/20 via-white/10 to-red-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-subtle"></div>
-        
-        {/* Grid de pontos decorativos */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e0e0e0_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none"></div>
-        
-        <div className="mb-8">
-          <CheckoutSteps currentStep={2} />
-        </div>
-        
+      <div className="section-container py-10">
         <CheckoutPageHeader 
-          title="Dados do Cliente e Envio"
-          subtitle="Preencha suas informações para finalizar a compra com segurança"
+          title="Informações de Entrega" 
+          subtitle="Preencha seus dados para enviarmos seu pedido corretamente"
         />
         
-        {/* Resumo do carrinho - com efeito de vidro */}
         <CartSummary 
-          itemsCount={items.length}
+          itemsCount={itemCount}
           total={total}
-          currentStep={2}
-          totalSteps={4}
+          currentStep={1}
+          totalSteps={3}
         />
         
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-          {/* Formulário de Informações Pessoais */}
-          <CustomerInfoForm 
-            customerData={customerData}
-            handleChangeInput={handleChangeInput}
-            formErrors={formErrors}
-          />
+        <CheckoutSteps currentStep={1} />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+          <div className="lg:col-span-2 space-y-8">
+            <CustomerInfoForm 
+              formData={formData}
+              validationErrors={validationErrors}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+            />
+            
+            <AddressForm 
+              formData={formData}
+              validationErrors={validationErrors}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              isValidatingCEP={isValidatingCEP}
+              handleCEPBlur={handleCEPBlur}
+            />
+            
+            <HowFoundUsForm 
+              formData={formData}
+              handleChange={handleChange}
+            />
+            
+            <CheckoutNavigation 
+              onContinue={handleContinue}
+              backLink="/carrinho"
+              backText="Voltar para o Carrinho"
+              continueText="Continuar para Pagamento"
+            />
+          </div>
           
-          {/* Formulário de Endereço */}
-          <AddressForm 
-            customerData={customerData}
-            handleChangeInput={handleChangeInput}
-            formErrors={formErrors}
-          />
-
-          {/* Como nos conheceu? - Movido para depois do endereço */}
-          <HowFoundUsForm
-            customerData={customerData}
-            handleChangeInput={handleChangeInput}
-          />
-          
-          {/* Formulário de Método de Envio */}
-          <ShippingMethodForm 
-            setShippingMethod={setShippingMethod}
-            formErrors={formErrors}
-          />
-          
-          <CheckoutNavigation 
-            onContinue={handleSubmit}
-            backLink="/carrinho"
-            backText="Voltar ao Carrinho"
-            continueText="Continuar"
-          />
-        </form>
+          <div className="hidden lg:block">
+            <div className="bg-gray-50 p-6 rounded-lg sticky top-24">
+              <h3 className="text-lg font-semibold mb-4 text-imperio-navy">Resumo do Pedido</h3>
+              <div className="space-y-4">
+                {items.map(item => (
+                  <div key={item.id} className="flex gap-3">
+                    <div className="w-16 h-16 bg-white rounded border overflow-hidden flex-shrink-0">
+                      {item.image && (
+                        <img 
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{item.name}</p>
+                      <p className="text-xs text-gray-500">Qtd: {item.quantity}</p>
+                      <p className="text-sm text-imperio-navy font-medium">
+                        {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="border-t pt-4 mt-4">
+                  <div className="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span>{total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-500 mt-1">
+                    <span>Frete:</span>
+                    <span>Calculado no próximo passo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
@@ -9,13 +8,15 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ShoppingBag, Heart, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AddedToCartModal } from '@/components/cart/AddedToCartModal';
 
 export const ProductDetailsPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const [showCartModal, setShowCartModal] = useState(false);
+  const { addItem, itemCount, total } = useCart();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -77,10 +78,7 @@ export const ProductDetailsPage: React.FC = () => {
         image: product.image
       });
 
-      toast({
-        title: "Produto adicionado",
-        description: `${product.name} foi adicionado ao carrinho.`
-      });
+      setShowCartModal(true);
     }
   };
 
@@ -124,7 +122,7 @@ export const ProductDetailsPage: React.FC = () => {
     );
   }
 
-  const discountPercentage = product.originalPrice && product.price 
+  const discountPercentage = product?.originalPrice && product?.price 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
     : 0;
 
@@ -142,8 +140,8 @@ export const ProductDetailsPage: React.FC = () => {
           {/* Imagem do Produto */}
           <div className="bg-white p-4 rounded-lg imperio-card">
             <img 
-              src={product.image} 
-              alt={product.name} 
+              src={product?.image} 
+              alt={product?.name} 
               className="w-full h-auto object-contain aspect-square"
             />
           </div>
@@ -151,14 +149,14 @@ export const ProductDetailsPage: React.FC = () => {
           {/* Detalhes do Produto */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-semibold text-imperio-navy">{product.name}</h1>
-              <p className="text-gray-600 mt-1">Marca: {product.brand}</p>
-              <p className="text-sm text-gray-500 mt-1">SKU: {product.sku}</p>
+              <h1 className="text-3xl font-semibold text-imperio-navy">{product?.name}</h1>
+              <p className="text-gray-600 mt-1">Marca: {product?.brand}</p>
+              <p className="text-sm text-gray-500 mt-1">SKU: {product?.sku}</p>
             </div>
             
             <div className="border-t border-b py-4">
               <div className="flex items-baseline gap-2">
-                {product.originalPrice && product.originalPrice > product.price && (
+                {product?.originalPrice && product?.originalPrice > product?.price && (
                   <>
                     <span className="text-gray-500 line-through">
                       {product.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -170,10 +168,10 @@ export const ProductDetailsPage: React.FC = () => {
                 )}
               </div>
               <div className="text-2xl font-semibold text-imperio-navy mt-1">
-                {(product.price || product.sellingPrice).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                {(product?.price || product?.sellingPrice)?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                {product.stock > 0 ? (
+                {product?.stock > 0 ? (
                   <span className="text-green-600">Em estoque: {product.stock} unidades</span>
                 ) : (
                   <span className="text-red-600">Fora de estoque</span>
@@ -183,7 +181,7 @@ export const ProductDetailsPage: React.FC = () => {
             
             <div>
               <h2 className="text-lg font-medium mb-2">Descrição</h2>
-              <p className="text-gray-700">{product.description || "Sem descrição disponível."}</p>
+              <p className="text-gray-700">{product?.description || "Sem descrição disponível."}</p>
             </div>
             
             <div className="flex items-center gap-4">
@@ -205,7 +203,7 @@ export const ProductDetailsPage: React.FC = () => {
               <Button 
                 className="bg-imperio-navy hover:bg-imperio-light-navy flex-1"
                 onClick={handleAddToCart}
-                disabled={product.stock <= 0}
+                disabled={product?.stock <= 0}
               >
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Adicionar ao Carrinho
@@ -217,11 +215,21 @@ export const ProductDetailsPage: React.FC = () => {
             </div>
             
             <div className="text-sm text-gray-600 border-t pt-4">
-              <p>Categoria: {product.category || "Não categorizado"}</p>
+              <p>Categoria: {product?.category || "Não categorizado"}</p>
             </div>
           </div>
         </div>
       </div>
+
+      {showCartModal && (
+        <AddedToCartModal
+          productName={product.name}
+          productImage={product.image}
+          total={total}
+          itemCount={itemCount}
+          onClose={() => setShowCartModal(false)}
+        />
+      )}
     </Layout>
   );
 };

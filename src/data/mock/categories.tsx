@@ -1,49 +1,61 @@
 
-import { Pill, Heart, Phone, Truck, CalendarIcon } from 'lucide-react';
-import { Category, ServiceCard } from '@/types/category';
+import React from 'react';
+import { TagIcon, PillIcon, HeartIcon, MoonIcon, ActivityIcon, ScrollIcon } from 'lucide-react';
+import { Category } from '@/types/category';
 
 export const mockCategories: Category[] = [
   {
-    id: 'emagrecedores',
+    id: '1',
+    name: 'Emagrecedores',
     title: 'Emagrecedores',
-    description: 'Produtos para a perda de peso',
-    icon: () => <Pill size={20} />,
+    description: 'Produtos para emagrecimento saudável',
+    icon: () => <TagIcon className="h-6 w-6" />,
     link: '/categoria/emagrecedores',
-    color: 'bg-white'
+    color: 'bg-red-500'
   },
   {
-    id: 'farmacia',
-    title: 'Farmácia',
-    description: 'Medicamentos e suplementos essenciais',
-    icon: () => <Heart size={20} />,
-    link: '/categoria/farmacia',
-    color: 'bg-white'
-  }
-];
-
-export const mockServiceCards: ServiceCard[] = [
-  {
-    id: 'faq',
-    title: 'FAQ',
-    description: 'Perguntas frequentes',
-    icon: () => <Phone size={20} />,
-    link: '/faq',
-    color: 'bg-blue-100'
+    id: '2',
+    name: 'Suplementos',
+    title: 'Suplementos',
+    description: 'Suplementos para melhorar sua performance',
+    icon: () => <PillIcon className="h-6 w-6" />,
+    link: '/categoria/suplementos',
+    color: 'bg-blue-500'
   },
   {
-    id: 'fretes',
-    title: 'Fretes',
-    description: 'Consulte nossas opções',
-    icon: () => <Truck size={20} />,
-    link: '/fretes',
-    color: 'bg-green-100'
+    id: '3',
+    name: 'Vitaminas',
+    title: 'Vitaminas',
+    description: 'Vitaminas para sua saúde',
+    icon: () => <HeartIcon className="h-6 w-6" />,
+    link: '/categoria/vitaminas',
+    color: 'bg-green-500'
   },
   {
-    id: 'pedidos',
-    title: 'Ciclos Prontos',
-    description: 'Combos preparados',
-    icon: () => <CalendarIcon size={20} />,
-    link: '/ciclos',
-    color: 'bg-yellow-100'
+    id: '4',
+    name: 'Hormônios',
+    title: 'Hormônios',
+    description: 'Hormônios e moduladores',
+    icon: () => <ActivityIcon className="h-6 w-6" />,
+    link: '/categoria/hormonios',
+    color: 'bg-purple-500'
+  },
+  {
+    id: '5',
+    name: 'Relaxantes',
+    title: 'Relaxantes',
+    description: 'Relaxantes musculares e tranquilizantes',
+    icon: () => <MoonIcon className="h-6 w-6" />,
+    link: '/categoria/relaxantes',
+    color: 'bg-indigo-500'
+  },
+  {
+    id: '6',
+    name: 'Fitoterápicos',
+    title: 'Fitoterápicos',
+    description: 'Produtos fitoterápicos naturais',
+    icon: () => <ScrollIcon className="h-6 w-6" />,
+    link: '/categoria/fitoterapicos',
+    color: 'bg-emerald-500'
   }
 ];
