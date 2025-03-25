@@ -266,30 +266,6 @@ export type Database = {
         }
         Relationships: []
       }
-      produtos: {
-        Row: {
-          criado_em: string | null
-          descricao: string | null
-          id: number
-          nome: string
-          preco: number
-        }
-        Insert: {
-          criado_em?: string | null
-          descricao?: string | null
-          id?: never
-          nome: string
-          preco: number
-        }
-        Update: {
-          criado_em?: string | null
-          descricao?: string | null
-          id?: never
-          nome?: string
-          preco?: number
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
