@@ -1,5 +1,5 @@
 
-import React, { forwardRef, useState, useEffect, useRef } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
@@ -8,7 +8,7 @@ export interface InputMaskProps extends React.InputHTMLAttributes<HTMLInputEleme
   maskChar?: string;
   formatChars?: { [key: string]: string };
   alwaysShowMask?: boolean;
-  onValueChange?: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onValueChange?: (value: string, event?: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
@@ -26,15 +26,13 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
       alwaysShowMask = false,
       onChange,
       onValueChange,
-      value: propValue,
+      value: propValue = '',
       ...props
     },
     ref
   ) => {
     const [value, setValue] = useState<string>(propValue as string || '');
-    const [cleanValue, setCleanValue] = useState<string>('');
-    const [focused, setFocused] = useState(false);
-    const inputRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
       if (propValue !== undefined) {
@@ -42,61 +40,56 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
       }
     }, [propValue]);
 
-    const getCleanValue = (val: string): string => {
-      if (!mask) return val;
-      
-      let cleanVal = '';
-      let maskIndex = 0;
-      
-      for (let i = 0; i < val.length && maskIndex < mask.length; i++) {
-        const maskChar = mask[maskIndex];
-        const valChar = val[i];
-        
-        if (maskChar in formatChars) {
-          if (new RegExp(formatChars[maskChar]).test(valChar)) {
-            cleanVal += valChar;
-          }
-        } else if (maskChar === valChar) {
-          // Skip special characters that match the mask
-        }
-        
-        maskIndex++;
-      }
-      
-      return cleanVal;
-    };
-
+    // Aplicar a máscara ao valor
     const formatValue = (val: string): string => {
       if (!mask) return val;
-      
-      const clean = getCleanValue(val);
-      let formatted = '';
+
+      const cleanValue = val.replace(/\D/g, '');
+      let result = '';
       let cleanIndex = 0;
-      
-      for (let i = 0; i < mask.length && cleanIndex < clean.length; i++) {
+
+      // Percorre a máscara caractere por caractere
+      for (let i = 0; i < mask.length && cleanIndex < cleanValue.length; i++) {
         const maskChar = mask[i];
         
         if (maskChar in formatChars) {
-          formatted += clean[cleanIndex];
+          // Se o caractere da máscara é um espaço para valor
+          result += cleanValue[cleanIndex];
           cleanIndex++;
         } else {
-          formatted += maskChar;
+          // Se o caractere da máscara é um separador
+          result += maskChar;
         }
       }
-      
-      return formatted;
+
+      return result;
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      const newCleanValue = getCleanValue(newValue);
-      const formattedValue = formatValue(newValue);
+      const inputValue = e.target.value;
       
-      setValue(formattedValue);
-      setCleanValue(newCleanValue);
+      // Remove caracteres não permitidos pela máscara
+      let processedValue = inputValue;
       
-      if (onChange) onChange(e);
-      if (onValueChange) onValueChange(newCleanValue, e);
+      if (mask) {
+        // Formata o valor de acordo com a máscara
+        processedValue = formatValue(processedValue);
+      }
+      
+      setValue(processedValue);
+      
+      // Extrai apenas os dígitos para o valor limpo
+      const cleanValue = processedValue.replace(/\D/g, '');
+      
+      // Chama o callback onChange original, se existir
+      if (onChange) {
+        onChange(e);
+      }
+      
+      // Chama o callback onValueChange, se existir
+      if (onValueChange) {
+        onValueChange(cleanValue, e);
+      }
     };
 
     return (
@@ -115,8 +108,6 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
         }}
         value={value}
         onChange={handleChange}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
         {...props}
       />
     );

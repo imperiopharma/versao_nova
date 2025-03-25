@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 
 export const CheckoutDadosPage: React.FC = () => {
-  const { customerData, updateCustomerData, setCheckoutStep } = useCheckout();
+  const { customerData, updateCustomerData, setCheckoutStep, validateCPF } = useCheckout();
   const { setShippingMethod } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -95,14 +95,28 @@ export const CheckoutDadosPage: React.FC = () => {
       errors.email = 'Email inválido';
     }
     
-    // CPF validation (just a basic check)
-    if (customerData.cpf && customerData.cpf.replace(/\D/g, '').length !== 11) {
-      errors.cpf = 'CPF inválido';
+    // CPF validation (validação completa)
+    if (customerData.cpf) {
+      const cpfClean = customerData.cpf.replace(/\D/g, '');
+      if (cpfClean.length !== 11 || !validateCPF(customerData.cpf)) {
+        errors.cpf = 'CPF inválido';
+      }
+    }
+    
+    // WhatsApp validation
+    if (customerData.whatsapp) {
+      const whatsappClean = customerData.whatsapp.replace(/\D/g, '');
+      if (whatsappClean.length !== 11) {
+        errors.whatsapp = 'Número de WhatsApp inválido';
+      }
     }
     
     // CEP validation
-    if (customerData.cep && customerData.cep.replace(/\D/g, '').length !== 8) {
-      errors.cep = 'CEP inválido';
+    if (customerData.cep) {
+      const cepClean = customerData.cep.replace(/\D/g, '');
+      if (cepClean.length !== 8) {
+        errors.cep = 'CEP inválido';
+      }
     }
     
     setFormErrors(errors);
