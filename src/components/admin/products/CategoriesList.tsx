@@ -26,6 +26,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { CategoryDialog } from './CategoryDialog';
+import { useToast } from '@/hooks/use-toast';
 
 // Dados de exemplo para desenvolvimento
 const mockCategories = [
@@ -68,6 +69,7 @@ export const CategoriesList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
+  const { toast } = useToast();
   
   const handleEditCategory = (category: any) => {
     setSelectedCategory(category);
@@ -77,6 +79,11 @@ export const CategoriesList: React.FC = () => {
   const handleDeleteCategory = (categoryId: number) => {
     // Na implementação real, aqui seria uma chamada à API
     setCategories(categories.filter(category => category.id !== categoryId));
+    
+    toast({
+      title: "Categoria excluída",
+      description: "A categoria foi excluída com sucesso.",
+    });
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

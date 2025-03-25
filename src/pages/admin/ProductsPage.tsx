@@ -70,15 +70,15 @@ export const ProductsPage: React.FC = () => {
           </TabsList>
           
           <TabsContent value="products">
-            <ProductsList onOpenDialog={() => setIsProductDialogOpen(true)} />
+            <ProductsList />
           </TabsContent>
           
           <TabsContent value="brands">
-            <BrandsList onOpenDialog={() => setIsBrandDialogOpen(true)} />
+            <BrandsList />
           </TabsContent>
           
           <TabsContent value="categories">
-            <CategoriesList onOpenDialog={() => setIsCategoryDialogOpen(true)} />
+            <CategoriesList />
           </TabsContent>
         </Tabs>
         
