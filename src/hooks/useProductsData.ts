@@ -1,13 +1,13 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProductCommon } from './useProductCommon';
 
 export function useProductsData() {
   const [products, setProducts] = useState<any[]>([]);
-  const { loading, setLoading, handleError, formatDateForSupabase } = useProductCommon();
+  const { handleError, formatDateForSupabase } = useProductCommon();
 
-  // Fetch products from Supabase
+  // Buscar produtos do Supabase
   const fetchProducts = async () => {
     try {
       const { data: productsData, error: productsError } = await supabase
@@ -18,7 +18,7 @@ export function useProductsData() {
         throw productsError;
       }
 
-      // Format products data
+      // Formatar dados dos produtos
       const formattedProducts = productsData.map(product => ({
         id: product.id,
         name: product.name,
@@ -44,7 +44,7 @@ export function useProductsData() {
     }
   };
 
-  // Add a product to Supabase
+  // Adicionar um produto ao Supabase
   const addProduct = async (product: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
@@ -100,7 +100,7 @@ export function useProductsData() {
     }
   };
 
-  // Update a product in Supabase
+  // Atualizar um produto no Supabase
   const updateProduct = async (product: any) => {
     try {
       const { id } = product;

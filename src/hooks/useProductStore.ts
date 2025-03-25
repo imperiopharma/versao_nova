@@ -30,12 +30,12 @@ export function useProductStore() {
     updateCategory
   } = useCategoriesData();
 
-  // Fetch all data on initial load
+  // Buscar todos os dados no carregamento inicial
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Function to fetch all data
+  // Função para buscar todos os dados
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -51,7 +51,7 @@ export function useProductStore() {
     }
   };
 
-  // Return the same API to maintain backward compatibility
+  // Retornar a mesma API para manter compatibilidade
   return {
     products,
     brands,

@@ -7,7 +7,7 @@ export function useCategoriesData() {
   const [categories, setCategories] = useState<any[]>([]);
   const { handleError, formatDateForSupabase } = useProductCommon();
 
-  // Fetch categories from Supabase
+  // Buscar categorias do Supabase
   const fetchCategories = async () => {
     try {
       const { data: categoriesData, error: categoriesError } = await supabase
@@ -18,7 +18,7 @@ export function useCategoriesData() {
         throw categoriesError;
       }
 
-      // Format categories data
+      // Formatar dados das categorias
       const formattedCategories = categoriesData.map(category => ({
         id: category.id,
         name: category.name,
@@ -35,7 +35,7 @@ export function useCategoriesData() {
     }
   };
 
-  // Add a category to Supabase
+  // Adicionar uma categoria ao Supabase
   const addCategory = async (category: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
@@ -73,7 +73,7 @@ export function useCategoriesData() {
     }
   };
 
-  // Update a category in Supabase
+  // Atualizar uma categoria no Supabase
   const updateCategory = async (category: any) => {
     try {
       const { id } = category;

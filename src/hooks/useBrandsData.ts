@@ -7,7 +7,7 @@ export function useBrandsData() {
   const [brands, setBrands] = useState<any[]>([]);
   const { handleError, formatDateForSupabase, showSuccessToast } = useProductCommon();
 
-  // Fetch brands from Supabase
+  // Buscar marcas do Supabase
   const fetchBrands = async () => {
     try {
       const { data: brandsData, error: brandsError } = await supabase
@@ -18,7 +18,7 @@ export function useBrandsData() {
         throw brandsError;
       }
 
-      // Format brands data
+      // Formatar dados das marcas
       const formattedBrands = brandsData.map(brand => ({
         id: brand.id,
         name: brand.name,
@@ -37,7 +37,7 @@ export function useBrandsData() {
     }
   };
 
-  // Add a brand to Supabase
+  // Adicionar uma marca ao Supabase
   const addBrand = async (brand: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
@@ -79,7 +79,7 @@ export function useBrandsData() {
     }
   };
 
-  // Update a brand in Supabase
+  // Atualizar uma marca no Supabase
   const updateBrand = async (brand: any) => {
     try {
       const { id } = brand;
@@ -110,7 +110,7 @@ export function useBrandsData() {
     }
   };
 
-  // Delete a brand from Supabase
+  // Excluir uma marca do Supabase
   const deleteBrand = async (brandId: string) => {
     try {
       const { error } = await supabase
