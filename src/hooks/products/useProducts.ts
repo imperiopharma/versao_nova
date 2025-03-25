@@ -5,38 +5,10 @@ import { useProductToast } from './useProductToast';
 import { Product, ProductInputData } from '@/types/product';
 import { formatDateForSupabase } from '@/lib/formatters';
 
-export function useProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const { handleError, showSuccessToast } = useProductToast();
-
-  // Buscar produtos do Supabase
-  const fetchProducts = async (): Promise<Product[]> => {
-    try {
-      console.log("Buscando produtos do Supabase...");
-      const { data: productsData, error: productsError } = await supabase
-        .from('products')
-        .select('*');
-
-      if (productsError) {
-        console.error("Erro ao buscar produtos:", productsError);
-        throw productsError;
-      }
-
-      console.log("Produtos recebidos do Supabase:", productsData?.length || 0);
-      
-      // Formatar dados dos produtos
-      const formattedProducts = productsData.map(formatProductFromDB);
-
-      setProducts(formattedProducts);
-      return formattedProducts;
-    } catch (error) {
-      handleError(error, 'Erro ao buscar produtos');
-      return [];
-    }
-  };
-
+// Utilitários para produtos
+const productUtils = {
   // Formatar produto vindo do banco de dados
-  const formatProductFromDB = (product: any): Product => {
+  formatProductFromDB: (product: any): Product => {
     return {
       id: product.id,
       name: product.name,
@@ -53,16 +25,10 @@ export function useProducts() {
       promoPrice: product.promo_price,
       stock: product.stock,
     };
-  };
-
-  // Gerar SKU automaticamente baseado na quantidade de produtos + 1
-  const generateSku = () => {
-    const nextNumber = products.length + 1;
-    return `PROD${String(nextNumber).padStart(4, '0')}`;
-  };
+  },
 
   // Preparar produto para o formato do Supabase
-  const prepareProductForDB = (product: ProductInputData) => {
+  prepareProductForDB: (product: ProductInputData, generateSku: () => string) => {
     // Remover propriedades incompatíveis com o esquema do Supabase
     const { 
       id, 
@@ -92,6 +58,43 @@ export function useProducts() {
       status: productData.status || 'active',
       image: productData.image || 'https://via.placeholder.com/300x300?text=Produto'
     };
+  }
+};
+
+export function useProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const { handleError, showSuccessToast } = useProductToast();
+
+  // Gerar SKU automaticamente baseado na quantidade de produtos + 1
+  const generateSku = () => {
+    const nextNumber = products.length + 1;
+    return `PROD${String(nextNumber).padStart(4, '0')}`;
+  };
+
+  // Buscar produtos do Supabase
+  const fetchProducts = async (): Promise<Product[]> => {
+    try {
+      console.log("Buscando produtos do Supabase...");
+      const { data: productsData, error: productsError } = await supabase
+        .from('products')
+        .select('*');
+
+      if (productsError) {
+        console.error("Erro ao buscar produtos:", productsError);
+        throw productsError;
+      }
+
+      console.log("Produtos recebidos do Supabase:", productsData?.length || 0);
+      
+      // Formatar dados dos produtos
+      const formattedProducts = productsData.map(productUtils.formatProductFromDB);
+
+      setProducts(formattedProducts);
+      return formattedProducts;
+    } catch (error) {
+      handleError(error, 'Erro ao buscar produtos');
+      return [];
+    }
   };
 
   // Adicionar um produto ao Supabase
@@ -99,7 +102,7 @@ export function useProducts() {
     try {
       console.log("Adicionando produto:", product);
       
-      const supabaseProduct = prepareProductForDB(product);
+      const supabaseProduct = productUtils.prepareProductForDB(product, generateSku);
       console.log('Dados enviados para o Supabase:', supabaseProduct);
 
       const { data, error } = await supabase
@@ -119,7 +122,7 @@ export function useProducts() {
         throw new Error('Produto não foi adicionado ao banco de dados');
       }
 
-      const formattedProduct = formatProductFromDB(data);
+      const formattedProduct = productUtils.formatProductFromDB(data);
 
       // Atualizar a lista local de produtos
       setProducts(prev => [formattedProduct, ...prev]);
@@ -142,7 +145,7 @@ export function useProducts() {
       }
       
       const supabaseProduct = {
-        ...prepareProductForDB(product),
+        ...productUtils.prepareProductForDB(product, generateSku),
         updated_at: formatDateForSupabase()
       };
 
