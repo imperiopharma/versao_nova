@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { 
   Heart, 
@@ -9,6 +9,8 @@ import {
   TrendingUp, 
   Award 
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { ProductCard } from '../components/product/ProductCard';
 
 // Import components
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -18,36 +20,11 @@ import { PromoCardsSection } from '../components/home/PromoCardsSection';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 
 export const HomePage: React.FC = () => {
-  // Brand data - would be fetched from API in a real app
-  const brands = {
-    imported: [
-      { id: 'dragon-pharma', name: 'Dragon Pharma', logo: 'https://via.placeholder.com/150x100?text=Dragon+Pharma' },
-      { id: 'universal-nutrition', name: 'Universal Nutrition', logo: 'https://via.placeholder.com/150x100?text=Universal+Nutrition' },
-      { id: 'dymatize', name: 'Dymatize', logo: 'https://via.placeholder.com/150x100?text=Dymatize' },
-      { id: 'optimum', name: 'Optimum Nutrition', logo: 'https://via.placeholder.com/150x100?text=Optimum' },
-      { id: 'muscletech', name: 'MuscleTech', logo: 'https://via.placeholder.com/150x100?text=MuscleTech' },
-    ],
-    premium: [
-      { id: 'king-pharma', name: 'King Pharma', logo: 'https://via.placeholder.com/150x100?text=King+Pharma' },
-      { id: 'cooper-pharma', name: 'Cooper Pharma', logo: 'https://via.placeholder.com/150x100?text=Cooper+Pharma' },
-      { id: 'muscle-labs', name: 'Muscle Labs', logo: 'https://via.placeholder.com/150x100?text=Muscle+Labs' },
-      { id: 'ultra-pharma', name: 'Ultra Pharma', logo: 'https://via.placeholder.com/150x100?text=Ultra+Pharma' },
-      { id: 'prime-labs', name: 'Prime Labs', logo: 'https://via.placeholder.com/150x100?text=Prime+Labs' },
-    ],
-    national: [
-      { id: 'growth', name: 'Growth', logo: 'https://via.placeholder.com/150x100?text=Growth' },
-      { id: 'r-pharm', name: 'R.Pharm', logo: 'https://via.placeholder.com/150x100?text=R.Pharm' },
-      { id: 'bio-pharma', name: 'Bio Pharma', logo: 'https://via.placeholder.com/150x100?text=Bio+Pharma' },
-      { id: 'life-pharma', name: 'Life Pharma', logo: 'https://via.placeholder.com/150x100?text=Life+Pharma' },
-      { id: 'max-power', name: 'Max Power', logo: 'https://via.placeholder.com/150x100?text=Max+Power' },
-    ],
-    various: [
-      { id: 'vitafor', name: 'Vitafor', logo: 'https://via.placeholder.com/150x100?text=Vitafor' },
-      { id: 'integral-medica', name: 'Integral Médica', logo: 'https://via.placeholder.com/150x100?text=Integral+Medica' },
-      { id: 'midway', name: 'Midway', logo: 'https://via.placeholder.com/150x100?text=Midway' },
-      { id: 'probiotica', name: 'Probiótica', logo: 'https://via.placeholder.com/150x100?text=Probiotica' },
-      { id: 'max-titanium', name: 'Max Titanium', logo: 'https://via.placeholder.com/150x100?text=Max+Titanium' },
-    ],
+  const [brands, setBrands] = useState<any>({
+    imported: [],
+    premium: [],
+    national: [],
+    various: [],
     categories: [
       { id: 'cbd', name: 'CBD', icon: <Pill className="w-8 h-8 mb-2" /> },
       { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2" /> },
@@ -55,7 +32,97 @@ export const HomePage: React.FC = () => {
       { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2" /> },
       { id: 'anabolizantes', name: 'Anabolizantes', icon: <Tablet className="w-8 h-8 mb-2" /> },
     ],
-  };
+  });
+  
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Buscar dados do Supabase ao carregar a página
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      
+      try {
+        // Buscar produtos
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('*')
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+          .limit(8);
+        
+        if (productsError) throw productsError;
+        
+        const formattedProducts = productsData.map(product => ({
+          id: product.id,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          originalPrice: product.original_price,
+          image: product.image || 'https://via.placeholder.com/300x300?text=Produto',
+          url: `/produto/${product.id}`
+        }));
+        
+        setProducts(formattedProducts);
+        
+        // Buscar marcas
+        const { data: brandsData, error: brandsError } = await supabase
+          .from('brands')
+          .select('*')
+          .eq('status', 'active');
+        
+        if (brandsError) throw brandsError;
+        
+        // Organizar marcas por categoria
+        const importedBrands = brandsData
+          .filter(brand => brand.category === 'imported')
+          .map(brand => ({
+            id: brand.id,
+            name: brand.name,
+            logo: brand.logo_url || `https://via.placeholder.com/150x100?text=${brand.name}`
+          }));
+        
+        const premiumBrands = brandsData
+          .filter(brand => brand.category === 'premium')
+          .map(brand => ({
+            id: brand.id,
+            name: brand.name,
+            logo: brand.logo_url || `https://via.placeholder.com/150x100?text=${brand.name}`
+          }));
+        
+        const nationalBrands = brandsData
+          .filter(brand => brand.category === 'national')
+          .map(brand => ({
+            id: brand.id,
+            name: brand.name,
+            logo: brand.logo_url || `https://via.placeholder.com/150x100?text=${brand.name}`
+          }));
+        
+        const variousBrands = brandsData
+          .filter(brand => brand.category === 'various' || !brand.category)
+          .map(brand => ({
+            id: brand.id,
+            name: brand.name,
+            logo: brand.logo_url || `https://via.placeholder.com/150x100?text=${brand.name}`
+          }));
+        
+        setBrands({
+          ...brands,
+          imported: importedBrands,
+          premium: premiumBrands,
+          national: nationalBrands,
+          various: variousBrands
+        });
+        
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
   // Hero banner slides for carousel
   const heroSlides = [
@@ -88,7 +155,7 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Promotional cards - updated to match the reference image
+  // Promotional cards
   const promoCards = [
     {
       id: 'emagrecedores',
@@ -124,42 +191,6 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Flash sale items
-  const flashSaleItems = [
-    {
-      id: 'oxandrolona',
-      name: 'Oxandrolona 15mg',
-      brand: 'King Pharma',
-      originalPrice: 299.90,
-      salePrice: 249.90,
-      image: 'https://via.placeholder.com/150x150?text=Oxandrolona'
-    },
-    {
-      id: 'stanozolol',
-      name: 'Stanozolol 50mg',
-      brand: 'Cooper Pharma',
-      originalPrice: 199.90,
-      salePrice: 169.90,
-      image: 'https://via.placeholder.com/150x150?text=Stanozolol'
-    },
-    {
-      id: 'trembolona',
-      name: 'Trembolona 100mg',
-      brand: 'Growth',
-      originalPrice: 349.90,
-      salePrice: 299.90,
-      image: 'https://via.placeholder.com/150x150?text=Trembolona'
-    },
-    {
-      id: 'testosterona',
-      name: 'Testosterona 200mg',
-      brand: 'Prime Labs',
-      originalPrice: 259.90,
-      salePrice: 219.90,
-      image: 'https://via.placeholder.com/150x150?text=Testosterona'
-    }
-  ];
-
   return (
     <Layout>
       {/* Hero Banner */}
@@ -167,6 +198,43 @@ export const HomePage: React.FC = () => {
       
       {/* Promotional Cards - Right after banner */}
       <PromoCardsSection cards={promoCards} />
+      
+      {/* Produtos Recentes */}
+      <div className="section-container py-12">
+        <h2 className="text-2xl font-semibold text-imperio-navy mb-6">Produtos Recentes</h2>
+        
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-gray-200 h-56 rounded-md mb-3"></div>
+                <div className="bg-gray-200 h-4 w-3/4 rounded mb-2"></div>
+                <div className="bg-gray-200 h-3 w-1/2 rounded mb-2"></div>
+                <div className="bg-gray-200 h-5 w-1/3 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Nenhum produto disponível no momento.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map(product => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                brand={product.brand}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                image={product.image}
+                url={product.url}
+              />
+            ))}
+          </div>
+        )}
+      </div>
       
       {/* Brands Section */}
       <BrandsSection 
@@ -177,8 +245,10 @@ export const HomePage: React.FC = () => {
         categories={brands.categories}
       />
       
-      {/* Flash Sale Section */}
-      <FlashSaleSection items={flashSaleItems} />
+      {/* FlashSaleSection será substituída se tivermos produtos reais */}
+      {products.length > 0 && (
+        <FlashSaleSection items={products.slice(0, 4)} />
+      )}
       
       {/* Newsletter & Social Media */}
       <NewsletterSection />

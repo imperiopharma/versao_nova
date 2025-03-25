@@ -12,7 +12,8 @@ export function useProductStore() {
     products,
     fetchProducts,
     addProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
   } = useProductsData();
   
   const {
@@ -60,6 +61,7 @@ export function useProductStore() {
     fetchData,
     addProduct,
     updateProduct,
+    deleteProduct,
     addBrand,
     updateBrand,
     deleteBrand,

@@ -19,6 +19,7 @@ import { CheckoutPagamentoPage } from "./pages/CheckoutPagamentoPage";
 import { MarketplacePage } from "./pages/MarketplacePage";
 import { FreightInfoPage } from "./pages/FreightInfoPage";
 import NotFound from "./pages/NotFound";
+import { ProductDetailsPage } from "./pages/ProductDetailsPage";
 
 // Admin pages
 import { AdminLoginPage } from "./pages/admin/LoginPage";
@@ -53,6 +54,7 @@ const App = () => (
               <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
               <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
               <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
+              <Route path="/produto/:productId" element={<ProductDetailsPage />} />
               
               {/* Admin login route - public access */}
               <Route path="/admin/login" element={<AdminLoginPage />} />

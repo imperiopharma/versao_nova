@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -21,72 +22,30 @@ import {
   MoreVertical, 
   Trash2, 
   Eye, 
-  FileImage
+  FileImage,
+  AlertTriangle
 } from "lucide-react";
 import { ProductDialog } from './ProductDialog';
 import { useDataList } from '@/hooks/useDataList';
 import { SearchBar } from '../common/SearchBar';
-
-// Dados de exemplo para desenvolvimento
-const mockProducts = [
-  { 
-    id: 1, 
-    name: 'Produto A', 
-    brand: 'Marca X', 
-    category: 'Categoria 1', 
-    sku: 'SKU001', 
-    costPrice: 45.0, 
-    sellingPrice: 89.90, 
-    stock: 25, 
-    status: 'active'
-  },
-  { 
-    id: 2, 
-    name: 'Produto B', 
-    brand: 'Marca Y', 
-    category: 'Categoria 2', 
-    sku: 'SKU002', 
-    costPrice: 68.0, 
-    sellingPrice: 129.90, 
-    stock: 12, 
-    status: 'active'
-  },
-  { 
-    id: 3, 
-    name: 'Produto C', 
-    brand: 'Marca Z', 
-    category: 'Categoria 1', 
-    sku: 'SKU003', 
-    costPrice: 23.50, 
-    sellingPrice: 49.90, 
-    stock: 37, 
-    status: 'active'
-  },
-  { 
-    id: 4, 
-    name: 'Produto D', 
-    brand: 'Marca X', 
-    category: 'Categoria 3', 
-    sku: 'SKU004', 
-    costPrice: 120.0, 
-    sellingPrice: 239.90, 
-    stock: 5, 
-    status: 'out_of_stock'
-  },
-  { 
-    id: 5, 
-    name: 'Produto E', 
-    brand: 'Marca Y', 
-    category: 'Categoria 2', 
-    sku: 'SKU005', 
-    costPrice: 75.0, 
-    sellingPrice: 149.90, 
-    stock: 0, 
-    status: 'inactive'
-  },
-];
+import { useProductStore } from '@/hooks/useProductStore';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Link } from 'react-router-dom';
 
 export const ProductsList: React.FC = () => {
+  const { products, loading, deleteProduct } = useProductStore();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  
   // Formatação de moeda
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -101,14 +60,38 @@ export const ProductsList: React.FC = () => {
     selectedItem: selectedProduct,
     isDialogOpen: isProductDialogOpen,
     handleEditItem: handleEditProduct,
-    handleDeleteItem: handleDeleteProduct,
     handleSearchChange,
     setIsDialogOpen: setIsProductDialogOpen,
     setSelectedItem: setSelectedProduct
   } = useDataList({
-    initialData: mockProducts,
+    initialData: products,
     searchFields: ['name', 'brand', 'sku']
   });
+  
+  // Atualizar os dados filtrados quando products mudar
+  useEffect(() => {
+    // Atualizar o initialData do useDataList
+    // Isso é necessário porque o hook useDataList não atualiza automaticamente
+    // quando o initialData muda
+    handleSearchChange({ target: { value: searchQuery } } as React.ChangeEvent<HTMLInputElement>);
+  }, [products]);
+
+  const handleDeleteClick = (productId: string) => {
+    setProductToDelete(productId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (productToDelete) {
+      try {
+        await deleteProduct(productToDelete);
+        setDeleteDialogOpen(false);
+        setProductToDelete(null);
+      } catch (error) {
+        console.error('Erro ao excluir produto:', error);
+      }
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -134,7 +117,13 @@ export const ProductsList: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredProducts.length === 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={9} className="h-24 text-center">
+                  Carregando produtos...
+                </TableCell>
+              </TableRow>
+            ) : filteredProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={9} className="h-24 text-center">
                   Nenhum produto encontrado.
@@ -195,14 +184,16 @@ export const ProductsList: React.FC = () => {
                             <FileImage className="h-4 w-4 mr-2" />
                             Gerenciar Imagens
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
-                            Visualizar na Loja
+                          <DropdownMenuItem asChild>
+                            <Link to={`/produto/${product.id}`}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              Visualizar na Loja
+                            </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
                             className="text-red-600"
-                            onClick={() => handleDeleteProduct(product.id)}
+                            onClick={() => handleDeleteClick(product.id)}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Excluir Produto
@@ -228,6 +219,24 @@ export const ProductsList: React.FC = () => {
           }}
         />
       )}
+      
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

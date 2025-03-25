@@ -5,7 +5,7 @@ import { useProductCommon } from './useProductCommon';
 
 export function useProductsData() {
   const [products, setProducts] = useState<any[]>([]);
-  const { handleError, formatDateForSupabase } = useProductCommon();
+  const { handleError, formatDateForSupabase, showSuccessToast } = useProductCommon();
 
   // Buscar produtos do Supabase
   const fetchProducts = async () => {
@@ -93,6 +93,7 @@ export function useProductsData() {
       };
 
       setProducts(prev => [...prev, formattedProduct]);
+      showSuccessToast("Produto adicionado", `${formattedProduct.name} foi adicionado com sucesso.`);
       return formattedProduct;
     } catch (error) {
       handleError(error, 'Erro ao adicionar produto');
@@ -131,9 +132,37 @@ export function useProductsData() {
       if (error) throw error;
 
       setProducts(prev => prev.map(p => p.id === id ? { ...product } : p));
+      showSuccessToast("Produto atualizado", `${product.name} foi atualizado com sucesso.`);
       return product;
     } catch (error) {
       handleError(error, 'Erro ao atualizar produto');
+      throw error;
+    }
+  };
+
+  // Excluir um produto do Supabase
+  const deleteProduct = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId);
+
+      if (error) throw error;
+
+      // Encontrar o produto antes de excluí-lo
+      const productToDelete = products.find(p => p.id === productId);
+      
+      // Atualizar o estado local removendo o produto excluído
+      setProducts(prev => prev.filter(p => p.id !== productId));
+      
+      if (productToDelete) {
+        showSuccessToast("Produto excluído", `${productToDelete.name} foi excluído com sucesso.`);
+      }
+      
+      return productId;
+    } catch (error) {
+      handleError(error, 'Erro ao excluir produto');
       throw error;
     }
   };
@@ -143,6 +172,7 @@ export function useProductsData() {
     setProducts,
     fetchProducts,
     addProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
   };
 }
