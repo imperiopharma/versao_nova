@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -24,63 +25,43 @@ import {
   MessageSquare
 } from "lucide-react";
 import { BrandDialog } from './BrandDialog';
-import { useDataList } from '@/hooks/useDataList';
 import { SearchBar } from '../common/SearchBar';
-
-// Dados de exemplo para desenvolvimento
-const mockBrands = [
-  { 
-    id: 1, 
-    name: 'Marca X', 
-    slug: 'marca-x', 
-    logoUrl: 'https://placehold.co/100x100?text=X',
-    description: 'Descrição da Marca X',
-    productsCount: 24,
-    status: 'active'
-  },
-  { 
-    id: 2, 
-    name: 'Marca Y', 
-    slug: 'marca-y', 
-    logoUrl: 'https://placehold.co/100x100?text=Y',
-    description: 'Descrição da Marca Y',
-    productsCount: 18,
-    status: 'active'
-  },
-  { 
-    id: 3, 
-    name: 'Marca Z', 
-    slug: 'marca-z', 
-    logoUrl: 'https://placehold.co/100x100?text=Z',
-    description: 'Descrição da Marca Z',
-    productsCount: 12,
-    status: 'active'
-  },
-  { 
-    id: 4, 
-    name: 'Marca W', 
-    slug: 'marca-w', 
-    logoUrl: 'https://placehold.co/100x100?text=W',
-    description: 'Descrição da Marca W',
-    productsCount: 0,
-    status: 'inactive'
-  },
-];
+import { useProductStore } from '@/hooks/useProductStore';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 export const BrandsList: React.FC = () => {
-  const {
-    filteredData: filteredBrands,
-    searchQuery,
-    selectedItem: selectedBrand,
-    isDialogOpen: isBrandDialogOpen,
-    handleEditItem: handleEditBrand,
-    handleDeleteItem: handleDeleteBrand,
-    handleSearchChange,
-    setIsDialogOpen: setIsBrandDialogOpen,
-    setSelectedItem: setSelectedBrand
-  } = useDataList({
-    initialData: mockBrands,
-    searchFields: ['name', 'description']
+  const { brands } = useProductStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState<any>(null);
+  const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
+  const [brandToDelete, setBrandToDelete] = useState<string | null>(null);
+  const { updateBrand, addBrand } = useProductStore();
+
+  const handleEditBrand = (brand: any) => {
+    setSelectedBrand(brand);
+    setIsBrandDialogOpen(true);
+  };
+
+  const handleDeleteBrand = (brandId: string) => {
+    setBrandToDelete(brandId);
+  };
+
+  const confirmDeleteBrand = () => {
+    // Implementação real de deleção seria aqui
+    console.log("Brand deleted:", brandToDelete);
+    setBrandToDelete(null);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredBrands = brands.filter(brand => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      brand.name.toLowerCase().includes(searchLower) || 
+      (brand.description && brand.description.toLowerCase().includes(searchLower))
+    );
   });
 
   return (
@@ -98,7 +79,7 @@ export const BrandsList: React.FC = () => {
               <TableHead>Logo</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Descrição</TableHead>
-              <TableHead className="text-center">Produtos</TableHead>
+              <TableHead className="text-center">Categoria</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Ações</TableHead>
             </TableRow>
@@ -116,7 +97,7 @@ export const BrandsList: React.FC = () => {
                   <TableCell>
                     <div className="h-10 w-10 rounded-md overflow-hidden bg-gray-100">
                       <img 
-                        src={brand.logoUrl} 
+                        src={brand.logoUrl || 'https://placehold.co/100x100?text=Logo'} 
                         alt={brand.name} 
                         className="h-full w-full object-cover"
                       />
@@ -124,7 +105,7 @@ export const BrandsList: React.FC = () => {
                   </TableCell>
                   <TableCell className="font-medium">{brand.name}</TableCell>
                   <TableCell className="max-w-xs truncate">{brand.description}</TableCell>
-                  <TableCell className="text-center">{brand.productsCount}</TableCell>
+                  <TableCell className="text-center">{brand.category}</TableCell>
                   <TableCell className="text-center">
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       brand.status === 'active' 
@@ -187,6 +168,23 @@ export const BrandsList: React.FC = () => {
           }}
         />
       )}
+
+      <AlertDialog open={brandToDelete !== null} onOpenChange={() => setBrandToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta marca? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteBrand} className="bg-red-600 hover:bg-red-700">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

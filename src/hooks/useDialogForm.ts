@@ -41,11 +41,12 @@ export function useDialogForm<T>({
     e.preventDefault();
     
     // Prepara os dados com id se estiver editando
-    const dataToSave = {
-      ...formData,
-      id: entityId || undefined
-    };
+    const dataToSave = isEditing 
+      ? { ...formData, id: entityId } 
+      : { ...formData, id: Date.now().toString() };
 
+    console.log(`Saving ${entityName.toLowerCase()}:`, dataToSave);
+    
     // Salva os dados no store apropriado com base no tipo de entidade
     if (entityName === 'Product') {
       if (isEditing) {
@@ -66,8 +67,6 @@ export function useDialogForm<T>({
         productStore.addCategory(dataToSave);
       }
     }
-    
-    console.log(`Saving ${entityName.toLowerCase()}:`, dataToSave);
     
     toast({
       title: isEditing ? `${entityName} atualizado` : `${entityName} adicionado`,
