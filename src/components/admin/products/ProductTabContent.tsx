@@ -11,12 +11,16 @@ interface BasicTabProps {
   formData: any;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSelectChange: (name: string, value: string) => void;
+  brands?: any[];
+  categories?: any[];
 }
 
 export const BasicInfoTab: React.FC<BasicTabProps> = ({
   formData,
   handleInputChange,
-  handleSelectChange
+  handleSelectChange,
+  brands = [],
+  categories = []
 }) => {
   return (
     <div className="space-y-4 py-4">
@@ -45,7 +49,10 @@ export const BasicInfoTab: React.FC<BasicTabProps> = ({
           label="Marca"
           value={formData.brand}
           onValueChange={(value) => handleSelectChange('brand', value)}
-          options={[
+          options={brands.map(brand => ({
+            value: brand.id,
+            label: brand.name
+          })) || [
             { value: 'Marca X', label: 'Marca X' },
             { value: 'Marca Y', label: 'Marca Y' },
             { value: 'Marca Z', label: 'Marca Z' }
@@ -56,7 +63,10 @@ export const BasicInfoTab: React.FC<BasicTabProps> = ({
           label="Categoria"
           value={formData.category}
           onValueChange={(value) => handleSelectChange('category', value)}
-          options={[
+          options={categories.map(category => ({
+            value: category.id,
+            label: category.name
+          })) || [
             { value: 'Categoria 1', label: 'Categoria 1' },
             { value: 'Categoria 2', label: 'Categoria 2' },
             { value: 'Categoria 3', label: 'Categoria 3' }
