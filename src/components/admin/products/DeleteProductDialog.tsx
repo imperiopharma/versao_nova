@@ -16,20 +16,38 @@ interface DeleteProductDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  itemType?: 'produto' | 'marca' | 'categoria';
 }
 
 export const DeleteProductDialog: React.FC<DeleteProductDialogProps> = ({
   isOpen,
   onOpenChange,
-  onConfirm
+  onConfirm,
+  itemType = 'produto'
 }) => {
+  const getTitle = () => {
+    switch (itemType) {
+      case 'marca': return 'Confirmar exclusão de marca';
+      case 'categoria': return 'Confirmar exclusão de categoria';
+      default: return 'Confirmar exclusão de produto';
+    }
+  };
+
+  const getMessage = () => {
+    switch (itemType) {
+      case 'marca': return 'Tem certeza que deseja excluir esta marca? Esta ação não pode ser desfeita.';
+      case 'categoria': return 'Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.';
+      default: return 'Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.';
+    }
+  };
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+          <AlertDialogTitle>{getTitle()}</AlertDialogTitle>
           <AlertDialogDescription>
-            Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.
+            {getMessage()}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

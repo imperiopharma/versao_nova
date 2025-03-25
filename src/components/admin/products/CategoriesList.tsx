@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -25,58 +26,63 @@ import {
 import { CategoryDialog } from './CategoryDialog';
 import { useDataList } from '@/hooks/useDataList';
 import { SearchBar } from '../common/SearchBar';
-
-// Dados de exemplo para desenvolvimento
-const mockCategories = [
-  { 
-    id: 1, 
-    name: 'Categoria 1', 
-    slug: 'categoria-1', 
-    description: 'Descrição da Categoria 1',
-    productsCount: 15,
-    status: 'active'
-  },
-  { 
-    id: 2, 
-    name: 'Categoria 2', 
-    slug: 'categoria-2', 
-    description: 'Descrição da Categoria 2',
-    productsCount: 8,
-    status: 'active'
-  },
-  { 
-    id: 3, 
-    name: 'Categoria 3', 
-    slug: 'categoria-3', 
-    description: 'Descrição da Categoria 3',
-    productsCount: 12,
-    status: 'active'
-  },
-  { 
-    id: 4, 
-    name: 'Categoria 4', 
-    slug: 'categoria-4', 
-    description: 'Descrição da Categoria 4',
-    productsCount: 0,
-    status: 'inactive'
-  },
-];
+import { useProductStore } from '@/hooks/useProductStore';
+import { DeleteProductDialog } from './DeleteProductDialog';
 
 export const CategoriesList: React.FC = () => {
+  const { categories, loading, fetchData, deleteCategory } = useProductStore();
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [categoryToDelete, setCategoryToDelete] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const {
     filteredData: filteredCategories,
     searchQuery,
     selectedItem: selectedCategory,
     isDialogOpen: isCategoryDialogOpen,
     handleEditItem: handleEditCategory,
-    handleDeleteItem: handleDeleteCategory,
     handleSearchChange,
     setIsDialogOpen: setIsCategoryDialogOpen,
-    setSelectedItem: setSelectedCategory
+    setSelectedItem: setSelectedCategory,
+    setData
   } = useDataList({
-    initialData: mockCategories,
+    initialData: categories,
     searchFields: ['name', 'description']
   });
+
+  // Atualizar os dados filtrados quando categories mudar
+  useEffect(() => {
+    setData(categories);
+    // Atualizar o initialData do useDataList
+    handleSearchChange({ target: { value: searchQuery } } as React.ChangeEvent<HTMLInputElement>);
+  }, [categories, searchQuery]);
+
+  const handleDeleteClick = (categoryId: string) => {
+    setCategoryToDelete(categoryId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (categoryToDelete) {
+      try {
+        await deleteCategory(categoryToDelete);
+        setDeleteDialogOpen(false);
+        setCategoryToDelete(null);
+      } catch (error) {
+        console.error('Erro ao excluir categoria:', error);
+      }
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setIsCategoryDialogOpen(false);
+    setSelectedCategory(null);
+    // Recarregar dados após fechar o diálogo
+    fetchData();
+  };
 
   return (
     <div className="space-y-4">
@@ -92,15 +98,20 @@ export const CategoriesList: React.FC = () => {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Descrição</TableHead>
-              <TableHead className="text-center">Produtos</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCategories.length === 0 ? (
+            {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell colSpan={4} className="h-24 text-center">
+                  Carregando categorias...
+                </TableCell>
+              </TableRow>
+            ) : filteredCategories.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
                   Nenhuma categoria encontrada.
                 </TableCell>
               </TableRow>
@@ -109,7 +120,6 @@ export const CategoriesList: React.FC = () => {
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">{category.name}</TableCell>
                   <TableCell className="max-w-xs truncate">{category.description}</TableCell>
-                  <TableCell className="text-center">{category.productsCount}</TableCell>
                   <TableCell className="text-center">
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       category.status === 'active' 
@@ -135,14 +145,10 @@ export const CategoriesList: React.FC = () => {
                             <Edit className="h-4 w-4 mr-2" />
                             Editar Categoria
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <MessageSquare className="h-4 w-4 mr-2" />
-                            Ver Produtos
-                          </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
                             className="text-red-600"
-                            onClick={() => handleDeleteCategory(category.id)}
+                            onClick={() => handleDeleteClick(category.id)}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Excluir Categoria
@@ -162,12 +168,15 @@ export const CategoriesList: React.FC = () => {
         <CategoryDialog 
           category={selectedCategory}
           isOpen={isCategoryDialogOpen}
-          onClose={() => {
-            setIsCategoryDialogOpen(false);
-            setSelectedCategory(null);
-          }}
+          onClose={handleCloseDialog}
         />
       )}
+      
+      <DeleteProductDialog
+        isOpen={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

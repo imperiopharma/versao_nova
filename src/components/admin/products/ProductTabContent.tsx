@@ -1,66 +1,74 @@
 
 import React from 'react';
-import { 
-  TextField, 
-  TextareaField, 
-  SelectField, 
-  ImageUploadField 
-} from '@/components/admin/common/FormFields';
+import { ImageUploadField, SelectField, TextField, TextareaField } from '../common/FormFields';
 
-interface BasicTabProps {
+// Componente para informações básicas
+export const BasicInfoTab: React.FC<{
   formData: any;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSelectChange: (name: string, value: string) => void;
-  brands?: any[];
-  categories?: any[];
-}
-
-export const BasicInfoTab: React.FC<BasicTabProps> = ({
-  formData,
-  handleInputChange,
-  handleSelectChange,
-  brands = [],
-  categories = []
-}) => {
+  brands: any[];
+  categories: any[];
+}> = ({ formData, handleInputChange, handleSelectChange, brands, categories }) => {
+  console.log("Categorias disponíveis:", categories);
+  
   return (
-    <div className="space-y-4 py-4">
-      <div className="grid grid-cols-1 gap-4">
+    <div className="space-y-4 py-2">
+      <TextField
+        id="product-name"
+        label="Nome do Produto"
+        value={formData.name || ''}
+        onChange={handleInputChange}
+        placeholder="Nome do produto"
+        required
+      />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextField
-          id="product-name"
-          label="Nome do Produto"
-          value={formData.name}
+          id="product-sku"
+          label="SKU / Código"
+          value={formData.sku || ''}
           onChange={handleInputChange}
-          placeholder="Nome do produto"
+          placeholder="Código do produto"
           required
+          description="Código único do produto (gerado automaticamente)"
+        />
+        
+        <SelectField
+          label="Status"
+          value={formData.status || 'active'}
+          onValueChange={(value) => handleSelectChange('status', value)}
+          options={[
+            { value: 'active', label: 'Ativo' },
+            { value: 'inactive', label: 'Inativo' }
+          ]}
         />
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SelectField
           label="Marca"
-          value={formData.brand}
+          value={formData.brand || ''}
           onValueChange={(value) => handleSelectChange('brand', value)}
-          options={brands.map(brand => ({
-            value: brand.id,
-            label: brand.name
-          })) || [
-            { value: 'Marca X', label: 'Marca X' },
-            { value: 'Marca Y', label: 'Marca Y' },
-            { value: 'Marca Z', label: 'Marca Z' }
+          options={[
+            { value: '', label: 'Selecione uma marca' },
+            ...brands.map(brand => ({
+              value: brand.name,
+              label: brand.name
+            }))
           ]}
         />
         
         <SelectField
           label="Categoria"
-          value={formData.category}
+          value={formData.category || ''}
           onValueChange={(value) => handleSelectChange('category', value)}
-          options={categories.map(category => ({
-            value: category.id,
-            label: category.name
-          })) || [
-            { value: 'Categoria 1', label: 'Categoria 1' },
-            { value: 'Categoria 2', label: 'Categoria 2' },
-            { value: 'Categoria 3', label: 'Categoria 3' }
+          options={[
+            { value: '', label: 'Selecione uma categoria' },
+            ...categories.map(category => ({
+              value: category.name,
+              label: category.name
+            }))
           ]}
         />
       </div>
@@ -68,110 +76,72 @@ export const BasicInfoTab: React.FC<BasicTabProps> = ({
       <TextareaField
         id="product-description"
         label="Descrição"
-        value={formData.description}
+        value={formData.description || ''}
         onChange={handleInputChange}
         placeholder="Descrição detalhada do produto..."
-        rows={5}
-      />
-      
-      <SelectField
-        label="Status"
-        value={formData.status}
-        onValueChange={(value) => handleSelectChange('status', value)}
-        options={[
-          { value: 'active', label: 'Ativo' },
-          { value: 'inactive', label: 'Inativo' }
-        ]}
+        rows={4}
       />
     </div>
   );
 };
 
-export const PriceStockTab: React.FC<BasicTabProps> = ({
-  formData,
-  handleInputChange
-}) => {
+// Componente para preços e estoque
+export const PriceStockTab: React.FC<{
+  formData: any;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSelectChange: (name: string, value: string) => void;
+}> = ({ formData, handleInputChange }) => {
   return (
-    <div className="space-y-4 py-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-4 py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextField
           id="product-costPrice"
-          label="Preço de Custo (R$)"
-          value={formData.costPrice}
+          label="Preço de Custo"
+          value={formData.costPrice || ''}
           onChange={handleInputChange}
-          placeholder="0.00"
+          placeholder="0,00"
           type="number"
-          description="Preço de custo para controle interno e cálculo de lucro"
+          description="Preço pago pelo produto"
         />
         
         <TextField
           id="product-sellingPrice"
-          label="Preço de Venda (R$)"
-          value={formData.sellingPrice}
+          label="Preço de Venda"
+          value={formData.sellingPrice || ''}
           onChange={handleInputChange}
-          placeholder="0.00"
+          placeholder="0,00"
           type="number"
           required
-          description="Preço que aparecerá na loja para os clientes"
+          description="Preço que será cobrado do cliente"
         />
       </div>
       
-      <div className="grid grid-cols-1 gap-4">
-        <TextField
-          id="product-promoPrice"
-          label="Preço Promocional (R$)"
-          value={formData.promoPrice}
-          onChange={handleInputChange}
-          placeholder="0.00"
-          type="number"
-          description="Preço durante promoções (deixe em branco se não houver)"
-        />
-      </div>
+      <TextField
+        id="product-promoPrice"
+        label="Preço Promocional"
+        value={formData.promoPrice || ''}
+        onChange={handleInputChange}
+        placeholder="0,00"
+        type="number"
+        description="Preço durante promoções (opcional)"
+      />
     </div>
   );
 };
 
-import { Button } from "@/components/ui/button";
-
+// Componente para imagens
 export const ImagesTab: React.FC = () => {
   return (
-    <div className="space-y-4 py-4">
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-        <div className="mb-4">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
-        </div>
-        <p className="mb-1 text-sm font-medium text-gray-900">
-          Clique para fazer upload ou arraste e solte
-        </p>
-        <p className="text-xs text-gray-500">
-          PNG, JPG ou WEBP (Máximo 5MB por imagem)
-        </p>
-        <p className="mt-2 text-xs text-amber-600">
-          O upload de imagem é opcional. O produto pode ser salvo sem uma imagem.
-        </p>
-        <Button className="mt-4" variant="outline" type="button">
-          Selecionar Arquivos
-        </Button>
-      </div>
+    <div className="space-y-4 py-2">
+      <p className="text-sm text-gray-500 mb-4">
+        Faça upload de imagens do produto. A primeira imagem será usada como capa.
+      </p>
       
-      <div className="grid grid-cols-4 gap-4 mt-4">
-        <div className="aspect-square rounded-md bg-gray-100 flex items-center justify-center relative">
-          <p className="text-gray-500 text-sm">Sem imagens</p>
-        </div>
-      </div>
+      <ImageUploadField
+        label="Imagem Principal"
+        imageUrl="https://via.placeholder.com/300x300?text=Produto"
+        imageName="Imagem de produto"
+      />
     </div>
   );
 };
