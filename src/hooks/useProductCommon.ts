@@ -1,30 +1,27 @@
 
-import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
 
-// Funções e estado compartilhados para hooks relacionados a produtos
 export function useProductCommon() {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  
-  // Função comum para tratamento de erros
-  const handleError = (error: any, errorMessage: string) => {
-    console.error(errorMessage, error);
-    toast({
-      title: "Erro",
-      description: `${errorMessage}. Tente novamente mais tarde.`,
-      variant: "destructive"
-    });
-    throw error;
-  };
 
-  // Função auxiliar para converter Date para string ISO para o Supabase
+  // Função para formatar data para Supabase
   const formatDateForSupabase = () => {
     return new Date().toISOString();
   };
 
-  // Toast de sucesso comum
+  // Função para lidar com erros
+  const handleError = (error: any, message: string) => {
+    console.error(`${message}:`, error);
+    toast({
+      title: 'Erro',
+      description: message,
+      variant: 'destructive',
+    });
+  };
+
+  // Função para exibir notificação de sucesso
   const showSuccessToast = (title: string, description: string) => {
     toast({
       title,
@@ -35,8 +32,8 @@ export function useProductCommon() {
   return {
     loading,
     setLoading,
-    handleError,
     formatDateForSupabase,
+    handleError,
     showSuccessToast
   };
 }

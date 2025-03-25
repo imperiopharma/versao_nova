@@ -93,7 +93,7 @@ export function useProductsData() {
       };
 
       setProducts(prev => [...prev, formattedProduct]);
-      showSuccessToast("Produto adicionado", `${formattedProduct.name} foi adicionado com sucesso.`);
+      showSuccessToast("Produto adicionado", "O produto foi adicionado com sucesso.");
       return formattedProduct;
     } catch (error) {
       handleError(error, 'Erro ao adicionar produto');
@@ -132,7 +132,7 @@ export function useProductsData() {
       if (error) throw error;
 
       setProducts(prev => prev.map(p => p.id === id ? { ...product } : p));
-      showSuccessToast("Produto atualizado", `${product.name} foi atualizado com sucesso.`);
+      showSuccessToast("Produto atualizado", "O produto foi atualizado com sucesso.");
       return product;
     } catch (error) {
       handleError(error, 'Erro ao atualizar produto');
@@ -150,17 +150,8 @@ export function useProductsData() {
 
       if (error) throw error;
 
-      // Encontrar o produto antes de excluí-lo
-      const productToDelete = products.find(p => p.id === productId);
-      
-      // Atualizar o estado local removendo o produto excluído
       setProducts(prev => prev.filter(p => p.id !== productId));
-      
-      if (productToDelete) {
-        showSuccessToast("Produto excluído", `${productToDelete.name} foi excluído com sucesso.`);
-      }
-      
-      return productId;
+      showSuccessToast("Produto excluído", "O produto foi excluído com sucesso.");
     } catch (error) {
       handleError(error, 'Erro ao excluir produto');
       throw error;
