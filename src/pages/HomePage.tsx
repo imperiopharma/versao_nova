@@ -1,14 +1,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
-import { Pill, Heart } from 'lucide-react';
+import { Pill, Heart, Sparkles, TrendingUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { motion } from 'framer-motion';
 
 // Import components
 import { HeroBanner } from '../components/home/HeroBanner';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { PromoCardsSection } from '../components/home/PromoCardsSection';
 import { NewsletterSection } from '../components/home/NewsletterSection';
+import { FlashSaleSection } from '../components/home/FlashSaleSection';
 
 export const HomePage: React.FC = () => {
   const [brands, setBrands] = useState<any>({
@@ -17,8 +19,8 @@ export const HomePage: React.FC = () => {
     national: [],
     various: [],
     categories: [
-      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2" /> },
-      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2" /> },
+      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2 text-imperio-navy" /> },
+      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2 text-imperio-navy" /> },
     ],
   });
   
@@ -83,7 +85,7 @@ export const HomePage: React.FC = () => {
     fetchData();
   }, []);
 
-  // Hero banner slides for carousel - apenas imagens
+  // Hero banner slides para o carrossel
   const heroSlides = [
     {
       image: "https://via.placeholder.com/1200x800?text=Slide+1",
@@ -96,7 +98,7 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Apenas 2 cards promocionais: Emagrecedores e Farmácia
+  // Cards promocionais: Emagrecedores e Farmácia com ícones modernos
   const promoCards = [
     {
       id: 'emagrecedores',
@@ -104,7 +106,7 @@ export const HomePage: React.FC = () => {
       description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento.',
       icon: <Pill size={20} />,
       link: '/categoria/emagrecedores',
-      color: 'bg-blue-50'
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
     },
     {
       id: 'farmacia',
@@ -112,29 +114,134 @@ export const HomePage: React.FC = () => {
       description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde.',
       icon: <Heart size={20} />,
       link: '/categoria/farmacia',
-      color: 'bg-blue-50'
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+    },
+    {
+      id: 'novidades',
+      title: 'Novidades',
+      description: 'Conheça os últimos lançamentos e produtos mais recentes.',
+      icon: <Sparkles size={20} />,
+      link: '/categoria/novidades',
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+    },
+    {
+      id: 'ofertas',
+      title: 'Ofertas',
+      description: 'Aproveite as melhores promoções e descontos especiais.',
+      icon: <TrendingUp size={20} />,
+      link: '/ofertas',
+      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
     }
   ];
 
+  // Produtos para o FlashSale
+  const flashSaleItems = [
+    {
+      id: 'combo1',
+      name: 'Combo Emagrecedor Premium',
+      brand: 'MultiHealth',
+      originalPrice: 299.90,
+      price: 249.90,
+      image: 'https://via.placeholder.com/300x300?text=Combo+1'
+    },
+    {
+      id: 'combo2',
+      name: 'Kit Vitaminas Essenciais',
+      brand: 'VitaPlus',
+      originalPrice: 179.90,
+      price: 149.90,
+      image: 'https://via.placeholder.com/300x300?text=Combo+2'
+    },
+    {
+      id: 'combo3',
+      name: 'Pacote Saúde Total',
+      brand: 'HealthForce',
+      originalPrice: 359.90,
+      price: 299.90,
+      image: 'https://via.placeholder.com/300x300?text=Combo+3'
+    },
+    {
+      id: 'combo4',
+      name: 'Proteína Premium + Creatina',
+      brand: 'PowerFit',
+      originalPrice: 249.90,
+      price: 199.90,
+      image: 'https://via.placeholder.com/300x300?text=Combo+4'
+    }
+  ];
+
+  // Container animation variants
+  const containerAnimation = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
   return (
     <Layout>
-      {/* Hero Banner */}
-      <HeroBanner slides={heroSlides} />
+      {/* Hero Banner com animação de entrada */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <HeroBanner slides={heroSlides} />
+      </motion.div>
       
-      {/* Promotional Cards - Apenas 2 cards */}
-      <PromoCardsSection cards={promoCards} />
+      {/* Promotional Cards com efeito de stagger */}
+      <motion.div
+        variants={containerAnimation}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        <PromoCardsSection cards={promoCards} />
+      </motion.div>
       
-      {/* Brands Section - Mostrando todas as marcas */}
-      <BrandsSection 
-        imported={brands.imported}
-        premium={brands.premium}
-        national={brands.national}
-        various={brands.various}
-        categories={brands.categories}
-      />
+      {/* Flash Sales Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <FlashSaleSection items={flashSaleItems} />
+      </motion.div>
       
-      {/* Newsletter & Social Media */}
-      <NewsletterSection />
+      {/* Brands Section com animação suave */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <BrandsSection 
+          imported={brands.imported}
+          premium={brands.premium}
+          national={brands.national}
+          various={brands.various}
+          categories={brands.categories}
+        />
+      </motion.div>
+      
+      {/* Newsletter Section com animação de fade-in */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <NewsletterSection />
+      </motion.div>
+      
+      {/* Elementos decorativos */}
+      <div className="fixed top-40 left-10 w-40 h-40 bg-imperio-navy/5 rounded-full blur-3xl -z-10"></div>
+      <div className="fixed bottom-40 right-10 w-60 h-60 bg-imperio-light-navy/5 rounded-full blur-3xl -z-10"></div>
     </Layout>
   );
 };
