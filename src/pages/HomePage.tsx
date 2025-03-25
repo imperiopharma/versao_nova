@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { 
@@ -56,8 +57,8 @@ export const HomePage: React.FC = () => {
           id: product.id,
           name: product.name,
           brand: product.brand,
-          price: product.price,
-          originalPrice: product.original_price,
+          price: product.price || 0,
+          originalPrice: product.original_price || product.price,
           image: product.image || 'https://via.placeholder.com/300x300?text=Produto',
           url: `/produto/${product.id}`
         }));
