@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { useCheckout } from '../contexts/CheckoutContext';
@@ -17,6 +17,7 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
+import { useCheckoutSubmit } from '@/hooks/useCheckoutSubmit';
 
 export const CheckoutPagamentoPage: React.FC = () => {
   const { 
@@ -27,17 +28,17 @@ export const CheckoutPagamentoPage: React.FC = () => {
     resetCustomerData
   } = useCheckout();
   
-  const { 
-    items, 
-    total,
-    clearCart
-  } = useCart();
-  
-  const [loading, setLoading] = useState(false);
-  const [completedOrder, setCompletedOrder] = useState(false);
+  const { items, total, clearCart } = useCart();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  const {
+    handleCompleteOrder,
+    loading,
+    completedOrder,
+    setCompletedOrder
+  } = useCheckoutSubmit();
   
   // Check if user came from previous steps
   useEffect(() => {
@@ -62,50 +63,6 @@ export const CheckoutPagamentoPage: React.FC = () => {
       description: 'Cole a chave no seu aplicativo de banco para realizar o pagamento.',
       duration: 3000,
     });
-  };
-  
-  const handleCompleteOrder = async () => {
-    if (!paymentProofFile) {
-      toast({
-        title: 'Comprovante necessário',
-        description: 'Por favor, anexe o comprovante do PIX para finalizar o pedido.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      // Simulate API call to Supabase
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real app, this would:
-      // 1. Upload the proof file to Supabase Storage
-      // 2. Create an order record in Supabase
-      // 3. Send notification to the store owner via webhook
-      
-      // Success!
-      setCompletedOrder(true);
-      
-      // Reset states
-      setTimeout(() => {
-        clearCart();
-        resetCustomerData();
-        setCheckoutStep(1);
-        navigate('/');
-      }, 5000);
-      
-    } catch (error) {
-      console.error('Error completing order:', error);
-      toast({
-        title: 'Erro ao processar pedido',
-        description: 'Ocorreu um erro ao processar seu pedido. Por favor, tente novamente.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
   };
   
   return (

@@ -1,105 +1,35 @@
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RecentOrdersTable } from './RecentOrdersTable';
+import { useOrdersData } from '@/hooks/useOrdersData';
+import { Order } from '@/types/orders';
 
 export const RecentOrders: React.FC = () => {
-  // Mock data for recent orders
-  const orders = [
-    {
-      id: "ORD-7352",
-      customer: "João Silva",
-      date: "2023-06-14",
-      total: "R$ 289,90",
-      status: "Concluído",
-      statusColor: "success"
-    },
-    {
-      id: "ORD-7351",
-      customer: "Maria Oliveira",
-      date: "2023-06-14",
-      total: "R$ 129,00",
-      status: "Enviado",
-      statusColor: "info"
-    },
-    {
-      id: "ORD-7350",
-      customer: "Pedro Santos",
-      date: "2023-06-13",
-      total: "R$ 499,50",
-      status: "Processando",
-      statusColor: "warning"
-    },
-    {
-      id: "ORD-7349",
-      customer: "Ana Costa",
-      date: "2023-06-13",
-      total: "R$ 59,90",
-      status: "Concluído",
-      statusColor: "success"
-    },
-    {
-      id: "ORD-7348",
-      customer: "Lucas Ferreira",
-      date: "2023-06-12",
-      total: "R$ 329,00",
-      status: "Cancelado",
-      statusColor: "destructive"
-    }
-  ];
+  const { orders, loading, fetchOrders } = useOrdersData();
+  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
 
-  // Function to render status badge with appropriate color
-  const renderStatus = (status: string, color: string) => {
-    const colorMap: Record<string, string> = {
-      success: "bg-green-100 text-green-800 hover:bg-green-100",
-      info: "bg-blue-100 text-blue-800 hover:bg-blue-100",
-      warning: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
-      destructive: "bg-red-100 text-red-800 hover:bg-red-100"
-    };
-    
-    return (
-      <Badge variant="outline" className={`${colorMap[color]} border-none`}>
-        {status}
-      </Badge>
-    );
-  };
+  useEffect(() => {
+    // Buscar pedidos recentes
+    fetchOrders();
+  }, []);
+
+  useEffect(() => {
+    // Limitar a 5 pedidos mais recentes
+    setRecentOrders(orders.slice(0, 5));
+  }, [orders]);
 
   return (
-    <Card className="border-none shadow-md">
+    <Card className="col-span-full xl:col-span-8">
       <CardHeader>
         <CardTitle>Pedidos Recentes</CardTitle>
+        <CardDescription>
+          Últimos 5 pedidos realizados na loja
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Pedido</TableHead>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Data</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium">{order.id}</TableCell>
-                <TableCell>{order.customer}</TableCell>
-                <TableCell>{order.date}</TableCell>
-                <TableCell>{order.total}</TableCell>
-                <TableCell>
-                  {renderStatus(order.status, order.statusColor)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <RecentOrdersTable orders={recentOrders} loading={loading} />
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button variant="ghost">Ver Todos os Pedidos</Button>
-      </CardFooter>
     </Card>
   );
 };
