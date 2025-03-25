@@ -15,7 +15,7 @@ import { useCheckoutForm } from '@/hooks/useCheckoutForm';
 
 export const CheckoutDadosPage: React.FC = () => {
   const { customerData } = useCheckout();
-  const { setShippingMethod, cart, total } = useCart();
+  const { setShippingMethod, items, total } = useCart(); // Corrigido: usando 'items' ao invés de 'cart'
   const { formErrors, handleChangeInput, handleSubmit } = useCheckoutForm();
   
   // Rolar para o topo quando a página carregar
@@ -61,7 +61,7 @@ export const CheckoutDadosPage: React.FC = () => {
               </div>
               <div>
                 <p className="text-xs text-imperio-navy/70">Seu carrinho</p>
-                <p className="font-bold text-imperio-navy text-lg">{cart.length} {cart.length === 1 ? 'item' : 'itens'}</p>
+                <p className="font-bold text-imperio-navy text-lg">{items.length} {items.length === 1 ? 'item' : 'itens'}</p>
               </div>
             </div>
             <div className="text-right">
