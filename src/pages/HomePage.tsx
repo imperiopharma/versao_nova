@@ -1,14 +1,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
-import { Pill, Heart, Sparkles, TrendingUp } from 'lucide-react';
+import { Pill, Heart, Sparkles, TrendingUp, ShoppingBag, BarChart3, Zap, Smartphone } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 // Import components
 import { HeroBanner } from '../components/home/HeroBanner';
 import { BrandsSection } from '../components/home/BrandsSection';
-import { PromoCardsSection } from '../components/home/PromoCardsSection';
+import { CategoryCards } from '../components/home/CategoryCards';
+import { FeaturedProducts } from '../components/home/FeaturedProducts';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 
 export const HomePage: React.FC = () => {
@@ -18,10 +20,49 @@ export const HomePage: React.FC = () => {
     national: [],
     various: [],
     categories: [
-      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2 text-imperio-navy" /> },
-      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2 text-imperio-navy" /> },
+      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2 text-white" /> },
+      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2 text-white" /> },
     ],
   });
+  
+  const [featuredProducts, setFeaturedProducts] = useState([
+    {
+      id: 'prod1',
+      name: 'Suplemento Emagrecedor',
+      brand: 'HealthMax',
+      price: 89.90,
+      image: 'https://via.placeholder.com/300x300?text=Produto+1',
+      category: 'emagrecedores',
+      discount: 15
+    },
+    {
+      id: 'prod2',
+      name: 'Vitamina C 1000mg',
+      brand: 'VitaForce',
+      price: 49.90,
+      image: 'https://via.placeholder.com/300x300?text=Produto+2',
+      category: 'vitaminas',
+      discount: 10
+    },
+    {
+      id: 'prod3',
+      name: 'Proteína Isolada',
+      brand: 'PowerNutrition',
+      price: 129.90,
+      image: 'https://via.placeholder.com/300x300?text=Produto+3',
+      category: 'suplementos',
+      discount: 20
+    },
+    {
+      id: 'prod4',
+      name: 'Colágeno Hidrolisado',
+      brand: 'BeautyHealth',
+      price: 79.90,
+      image: 'https://via.placeholder.com/300x300?text=Produto+4',
+      category: 'beleza',
+      discount: 5
+    }
+  ]);
   
   // Buscar dados do Supabase ao carregar a página
   useEffect(() => {
@@ -97,41 +138,51 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // Cards promocionais: Emagrecedores e Farmácia com ícones modernos
-  const promoCards = [
+  // Categorias com cores vibrantes
+  const categories = [
     {
       id: 'emagrecedores',
       title: 'Emagrecedores',
-      description: 'Soluções eficazes para auxiliar no seu processo de emagrecimento.',
-      icon: <Pill size={20} />,
+      description: 'Produtos para perda de peso',
+      icon: <Zap size={24} />,
       link: '/categoria/emagrecedores',
-      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+      color: 'bg-red-500'
     },
     {
       id: 'farmacia',
       title: 'Farmácia',
-      description: 'Produtos farmacêuticos essenciais para o seu bem-estar e saúde.',
-      icon: <Heart size={20} />,
+      description: 'Medicamentos e produtos de saúde',
+      icon: <Heart size={24} />,
       link: '/categoria/farmacia',
-      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+      color: 'bg-blue-500'
     },
     {
-      id: 'novidades',
-      title: 'Novidades',
-      description: 'Conheça os últimos lançamentos e produtos mais recentes.',
-      icon: <Sparkles size={20} />,
-      link: '/categoria/novidades',
-      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+      id: 'suplementos',
+      title: 'Suplementos',
+      description: 'Vitaminas e suplementos',
+      icon: <BarChart3 size={24} />,
+      link: '/categoria/suplementos',
+      color: 'bg-green-500'
     },
     {
       id: 'ofertas',
       title: 'Ofertas',
-      description: 'Aproveite as melhores promoções e descontos especiais.',
-      icon: <TrendingUp size={20} />,
+      description: 'Promoções especiais',
+      icon: <ShoppingBag size={24} />,
       link: '/ofertas',
-      color: 'bg-gradient-to-br from-blue-50 to-blue-100'
+      color: 'bg-purple-500'
     }
   ];
+
+  // App banner
+  const appPromo = {
+    title: 'Baixe nosso Aplicativo',
+    description: 'Compre mais rápido e tenha acesso a promoções exclusivas',
+    icon: <Smartphone size={48} className="text-white mb-4" />,
+    buttonText: 'Baixar Agora',
+    buttonLink: '#',
+    color: 'bg-gradient-to-r from-blue-600 to-blue-800'
+  };
 
   // Container animation variants
   const containerAnimation = {
@@ -156,7 +207,18 @@ export const HomePage: React.FC = () => {
         <HeroBanner slides={heroSlides} />
       </motion.div>
       
-      {/* Brands Section com animação suave - Movida para cima */}
+      {/* Categorias em cards coloridos */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-6"
+      >
+        <CategoryCards categories={categories} />
+      </motion.div>
+      
+      {/* Brands Section com animação suave */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -172,14 +234,42 @@ export const HomePage: React.FC = () => {
         />
       </motion.div>
       
-      {/* Promotional Cards com efeito de stagger */}
+      {/* Produtos em destaque */}
       <motion.div
         variants={containerAnimation}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <PromoCardsSection cards={promoCards} />
+        <FeaturedProducts products={featuredProducts} />
+      </motion.div>
+      
+      {/* App Promo Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-6"
+      >
+        <div className="section-container">
+          <div className={`rounded-xl p-6 md:p-8 ${appPromo.color} text-white text-center`}>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {appPromo.icon}
+            </motion.div>
+            <h2 className="text-xl md:text-2xl font-bold mb-2">{appPromo.title}</h2>
+            <p className="mb-4 opacity-90">{appPromo.description}</p>
+            <Link 
+              to={appPromo.buttonLink} 
+              className="inline-block bg-white text-blue-600 font-bold py-3 px-6 rounded-full hover:bg-blue-50 transition-colors"
+            >
+              {appPromo.buttonText}
+            </Link>
+          </div>
+        </div>
       </motion.div>
       
       {/* Newsletter Section com animação de fade-in */}
