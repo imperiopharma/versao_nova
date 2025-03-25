@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
-import { Pill, Heart, BarChart3, ShoppingBag, Zap, PhoneCall, Truck, Map, Calendar, CreditCard } from 'lucide-react';
+import { Pill, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 // Import components
@@ -227,10 +227,13 @@ export const HomePage: React.FC = () => {
       
       <HeroBanner slides={heroSlides} />
       
-      <CategoryCards categories={categories} />
+      {/* Parte 1: Categorias e Serviços */}
+      <div className="py-2">
+        <CategoryCards categories={categories} />
+        <PromoCardsSection cards={serviceCards} />
+      </div>
       
-      <PromoCardsSection cards={serviceCards} />
-      
+      {/* Parte 2: Marcas */}
       <BrandsSection 
         premium={brands.premium}
         national={brands.national}
@@ -239,20 +242,27 @@ export const HomePage: React.FC = () => {
         categories={brands.categories}
       />
       
-      <FeaturedProducts products={featuredProducts} />
+      {/* Parte 3: Produtos */}
+      <div className="py-2">
+        <FeaturedProducts products={featuredProducts} />
+        <FlashSaleSection items={flashSaleItems} />
+      </div>
       
-      <FlashSaleSection items={flashSaleItems} />
-      
+      {/* Parte 4: Garantias */}
       <GuaranteesSection />
       
-      <VipMembershipSection />
+      {/* Parte 5: Informações Adicionais */}
+      <div className="py-2">
+        <VipMembershipSection />
+        <div className="py-2"></div>
+        <AboutSection />
+        <div className="py-2"></div>
+        <LocationSection />
+        <div className="py-2"></div>
+        <FaqSection items={faqItems} />
+      </div>
       
-      <AboutSection />
-      
-      <FaqSection items={faqItems} />
-      
-      <LocationSection />
-      
+      {/* Parte 6: Newsletter */}
       <NewsletterSection />
     </Layout>
   );

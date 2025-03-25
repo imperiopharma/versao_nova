@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Brand {
   id: string;
@@ -25,6 +26,8 @@ interface BrandsSectionProps {
 }
 
 export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national, imported, various, categories }) => {
+  const isMobile = useIsMobile();
+  
   // Marcas conforme a imagem de exemplo
   const brandsData = {
     imported: [
@@ -61,18 +64,18 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
+        staggerChildren: 0.05,
+        delayChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4 }
+      transition: { duration: 0.3 }
     }
   };
 
@@ -81,19 +84,26 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      className="mb-6"
+      viewport={{ once: true, margin: "-50px" }}
+      className="mb-5"
     >
-      <div className="text-center mb-3">
-        <h3 className="text-md font-medium text-imperio-navy">{title}</h3>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-medium text-imperio-navy">{title}</h3>
+        <Link 
+          to={`/marcas/${title.toLowerCase().replace(' ', '-')}`}
+          className="text-xs text-imperio-red font-medium flex items-center"
+        >
+          Ver mais
+          <ArrowRight size={12} className="ml-1" />
+        </Link>
       </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {brands.map((brand) => (
           <motion.div key={brand.id} variants={itemVariants}>
             <Link 
               to={`/marca/${brand.id}`}
-              className="border border-gray-200 rounded-lg flex items-center justify-center h-16 bg-white hover:shadow-sm transition-all"
+              className="border border-gray-200 rounded-lg flex items-center justify-center h-14 sm:h-16 bg-white hover:shadow-sm transition-all"
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
@@ -101,7 +111,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
               <img 
                 src={brand.logo} 
                 alt={brand.name} 
-                className="max-h-10 max-w-[80%] object-contain" 
+                className="max-h-8 sm:max-h-10 max-w-[80%] object-contain" 
               />
             </Link>
           </motion.div>
@@ -111,11 +121,17 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
   );
 
   return (
-    <section className="py-8 bg-gray-50">
+    <section className="py-4 sm:py-6 bg-gray-50">
       <div className="section-container">
-        <div className="text-center mb-4">
-          <h2 className="text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
-          <p className="text-sm text-gray-600 mt-1">Selecione uma das marcas abaixo para ver os produtos</p>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
+          <Link 
+            to="/marcas" 
+            className="text-sm text-imperio-red font-medium flex items-center"
+          >
+            Ver todas
+            <ArrowRight size={14} className="ml-1" />
+          </Link>
         </div>
         
         {/* Imported Brands */}
