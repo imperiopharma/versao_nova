@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { 
@@ -245,9 +244,16 @@ export const HomePage: React.FC = () => {
         categories={brands.categories}
       />
       
-      {/* FlashSaleSection será substituída se tivermos produtos reais */}
+      {/* FlashSaleSection com verificação para garantir que temos produtos */}
       {products.length > 0 && (
-        <FlashSaleSection items={products.slice(0, 4)} />
+        <FlashSaleSection items={products.slice(0, 4).map(product => ({
+          id: product.id,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          image: product.image
+        }))} />
       )}
       
       {/* Newsletter & Social Media */}
