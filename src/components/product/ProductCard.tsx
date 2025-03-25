@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart, CartItem } from '../../contexts/CartContext';
-import { toast } from '@/components/ui/use-toast';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '../ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   id: string;
@@ -12,7 +12,7 @@ interface ProductCardProps {
   brand: string;
   price: number;
   originalPrice?: number;
-  image?: string;
+  image: string;
   url: string;
 }
 
@@ -23,141 +23,88 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   price,
   originalPrice,
   image,
-  url,
+  url
 }) => {
-  const { addItem, itemCount, total } = useCart();
-  const [showDialog, setShowDialog] = React.useState(false);
-  const [quantity, setQuantity] = React.useState(1);
-  const discountPercentage = originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
-
+  const { addItem } = useCart();
+  const { toast } = useToast();
+  
+  const hasDiscount = originalPrice && originalPrice > price;
+  const discountPercentage = hasDiscount
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+  
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const item: CartItem = {
+    addItem({
       id,
       name,
       brand,
       price,
       originalPrice,
-      quantity,
-      image,
-    };
+      quantity: 1,
+      image
+    });
     
-    addItem(item);
-    setShowDialog(true);
+    toast({
+      title: 'Produto Adicionado!',
+      description: `${name} foi adicionado ao carrinho.`,
+      duration: 3000,
+    });
   };
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setQuantity(parseInt(e.target.value, 10));
-  };
-
+  
   return (
-    <>
-      <div className="imperio-card hover-lift group">
-        <Link to={url} className="block">
-          <div className="relative">
-            {image ? (
-              <img
-                src={image}
-                alt={name}
-                className="w-full aspect-square object-cover rounded-md mb-3"
-              />
-            ) : (
-              <div className="w-full aspect-square bg-gray-200 rounded-md mb-3 flex items-center justify-center">
-                <span className="text-gray-400">Sem imagem</span>
-              </div>
-            )}
-            
-            {originalPrice && (
-              <div className="absolute top-2 left-2 bg-imperio-red text-white text-xs font-medium px-2 py-1 rounded">
-                -{discountPercentage}%
-              </div>
-            )}
-          </div>
-          
-          <div className="flex flex-col h-[120px]">
-            <h3 className="font-medium text-lg group-hover:text-imperio-navy transition-colors">{name}</h3>
-            <p className="text-sm text-gray-500 mb-2">{brand}</p>
-            
-            <div className="mt-auto">
-              {originalPrice && (
-                <p className="text-sm text-gray-500 line-through">
-                  {originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                </p>
-              )}
-              <div className="flex justify-between items-end">
-                <p className="text-lg font-semibold text-imperio-navy">
-                  {price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                </p>
-                
-                <div className="flex items-center space-x-2">
-                  <select 
-                    value={quantity} 
-                    onChange={handleQuantityChange}
-                    className="bg-white border border-gray-200 rounded p-1 text-sm"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <option key={num} value={num}>
-                        {num}
-                      </option>
-                    ))}
-                  </select>
-                  
-                  <Button 
-                    size="sm" 
-                    className="bg-imperio-navy hover:bg-imperio-light-navy text-white"
-                    onClick={handleAddToCart}
-                  >
-                    Adicionar
-                  </Button>
-                </div>
-              </div>
+    <Link 
+      to={url}
+      className="group transition-all duration-300 flex flex-col h-full"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    >
+      <div className="bg-white rounded-lg shadow-subtle overflow-hidden h-full flex flex-col hover:shadow-elevation transition-shadow duration-300">
+        {/* Imagem do produto com overlay hover */}
+        <div className="relative aspect-square overflow-hidden">
+          {hasDiscount && (
+            <div className="absolute top-2 left-2 bg-imperio-red text-white text-xs font-bold py-1 px-2 rounded-full z-10">
+              -{discountPercentage}%
             </div>
-          </div>
-        </Link>
-      </div>
-      
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-imperio-navy">Produto Adicionado!</DialogTitle>
-            <DialogDescription>
-              <p className="mt-2">{name}</p>
-              <p className="text-sm text-gray-500">{brand}</p>
-            </DialogDescription>
-          </DialogHeader>
+          )}
           
-          <div className="py-4">
-            <p className="font-medium text-xl">
-              Total do Carrinho: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              {itemCount} {itemCount === 1 ? 'item' : 'itens'} no carrinho
-            </p>
-          </div>
+          <img 
+            src={image} 
+            alt={name}
+            className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
+          />
           
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
-            <Button
-              variant="outline"
-              className="sm:w-full"
-              onClick={() => setShowDialog(false)}
-            >
-              Continuar Comprando
-            </Button>
+          {/* Overlay de ação no hover */}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
             <Button 
-              className="bg-imperio-navy hover:bg-imperio-light-navy text-white sm:w-full"
-              onClick={() => {
-                setShowDialog(false);
-                window.location.href = '/carrinho';
-              }}
+              onClick={handleAddToCart}
+              size="sm"
+              className="bg-imperio-navy hover:bg-imperio-light-navy text-white text-xs sm:text-sm"
             >
-              Ir para o Carrinho
+              <ShoppingCart className="w-4 h-4 mr-1" />
+              Adicionar
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          </div>
+        </div>
+        
+        {/* Informações do produto */}
+        <div className="p-3 sm:p-4 flex-grow flex flex-col">
+          <div className="mb-1 text-xs text-gray-500">{brand}</div>
+          <h3 className="font-medium text-sm sm:text-base line-clamp-2 mb-1 group-hover:text-imperio-navy transition-colors">{name}</h3>
+          
+          <div className="mt-auto flex items-baseline">
+            {hasDiscount && (
+              <span className="text-gray-500 line-through text-xs mr-2">
+                {originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              </span>
+            )}
+            <span className="text-imperio-navy font-semibold text-base">
+              {price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, Phone, Mail } from 'lucide-react';
+import { User, Phone, Mail, CreditCard } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { InputMask } from '@/components/ui/input-mask';
@@ -16,7 +16,7 @@ interface CustomerInfoFormProps {
 export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
   customerData,
   handleChangeInput,
-  formErrors
+  formErrors,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
@@ -48,14 +48,19 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
           <Label htmlFor="cpf" className="mb-1 block">
             CPF *
           </Label>
-          <InputMask
-            id="cpf"
-            placeholder="000.000.000-00"
-            mask="999.999.999-99"
-            className={formErrors.cpf ? 'border-imperio-red' : ''}
-            value={customerData.cpf}
-            onValueChange={(value) => handleChangeInput('cpf', value)}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <CreditCard size={18} />
+            </div>
+            <InputMask
+              id="cpf"
+              placeholder="000.000.000-00"
+              mask="999.999.999-99"
+              className={`pl-10 ${formErrors.cpf ? 'border-imperio-red' : ''}`}
+              value={customerData.cpf}
+              onValueChange={(value) => handleChangeInput('cpf', value)}
+            />
+          </div>
           {formErrors.cpf && (
             <p className="text-imperio-red text-sm mt-1">{formErrors.cpf}</p>
           )}
@@ -85,7 +90,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         
         <div>
           <Label htmlFor="email" className="mb-1 block">
-            Email *
+            E-mail *
           </Label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
@@ -94,7 +99,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             <Input
               id="email"
               type="email"
-              placeholder="Digite seu email"
+              placeholder="seu@email.com"
               className={`pl-10 ${formErrors.email ? 'border-imperio-red' : ''}`}
               value={customerData.email}
               onChange={(e) => handleChangeInput('email', e.target.value)}
@@ -106,7 +111,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="source" className="mb-1 block">
+          <Label htmlFor="howDidYouFindUs" className="mb-1 block">
             Como nos conheceu?
           </Label>
           <Select
@@ -119,8 +124,9 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
             <SelectContent>
               <SelectItem value="google">Google</SelectItem>
               <SelectItem value="instagram">Instagram</SelectItem>
-              <SelectItem value="indicacao">Indicação</SelectItem>
-              <SelectItem value="outros">Outros</SelectItem>
+              <SelectItem value="facebook">Facebook</SelectItem>
+              <SelectItem value="friend">Indicação de amigo</SelectItem>
+              <SelectItem value="other">Outro</SelectItem>
             </SelectContent>
           </Select>
         </div>

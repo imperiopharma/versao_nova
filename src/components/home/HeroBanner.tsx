@@ -1,18 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HeroSlide {
-  title: string;
-  subtitle: string;
   image: string;
-  cta: {
-    primary: { text: string; link: string };
-    secondary: { text: string; link: string };
-  };
 }
 
 interface HeroBannerProps {
@@ -66,13 +58,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
 
   return (
     <section 
-      className="relative h-[80vh] min-h-[500px] bg-imperio-navy overflow-hidden"
+      className={`relative ${isMobile ? 'h-[50vh]' : 'h-[80vh]'} min-h-[300px] bg-imperio-navy overflow-hidden`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-imperio-navy/90 to-imperio-navy/70 z-10"></div>
+      {/* Dark overlay for better visibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-imperio-navy/50 to-imperio-navy/30 z-10"></div>
       
       {/* Carousel Slides */}
       <div className="relative h-full">
@@ -87,44 +79,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }}
             ></div>
-            
-            <div className="relative h-full flex items-center z-20">
-              <div className="section-container">
-                <div className="max-w-lg text-white px-2">
-                  {/* Text content with improved contrast */}
-                  <div className="bg-imperio-navy/70 p-4 rounded-lg backdrop-blur-sm shadow-lg">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight animate-slide-up text-white">
-                      {slide.title}
-                    </h1>
-                    <p className="mt-4 md:mt-6 text-base md:text-lg text-gray-100 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                      {slide.subtitle}
-                    </p>
-                    
-                    <div className="mt-6 md:mt-8 space-x-3 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                      <Button 
-                        size={isMobile ? "default" : "lg"} 
-                        className="bg-imperio-red hover:bg-imperio-red/90 text-white font-semibold"
-                        asChild
-                      >
-                        <Link to={slide.cta.primary.link}>
-                          {slide.cta.primary.text}
-                        </Link>
-                      </Button>
-                      <Button 
-                        variant="outline"
-                        size={isMobile ? "default" : "lg"}
-                        className="text-white border-white hover:bg-white hover:text-imperio-navy"
-                        asChild
-                      >
-                        <Link to={slide.cta.secondary.link}>
-                          {slide.cta.secondary.text}
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         ))}
       </div>

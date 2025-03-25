@@ -1,14 +1,12 @@
 
-import React, { useState } from 'react';
-import { Layout } from '../components/layout/Layout';
-import { useCart } from '../contexts/CartContext';
-import { useCheckout } from '../contexts/CheckoutContext';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CheckoutSteps } from '../components/checkout/CheckoutSteps';
-import { Trash2, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Layout } from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Minus, Plus, Trash2, ShoppingBag, ChevronRight, AlertTriangle } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 export const CartPage: React.FC = () => {
   const { 
@@ -16,267 +14,229 @@ export const CartPage: React.FC = () => {
     updateQuantity, 
     removeItem, 
     subtotal, 
-    couponCode, 
-    setCouponCode, 
     discount, 
-    shippingCost,
+    couponCode, 
+    setCouponCode,
     total
   } = useCart();
-  const { setCheckoutStep } = useCheckout();
   const navigate = useNavigate();
-  
-  const [tempCouponCode, setTempCouponCode] = useState('');
-  const [couponError, setCouponError] = useState('');
-  
-  const handleQuantityChange = (id: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      updateQuantity(id, newQuantity);
-    }
-  };
-  
-  const handleRemoveItem = (id: string) => {
-    removeItem(id);
-  };
+  const { toast } = useToast();
+  const [coupon, setCoupon] = React.useState(couponCode || '');
   
   const handleApplyCoupon = () => {
-    if (!tempCouponCode.trim()) {
-      setCouponError('Por favor, insira um cupom');
+    if (coupon.trim() === '') {
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Por favor, insira um código de cupom válido.',
+      });
       return;
     }
     
-    // Simple validation for the example
-    if (tempCouponCode.toUpperCase() === 'DESCONTO10') {
-      setCouponCode(tempCouponCode.toUpperCase());
-      setCouponError('');
+    if (coupon === 'DESCONTO10') {
+      setCouponCode(coupon);
+      toast({
+        title: 'Cupom aplicado!',
+        description: 'Desconto de 10% aplicado com sucesso.',
+      });
     } else {
-      setCouponError('Cupom inválido ou expirado');
+      toast({
+        variant: 'destructive',
+        title: 'Cupom inválido',
+        description: 'O código inserido não é válido ou expirou.',
+      });
     }
   };
   
-  const handleProceedToCheckout = () => {
-    // In a real app, check if user is logged in here
-    // if not, redirect to login page
-    // For now, we'll just proceed to the next step
-    
-    setCheckoutStep(2); // Move to 'Dados' step
-    navigate('/checkout/dados');
-  };
-
-  return (
-    <Layout>
-      <div className="section-container py-12">
-        <div className="mb-8">
-          <CheckoutSteps currentStep={1} />
-        </div>
-        
-        <h1 className="text-3xl font-semibold text-imperio-navy mb-8">Carrinho de Compras</h1>
-        
-        {items.length === 0 ? (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-medium mb-4">Seu carrinho está vazio</h2>
-            <p className="text-gray-500 mb-8">Adicione produtos ao seu carrinho para continuar suas compras.</p>
-            <Button asChild>
-              <Link to="/marcas">Explorar Marcas</Link>
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg shadow-subtle p-6">
-                <div className="space-y-6">
-                  {/* Cart Items */}
-                  {items.map((item) => (
-                    <div 
-                      key={item.id} 
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b border-gray-100 last:border-b-0 animate-fade-in"
-                    >
-                      {/* Image and Information */}
-                      <div className="flex items-center mb-4 sm:mb-0">
-                        <div className="w-16 h-16 rounded-md bg-gray-200 mr-4 flex-shrink-0 overflow-hidden">
-                          {item.image ? (
-                            <img 
-                              src={item.image} 
-                              alt={item.name} 
-                              className="w-full h-full object-cover" 
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
-                              Sem imagem
-                            </div>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <h3 className="font-medium text-lg">{item.name}</h3>
-                          <p className="text-sm text-gray-500">{item.brand}</p>
-                          
-                          <div className="flex sm:hidden mt-2">
-                            <div className="flex items-center border border-gray-200 rounded-md">
-                              <button 
-                                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                className="px-3 py-1 text-gray-500 hover:text-imperio-navy focus:outline-none"
-                                disabled={item.quantity <= 1}
-                              >
-                                -
-                              </button>
-                              <span className="px-3 py-1 border-x border-gray-200">
-                                {item.quantity}
-                              </span>
-                              <button 
-                                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                className="px-3 py-1 text-gray-500 hover:text-imperio-navy focus:outline-none"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Price, Quantity, Actions */}
-                      <div className="flex items-center justify-between w-full sm:w-auto space-x-4">
-                        <div className="hidden sm:flex items-center border border-gray-200 rounded-md">
-                          <button 
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            className="px-3 py-1 text-gray-500 hover:text-imperio-navy focus:outline-none"
-                            disabled={item.quantity <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="px-3 py-1 border-x border-gray-200">
-                            {item.quantity}
-                          </span>
-                          <button 
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                            className="px-3 py-1 text-gray-500 hover:text-imperio-navy focus:outline-none"
-                          >
-                            +
-                          </button>
-                        </div>
-                        
-                        <div className="text-right">
-                          <p className="font-medium text-imperio-navy">
-                            {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                          </p>
-                          {item.originalPrice && (
-                            <p className="text-sm text-gray-500 line-through">
-                              {(item.originalPrice * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                            </p>
-                          )}
-                        </div>
-                        
-                        <button 
-                          onClick={() => handleRemoveItem(item.id)}
-                          className="text-imperio-red hover:text-imperio-red/80 focus:outline-none"
-                          aria-label="Remover"
-                        >
-                          <Trash2 size={20} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+  if (items.length === 0) {
+    return (
+      <Layout>
+        <div className="section-container py-16">
+          <div className="max-w-lg mx-auto text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 rounded-full bg-imperio-extra-light-navy flex items-center justify-center">
+                <ShoppingBag size={36} className="text-imperio-navy" />
               </div>
             </div>
             
-            {/* Summary */}
-            <div>
-              <div className="bg-white rounded-lg shadow-subtle p-6 sticky top-24">
-                <h2 className="text-xl font-semibold mb-6">Resumo do Pedido</h2>
+            <h1 className="text-2xl font-semibold mb-4">Seu carrinho está vazio</h1>
+            <p className="text-gray-600 mb-8">
+              Navegue pelos nossos produtos e adicione-os ao seu carrinho.
+            </p>
+            
+            <Button asChild className="bg-imperio-navy hover:bg-imperio-light-navy">
+              <Link to="/">Explorar Produtos</Link>
+            </Button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+  
+  return (
+    <Layout>
+      <div className="section-container py-8">
+        <h1 className="text-2xl md:text-3xl font-semibold text-imperio-navy mb-6">
+          Carrinho de Compras
+        </h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Lista de Produtos */}
+          <div className="lg:col-span-2 space-y-4">
+            {items.map((item) => (
+              <div 
+                key={item.id}
+                className="bg-white rounded-lg shadow-subtle p-4 flex flex-col sm:flex-row gap-4"
+              >
+                <div className="flex-shrink-0">
+                  <img 
+                    src={item.image || 'https://via.placeholder.com/100'} 
+                    alt={item.name}
+                    className="w-20 h-20 object-cover rounded-md mx-auto"
+                  />
+                </div>
                 
-                {/* Coupon Code */}
-                <div className="mb-6">
-                  <label htmlFor="coupon" className="block text-sm font-medium mb-2">
-                    Cupom de Desconto
-                  </label>
-                  <div className="flex space-x-2">
-                    <Input
-                      id="coupon"
-                      placeholder="Digite o código"
-                      value={tempCouponCode}
-                      onChange={(e) => setTempCouponCode(e.target.value)}
-                    />
-                    <Button onClick={handleApplyCoupon}>
+                <div className="flex-grow">
+                  <h3 className="font-medium">{item.name}</h3>
+                  <p className="text-sm text-gray-500">{item.brand}</p>
+                  
+                  <div className="flex flex-wrap items-center justify-between mt-3 gap-2">
+                    <div className="flex items-center">
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="h-8 w-8 rounded-l-md rounded-r-none border-r-0"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                      
+                      <div className="h-8 w-12 flex items-center justify-center border border-input">
+                        {item.quantity}
+                      </div>
+                      
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="h-8 w-8 rounded-r-md rounded-l-none border-l-0"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="text-right">
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <span className="text-sm text-gray-500 line-through block">
+                            {item.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                          </span>
+                        )}
+                        <span className="font-medium">
+                          {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </span>
+                      </div>
+                      
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="h-8 w-8 text-imperio-red hover:bg-imperio-red/10 hover:text-imperio-red border-imperio-red/20"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Resumo do Pedido */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-subtle p-6">
+              <div className="space-y-6">
+                {/* Cupom de Desconto */}
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex-1">
+                      <Input
+                        placeholder="Digite o código"
+                        value={coupon}
+                        onChange={(e) => setCoupon(e.target.value)}
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleApplyCoupon}
+                      className="whitespace-nowrap bg-imperio-navy hover:bg-imperio-light-navy"
+                    >
                       Aplicar
                     </Button>
                   </div>
-                  {couponError && (
-                    <p className="text-imperio-red text-sm mt-1">{couponError}</p>
-                  )}
-                  {couponCode && (
-                    <p className="text-green-600 text-sm mt-1">
-                      Cupom {couponCode} aplicado!
-                    </p>
-                  )}
+                  <p className="text-xs text-gray-500">
+                    Digite DESCONTO10 para 10% de desconto
+                  </p>
                 </div>
                 
-                {/* Order Summary */}
-                <div className="space-y-3 mb-6">
+                {/* Cálculos */}
+                <div className="border-t border-b py-4 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">
-                      {subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </span>
+                    <span>Subtotal</span>
+                    <span>{subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                   </div>
                   
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Desconto</span>
-                      <span>
-                        -{discount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                      </span>
+                      <span>-{discount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                     </div>
                   )}
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Frete</span>
-                    <span>
-                      {shippingCost > 0 
-                        ? shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                        : '+ frete'
-                      }
-                    </span>
-                  </div>
-                  
-                  <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg">
-                    <span>Total</span>
-                    <span>
-                      {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </span>
+                    <span>Frete</span>
+                    <span className="text-gray-500">Calculado no checkout</span>
                   </div>
                 </div>
                 
+                {/* Total */}
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold">Total</span>
+                  <span className="text-xl font-bold text-imperio-navy">
+                    {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  </span>
+                </div>
+                
+                {/* Botão de Checkout */}
                 <Button 
-                  className="w-full bg-imperio-red hover:bg-imperio-red/90 text-white text-lg py-6"
-                  onClick={handleProceedToCheckout}
+                  className="w-full bg-imperio-navy hover:bg-imperio-light-navy"
+                  onClick={() => navigate('/checkout/dados')}
                 >
-                  Confirmar Carrinho
-                  <ChevronRight size={18} className="ml-2" />
+                  Finalizar Compra
+                  <ChevronRight size={16} className="ml-2" />
                 </Button>
                 
-                <div className="mt-4">
-                  <Button 
-                    variant="ghost" 
-                    className="text-gray-500 hover:text-imperio-navy w-full"
-                    asChild
-                  >
-                    <Link to="/">
-                      <ChevronLeft size={18} className="mr-2" />
-                      Continuar Comprando
-                    </Link>
-                  </Button>
+                {/* Aviso */}
+                <div className="bg-imperio-extra-light-navy p-3 rounded-md flex gap-2 items-start text-sm">
+                  <AlertTriangle size={18} className="text-imperio-navy flex-shrink-0 mt-0.5" />
+                  <p className="text-gray-700">
+                    Produtos disponíveis conforme estoque. Preços sujeitos a alteração sem aviso prévio.
+                  </p>
                 </div>
                 
-                <Alert className="mt-6 bg-imperio-extra-light-navy border-imperio-navy/20">
-                  <AlertTriangle className="h-4 w-4 text-imperio-navy" />
-                  <AlertDescription className="text-imperio-navy text-sm">
-                    Os valores de frete serão calculados na próxima etapa.
-                  </AlertDescription>
-                </Alert>
+                <div className="text-center">
+                  <Link 
+                    to="/" 
+                    className="text-imperio-navy text-sm hover:underline"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  >
+                    Continuar Comprando
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </Layout>
   );

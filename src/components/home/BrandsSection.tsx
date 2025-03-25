@@ -33,6 +33,10 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
             key={brand.id} 
             to={`/marca/${brand.id}`}
             className="imperio-card flex items-center justify-center h-20 sm:h-24 hover-lift group"
+            onClick={(e) => {
+              // Garantir rolagem suave para o topo
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           >
             <img 
               src={brand.logo} 
@@ -53,6 +57,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
           <Link 
             to="/marcas" 
             className="text-sm font-medium text-imperio-navy flex items-center underline-animation"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             Ver Todas
             <ArrowRight size={16} className="ml-1" />
@@ -60,16 +65,16 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
         </div>
         
         {/* Imported Brands */}
-        {renderBrandGrid(imported, "Marcas Importadas")}
+        {imported.length > 0 && renderBrandGrid(imported, "Marcas Importadas")}
         
         {/* Premium Brands */}
-        {renderBrandGrid(premium, "Marcas Premium")}
+        {premium.length > 0 && renderBrandGrid(premium, "Marcas Premium")}
         
         {/* National Brands */}
-        {renderBrandGrid(national, "Marcas Nacionais")}
+        {national.length > 0 && renderBrandGrid(national, "Marcas Nacionais")}
         
         {/* Various Brands */}
-        {renderBrandGrid(various, "Diversos")}
+        {various.length > 0 && renderBrandGrid(various, "Diversos")}
         
         {/* Categories */}
         <div>
@@ -80,6 +85,7 @@ export const BrandsSection: React.FC<BrandsSectionProps> = ({ premium, national,
                 key={category.id} 
                 to={`/categoria/${category.id}`}
                 className="imperio-card flex flex-col items-center text-center p-3 sm:p-5 hover-lift h-24 sm:h-28"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <div className="text-imperio-navy">
                   {category.icon}

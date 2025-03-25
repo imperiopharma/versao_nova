@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { useCheckout } from '../contexts/CheckoutContext';
@@ -34,8 +34,7 @@ export const CheckoutResumoPage: React.FC = () => {
     setHasInsurance 
   } = useCart();
   
-  const [showInsuranceDetails, setShowInsuranceDetails] = useState(false);
-  const [insuranceChoice, setInsuranceChoice] = useState<boolean | null>(null);
+  const [showInsuranceDetails, setShowInsuranceDetails] = React.useState(false);
   const navigate = useNavigate();
   
   // Check if user came from previous step
@@ -58,17 +57,7 @@ export const CheckoutResumoPage: React.FC = () => {
     }
   };
   
-  const handleCheckboxChange = (checked: boolean) => {
-    setInsuranceChoice(checked);
-    setHasInsurance(checked);
-  };
-  
   const handleContinue = () => {
-    if (insuranceChoice === null) {
-      // User must make an explicit choice about insurance
-      return;
-    }
-    
     setCheckoutStep(4);
     navigate('/checkout/pagamento');
   };
@@ -120,13 +109,12 @@ export const CheckoutResumoPage: React.FC = () => {
             </div>
             
             <div className="bg-imperio-extra-light-navy rounded-lg p-4">
-              <p>
+              <div className="flex justify-between items-center">
                 <span className="font-medium">{getShippingMethodDisplay()}</span>
-                {' – '}
-                <span>
+                <span className="font-medium">
                   {shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </span>
-              </p>
+              </div>
             </div>
           </div>
           
@@ -173,6 +161,13 @@ export const CheckoutResumoPage: React.FC = () => {
                 <span>{shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
               </div>
               
+              {hasInsurance && (
+                <div className="flex justify-between mb-2 text-imperio-navy">
+                  <span>Seguro de Envio (20%)</span>
+                  <span>+{(total * 0.2).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                </div>
+              )}
+              
               <div className="flex justify-between font-semibold text-lg mt-2 pt-2 border-t border-gray-200">
                 <span>Total</span>
                 <span>{total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
@@ -198,7 +193,7 @@ export const CheckoutResumoPage: React.FC = () => {
               <Checkbox 
                 id="insurance" 
                 checked={hasInsurance}
-                onCheckedChange={handleCheckboxChange}
+                onCheckedChange={(checked) => setHasInsurance(checked === true)}
                 className="mt-1"
               />
               <div>
@@ -227,18 +222,11 @@ export const CheckoutResumoPage: React.FC = () => {
             <Button 
               onClick={handleContinue}
               className="bg-imperio-navy hover:bg-imperio-light-navy text-white sm:order-2"
-              disabled={insuranceChoice === null}
             >
               Ir para Pagamento
               <ChevronRight size={18} className="ml-2" />
             </Button>
           </div>
-          
-          {insuranceChoice === null && (
-            <p className="text-imperio-red text-sm text-center mt-4">
-              Por favor, selecione se deseja ou não o seguro de envio para continuar.
-            </p>
-          )}
         </div>
       </div>
       
@@ -297,7 +285,6 @@ export const CheckoutResumoPage: React.FC = () => {
             <Button 
               onClick={() => {
                 setHasInsurance(true);
-                setInsuranceChoice(true);
                 setShowInsuranceDetails(false);
               }}
               className="bg-imperio-navy hover:bg-imperio-light-navy text-white sm:w-full"

@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { InputMask } from '@/components/ui/input-mask';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CustomerData } from '@/contexts/CheckoutContext';
 
 interface AddressFormProps {
@@ -19,6 +20,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   formErrors
 }) => {
   const [loadingCep, setLoadingCep] = useState(false);
+  const [cepError, setCepError] = useState<string | null>(null);
 
   const fetchAddressFromCep = async (cep: string) => {
     // Remove caracteres não numéricos
@@ -29,13 +31,14 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     }
     
     setLoadingCep(true);
+    setCepError(null);
     
     try {
       const response = await fetch(`https://viacep.com.br/ws/${numericCep}/json/`);
       const data = await response.json();
       
       if (data.erro) {
-        // Tratar erros de formulário no componente pai
+        setCepError('CEP não encontrado. Verifique o número informado.');
         return;
       }
       
@@ -46,6 +49,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       
     } catch (error) {
       console.error('Erro ao buscar endereço:', error);
+      setCepError('Erro ao buscar o CEP. Tente novamente.');
     } finally {
       setLoadingCep(false);
     }
@@ -75,7 +79,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               id="cep"
               placeholder="00000-000"
               mask="99999-999"
-              className={`pl-10 ${formErrors.cep ? 'border-imperio-red' : ''}`}
+              className={`pl-10 ${formErrors.cep || cepError ? 'border-imperio-red' : ''}`}
               value={customerData.cep}
               onValueChange={(value) => handleChangeInput('cep', value)}
               onBlur={handleCepBlur}
@@ -86,7 +90,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               </div>
             )}
           </div>
-          {formErrors.cep && (
+          {cepError && (
+            <Alert variant="destructive" className="mt-2 py-2">
+              <AlertDescription>{cepError}</AlertDescription>
+            </Alert>
+          )}
+          {formErrors.cep && !cepError && (
             <p className="text-imperio-red text-sm mt-1">{formErrors.cep}</p>
           )}
         </div>

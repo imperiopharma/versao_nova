@@ -1,133 +1,126 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Truck, TruckIcon, Package, AlertTriangle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useCart } from '@/contexts/CartContext';
-import { useCheckout } from '@/contexts/CheckoutContext';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ShippingMethodFormProps {
-  setShippingMethod: (method: string) => void;
+  setShippingMethod: (method: string | null) => void;
   formErrors: Record<string, string>;
-}
-
-interface ShippingOption {
-  id: string;
-  name: string;
-  price: number;
-  estimatedDays: string;
 }
 
 export const ShippingMethodForm: React.FC<ShippingMethodFormProps> = ({
   setShippingMethod,
-  formErrors
+  formErrors,
 }) => {
-  const { customerData } = useCheckout();
-  const { setShipping } = useCart();
-  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([
-    { id: 'sedex', name: 'Sedex', price: 25.90, estimatedDays: '2-3 dias úteis' },
-    { id: 'pac', name: 'PAC', price: 18.50, estimatedDays: '5-8 dias úteis' },
-    { id: 'transportadora', name: 'Transportadora', price: 32.00, estimatedDays: '3-5 dias úteis' }
-  ]);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [shippingCost, setShippingCost] = useState<number>(0);
+  const [calculatingShipping, setCalculatingShipping] = useState(false);
   
-  // Calcular frete com base no estado do cliente
+  // Cálculo simulado de frete com base no método selecionado
   useEffect(() => {
-    if (customerData.state) {
-      let stateFactor = 1;
+    if (!selectedMethod) {
+      setShippingCost(0);
+      return;
+    }
+    
+    setCalculatingShipping(true);
+    
+    // Simulação de cálculo de frete
+    setTimeout(() => {
+      const state = localStorage.getItem('shipmentState') || 'SP';
       
-      // Ajustar preço com base na região
-      switch (customerData.state.toUpperCase()) {
-        case 'SP':
-        case 'RJ':
-        case 'MG':
-        case 'ES':
-          stateFactor = 1; // Sudeste (preço base)
-          break;
-        case 'PR':
-        case 'SC':
-        case 'RS':
-          stateFactor = 1.1; // Sul
-          break;
-        case 'MT':
-        case 'MS':
-        case 'GO':
-        case 'DF':
-          stateFactor = 1.2; // Centro-Oeste
-          break;
-        case 'BA':
-        case 'SE':
-        case 'AL':
-        case 'PE':
-        case 'PB':
-        case 'RN':
-        case 'CE':
-        case 'PI':
-        case 'MA':
-          stateFactor = 1.3; // Nordeste
-          break;
-        case 'AM':
-        case 'PA':
-        case 'AC':
-        case 'RO':
-        case 'RR':
-        case 'AP':
-        case 'TO':
-          stateFactor = 1.5; // Norte
-          break;
-        default:
-          stateFactor = 1;
+      if (state === 'SP' || state === 'RJ') {
+        if (selectedMethod === 'sedex') setShippingCost(20);
+        else if (selectedMethod === 'pac') setShippingCost(15);
+        else if (selectedMethod === 'transportadora') setShippingCost(40);
+      } else {
+        if (selectedMethod === 'sedex') setShippingCost(30);
+        else if (selectedMethod === 'pac') setShippingCost(20);
+        else if (selectedMethod === 'transportadora') setShippingCost(40);
       }
       
-      // Atualizar opções de frete com o fator regional
-      const updatedOptions = shippingOptions.map(option => ({
-        ...option,
-        price: parseFloat((option.price * stateFactor).toFixed(2))
-      }));
-      
-      setShippingOptions(updatedOptions);
-    }
-  }, [customerData.state]);
+      setCalculatingShipping(false);
+    }, 500);
+  }, [selectedMethod]);
   
-  const handleShippingChange = (value: string) => {
+  const handleMethodChange = (value: string) => {
+    setSelectedMethod(value);
     setShippingMethod(value);
-    
-    // Encontrar a opção selecionada e atualizar o preço do frete
-    const selectedOption = shippingOptions.find(option => option.id === value);
-    if (selectedOption) {
-      setShipping(selectedOption.price);
-    }
   };
   
   return (
     <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
-      <h2 className="text-xl font-medium mb-6">Frete (Envio)</h2>
+      <h2 className="text-xl font-medium mb-6">Método de Envio</h2>
       
-      <div>
-        <Label htmlFor="shipping" className="mb-1 block">
-          Método de Envio *
-        </Label>
-        <Select
-          onValueChange={handleShippingChange}
-        >
-          <SelectTrigger className={formErrors.shipping ? 'border-imperio-red' : ''}>
-            <SelectValue placeholder="Selecione o método de envio" />
-          </SelectTrigger>
-          <SelectContent>
-            {shippingOptions.map(option => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name} - {option.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} 
-                ({option.estimatedDays})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {formErrors.shipping && (
-          <p className="text-imperio-red text-sm mt-1">{formErrors.shipping}</p>
-        )}
+      <RadioGroup 
+        value={selectedMethod || ""}
+        onValueChange={handleMethodChange}
+        className="space-y-4"
+      >
+        <div className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-imperio-navy/30 ${selectedMethod === 'sedex' ? 'border-imperio-navy bg-imperio-extra-light-navy' : 'border-gray-200'}`}>
+          <div className="flex items-center space-x-3">
+            <RadioGroupItem value="sedex" id="sedex" />
+            <Label htmlFor="sedex" className="flex items-center cursor-pointer">
+              <TruckIcon size={20} className="mr-2 text-imperio-navy" />
+              <span className="font-medium">Sedex</span>
+            </Label>
+          </div>
+        </div>
         
-        <p className="text-sm text-gray-500 mt-2">
-          O valor do frete é calculado com base no seu estado e no método de envio selecionado.
-        </p>
-      </div>
+        <div className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-imperio-navy/30 ${selectedMethod === 'pac' ? 'border-imperio-navy bg-imperio-extra-light-navy' : 'border-gray-200'}`}>
+          <div className="flex items-center space-x-3">
+            <RadioGroupItem value="pac" id="pac" />
+            <Label htmlFor="pac" className="flex items-center cursor-pointer">
+              <Package size={20} className="mr-2 text-imperio-navy" />
+              <span className="font-medium">PAC</span>
+            </Label>
+          </div>
+        </div>
+        
+        <div className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-imperio-navy/30 ${selectedMethod === 'transportadora' ? 'border-imperio-navy bg-imperio-extra-light-navy' : 'border-gray-200'}`}>
+          <div className="flex items-center space-x-3">
+            <RadioGroupItem value="transportadora" id="transportadora" />
+            <Label htmlFor="transportadora" className="flex items-center cursor-pointer">
+              <Truck size={20} className="mr-2 text-imperio-navy" />
+              <span className="font-medium">Transportadora</span>
+            </Label>
+          </div>
+        </div>
+      </RadioGroup>
+      
+      {formErrors.shippingMethod && (
+        <p className="text-imperio-red text-sm mt-3">{formErrors.shippingMethod}</p>
+      )}
+      
+      {/* Mostrar o valor do frete calculado */}
+      {selectedMethod && (
+        <div className="mt-4 p-4 bg-imperio-extra-light-navy rounded-lg">
+          <h3 className="font-medium mb-2">Valor do Frete</h3>
+          {calculatingShipping ? (
+            <div className="flex items-center">
+              <div className="w-5 h-5 border-t-2 border-b-2 border-imperio-navy rounded-full animate-spin mr-2"></div>
+              <span>Calculando...</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <span>Total do frete:</span>
+              <span className="font-semibold text-imperio-navy">
+                {shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Aviso sobre prazo de entrega */}
+      <Alert className="mt-4 bg-yellow-50 border-yellow-200">
+        <AlertTriangle className="h-4 w-4 text-yellow-600" />
+        <AlertDescription className="text-sm text-yellow-800">
+          Os prazos de entrega são estimados e podem variar de acordo com a região.
+        </AlertDescription>
+      </Alert>
     </div>
   );
 };
