@@ -38,7 +38,7 @@ export const CustomersPage: React.FC = () => {
           </div>
         </div>
         
-        <CustomersList searchQuery={searchQuery} />
+        <CustomersList />
         
         {isCustomerDialogOpen && (
           <CustomerDialog 

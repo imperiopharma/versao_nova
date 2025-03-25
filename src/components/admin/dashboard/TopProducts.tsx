@@ -1,63 +1,68 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const TopProducts: React.FC = () => {
-  // Mock data for top products
+interface TopProductsProps {
+  className?: string;
+  loading?: boolean;
+}
+
+export const TopProducts: React.FC<TopProductsProps> = ({ className, loading = false }) => {
+  // Dados de exemplo para demonstração
   const products = [
-    {
-      name: "Produto Premium XYZ",
-      sales: 89,
-      revenue: "R$ 8.900,00",
-      image: "https://placehold.co/40x40"
-    },
-    {
-      name: "Produto Especial ABC",
-      sales: 67,
-      revenue: "R$ 5.360,00",
-      image: "https://placehold.co/40x40"
-    },
-    {
-      name: "Kit Completo 123",
-      sales: 45,
-      revenue: "R$ 4.050,00",
-      image: "https://placehold.co/40x40"
-    },
-    {
-      name: "Produto Standard DEF",
-      sales: 39,
-      revenue: "R$ 1.950,00",
-      image: "https://placehold.co/40x40"
-    }
+    { id: 1, name: 'Whey Protein Concentrado 900g', sales: 187, percentage: 23 },
+    { id: 2, name: 'Creatina Monohidratada 300g', sales: 124, percentage: 18 },
+    { id: 3, name: 'BCAA 2:1:1 90 caps', sales: 96, percentage: 12 },
+    { id: 4, name: 'Pré-treino Extreme 300g', sales: 78, percentage: 9 },
+    { id: 5, name: 'Whey Protein Isolado 900g', sales: 65, percentage: 7 },
   ];
 
+  if (loading) {
+    return (
+      <Card className={`border-none shadow-md ${className || ''}`}>
+        <CardHeader>
+          <Skeleton className="h-8 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="border-none shadow-md h-full">
+    <Card className={`border-none shadow-md ${className || ''}`}>
       <CardHeader>
-        <CardTitle>Produtos Mais Vendidos</CardTitle>
+        <CardTitle className="text-lg">Produtos Mais Vendidos</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          {products.map((product, index) => (
-            <div key={index} className="flex items-center">
-              <div className="flex-shrink-0">
-                <img src={product.image} alt={product.name} className="w-10 h-10 rounded-md" />
+        <div className="space-y-5">
+          {products.map((product) => (
+            <div key={product.id} className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="font-medium truncate max-w-[200px]">{product.name}</p>
+                <p className="text-sm text-muted-foreground">{product.sales} vendas</p>
               </div>
-              <div className="ml-4 flex-grow">
-                <h4 className="text-sm font-medium">{product.name}</h4>
-                <p className="text-xs text-gray-500">{product.sales} vendas</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium">{product.revenue}</p>
+              <div className="ml-auto">
+                <div className="flex items-center">
+                  <div className="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-indigo-600 rounded-full"
+                      style={{ width: `${product.percentage}%` }}
+                    />
+                  </div>
+                  <span className="ml-2 text-sm font-medium">{product.percentage}%</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button variant="ghost">Ver Todos os Produtos</Button>
-      </CardFooter>
     </Card>
   );
 };

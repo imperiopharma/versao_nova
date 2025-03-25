@@ -5,60 +5,23 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DollarSign, Users, ShoppingBag, LineChart } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 
+interface Stat {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  growth: number;
+  bgColor: string;
+}
+
 interface DashboardStatsProps {
-  totalSales: number;
-  salesGrowth: number;
-  newCustomers: number;
-  customersGrowth: number;
-  totalOrders: number;
-  ordersGrowth: number;
-  revenue: number;
-  revenueGrowth: number;
-  loading: boolean;
+  stats: Stat[];
+  loading?: boolean;
 }
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({
-  totalSales,
-  salesGrowth,
-  newCustomers,
-  customersGrowth,
-  totalOrders,
-  ordersGrowth,
-  revenue,
-  revenueGrowth,
-  loading
+  stats,
+  loading = false
 }) => {
-  const stats = [
-    {
-      title: 'Vendas Totais',
-      value: formatCurrency(totalSales),
-      icon: <LineChart className="h-5 w-5 text-muted-foreground" />,
-      growth: salesGrowth,
-      bgColor: 'bg-blue-50'
-    },
-    {
-      title: 'Novos Clientes',
-      value: newCustomers.toString(),
-      icon: <Users className="h-5 w-5 text-muted-foreground" />,
-      growth: customersGrowth,
-      bgColor: 'bg-green-50'
-    },
-    {
-      title: 'Pedidos',
-      value: totalOrders.toString(),
-      icon: <ShoppingBag className="h-5 w-5 text-muted-foreground" />,
-      growth: ordersGrowth,
-      bgColor: 'bg-yellow-50'
-    },
-    {
-      title: 'Receita',
-      value: formatCurrency(revenue),
-      icon: <DollarSign className="h-5 w-5 text-muted-foreground" />,
-      growth: revenueGrowth,
-      bgColor: 'bg-purple-50'
-    }
-  ];
-
   return (
     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (

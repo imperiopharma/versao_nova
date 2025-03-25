@@ -11,7 +11,12 @@ import {
   Tooltip 
 } from 'recharts';
 
-export const SalesChart: React.FC = () => {
+interface SalesChartProps {
+  className?: string;
+  loading?: boolean;
+}
+
+export const SalesChart: React.FC<SalesChartProps> = ({ className, loading }) => {
   // Dummy data for demonstration
   const data = [
     { name: 'Jan', vendas: 4000 },
@@ -36,48 +41,54 @@ export const SalesChart: React.FC = () => {
   };
 
   return (
-    <Card className="border-none shadow-md">
+    <Card className={`border-none shadow-md ${className || ""}`}>
       <CardHeader className="pb-0">
         <CardTitle className="text-lg">Vendas Anuais</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorVendas" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#001f3f" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#001f3f" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis 
-                dataKey="name" 
-                axisLine={false} 
-                tickLine={false}
-                tick={{ fontSize: 12 }}
-              />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false}
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `R$ ${value / 1000}k`}
-              />
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <Tooltip 
-                formatter={(value: number) => formatCurrency(value)}
-                labelFormatter={(label) => `Mês: ${label}`}
-              />
-              <Area 
-                type="monotone" 
-                dataKey="vendas" 
-                stroke="#001f3f" 
-                strokeWidth={2}
-                fillOpacity={1} 
-                fill="url(#colorVendas)" 
-                name="Vendas"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          {loading ? (
+            <div className="h-full w-full flex items-center justify-center bg-gray-50 rounded-md">
+              <p className="text-muted-foreground">Carregando dados...</p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorVendas" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#001f3f" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#001f3f" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false}
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false}
+                  tick={{ fontSize: 12 }}
+                  tickFormatter={(value) => `R$ ${value / 1000}k`}
+                />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <Tooltip 
+                  formatter={(value: number) => formatCurrency(value)}
+                  labelFormatter={(label) => `Mês: ${label}`}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="vendas" 
+                  stroke="#001f3f" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorVendas)" 
+                  name="Vendas"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </CardContent>
     </Card>

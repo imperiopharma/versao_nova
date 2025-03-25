@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Order, OrderFilters, OrderStatus } from '@/types/orders';
+import { Order, OrderFilters, OrderStatus, PaymentMethod } from '@/types/orders';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -50,7 +50,7 @@ export const useOrders = (activeFilters: OrderFilters) => {
           shipping: order.shipping || 0,
           discount: order.discount || 0,
           total: order.total || 0,
-          paymentMethod: order.payment_method || 'PIX',
+          paymentMethod: (order.payment_method || 'PIX') as PaymentMethod,
           status: order.status as OrderStatus,
           items: [], // Na implementação real, buscaria os itens de cada pedido
         }));

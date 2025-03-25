@@ -8,9 +8,10 @@ import { TopProducts } from '@/components/admin/dashboard/TopProducts';
 import { CustomerGrowth } from '@/components/admin/dashboard/CustomerGrowth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, DollarSign, LineChart, ShoppingBag, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { formatCurrency } from '@/lib/formatters';
 
 export const AdminDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState({
@@ -88,6 +89,37 @@ export const AdminDashboard: React.FC = () => {
     fetchDashboardData();
   }, []);
 
+  const statsData = [
+    {
+      title: 'Produtos',
+      value: formatCurrency(dashboardData.totalProducts),
+      icon: <LineChart className="h-5 w-5 text-muted-foreground" />,
+      growth: 12,
+      bgColor: 'bg-blue-50'
+    },
+    {
+      title: 'Clientes',
+      value: dashboardData.totalCustomers.toString(),
+      icon: <Users className="h-5 w-5 text-muted-foreground" />,
+      growth: 18,
+      bgColor: 'bg-green-50'
+    },
+    {
+      title: 'Pedidos',
+      value: dashboardData.totalOrders.toString(),
+      icon: <ShoppingBag className="h-5 w-5 text-muted-foreground" />,
+      growth: 2.3,
+      bgColor: 'bg-yellow-50'
+    },
+    {
+      title: 'Faturamento',
+      value: formatCurrency(dashboardData.totalRevenue),
+      icon: <DollarSign className="h-5 w-5 text-muted-foreground" />,
+      growth: 1.2,
+      bgColor: 'bg-purple-50'
+    }
+  ];
+
   return (
     <AdminLayout>
       <div className="flex flex-col">
@@ -100,12 +132,8 @@ export const AdminDashboard: React.FC = () => {
           </div>
           
           <DashboardStats 
-            stats={[
-              { title: 'Produtos', value: dashboardData.totalProducts, trend: 'up', change: 12 },
-              { title: 'Clientes', value: dashboardData.totalCustomers, trend: 'up', change: 18 },
-              { title: 'Pedidos', value: dashboardData.totalOrders, trend: 'up', change: 2.3 },
-              { title: 'Faturamento', value: dashboardData.totalRevenue, trend: 'up', change: 1.2, isCurrency: true }
-            ]}
+            stats={statsData}
+            loading={loading}
           />
           
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
