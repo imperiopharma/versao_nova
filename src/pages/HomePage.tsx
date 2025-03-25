@@ -1,8 +1,7 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Layout } from '../components/layout/Layout';
-import { Pill, Heart, Phone, Truck, CalendarIcon } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useHomeData } from '@/hooks/useHomeData';
 
 // Import components
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -18,7 +17,6 @@ import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
 import { GuaranteesSection } from '../components/home/GuaranteesSection';
-import { useHomeData } from '@/hooks/useHomeData';
 
 export const HomePage: React.FC = () => {
   const { 
