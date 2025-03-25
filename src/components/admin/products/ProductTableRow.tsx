@@ -35,36 +35,42 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
   handleEditProduct,
   handleDeleteClick
 }) => {
+  // Verificação de segurança para evitar erros se o produto for inválido
+  if (!product || !product.id) {
+    console.error("Produto inválido na linha da tabela:", product);
+    return null;
+  }
+  
+  // Valores seguros para exibição
+  const sku = product.sku || 'N/D';
+  const name = product.name || 'Sem nome';
+  const brand = product.brand || 'N/D';
+  const category = product.category || 'N/D';
+  const costPrice = typeof product.costPrice === 'number' ? product.costPrice : 0;
+  const sellingPrice = typeof product.sellingPrice === 'number' ? product.sellingPrice : 0;
+  const status = product.status || 'inactive';
+  
+  console.log("Renderizando linha para produto:", product.id, name);
+  
   return (
     <TableRow key={product.id}>
-      <TableCell className="font-medium">{product.sku}</TableCell>
-      <TableCell>{product.name}</TableCell>
-      <TableCell>{product.brand}</TableCell>
-      <TableCell>{product.category}</TableCell>
-      <TableCell className="text-right">{formatCurrency(product.costPrice)}</TableCell>
-      <TableCell className="text-right">{formatCurrency(product.sellingPrice)}</TableCell>
-      <TableCell className="text-center">
-        <span className={`${
-          product.stock === 0 
-            ? 'text-red-500' 
-            : product.stock < 10 
-              ? 'text-amber-500' 
-              : 'text-green-500'
-        }`}>
-          {product.stock}
-        </span>
-      </TableCell>
+      <TableCell className="font-medium">{sku}</TableCell>
+      <TableCell>{name}</TableCell>
+      <TableCell>{brand}</TableCell>
+      <TableCell>{category}</TableCell>
+      <TableCell className="text-right">{formatCurrency(costPrice)}</TableCell>
+      <TableCell className="text-right">{formatCurrency(sellingPrice)}</TableCell>
       <TableCell className="text-center">
         <span className={`px-2 py-1 rounded-full text-xs ${
-          product.status === 'active' 
+          status === 'active' 
             ? 'bg-green-100 text-green-800' 
-            : product.status === 'out_of_stock' 
+            : status === 'out_of_stock' 
               ? 'bg-amber-100 text-amber-800' 
               : 'bg-red-100 text-red-800'
         }`}>
-          {product.status === 'active' 
+          {status === 'active' 
             ? 'Ativo' 
-            : product.status === 'out_of_stock' 
+            : status === 'out_of_stock' 
               ? 'Sem Estoque' 
               : 'Inativo'}
         </span>

@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useProductCommon } from './useProductCommon';
 import { useProductsData } from './useProductsData';
 import { useBrandsData } from './useBrandsData';
@@ -7,6 +7,7 @@ import { useCategoriesData } from './useCategoriesData';
 
 export function useProductStore() {
   const { loading, setLoading } = useProductCommon();
+  const [initialized, setInitialized] = useState(false);
   
   const { 
     products,
@@ -34,18 +35,29 @@ export function useProductStore() {
 
   // Buscar todos os dados no carregamento inicial
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!initialized) {
+      console.log("useProductStore: Inicializando e buscando dados...");
+      fetchData();
+      setInitialized(true);
+    }
+  }, [initialized]);
 
   // Função para buscar todos os dados
   const fetchData = async () => {
+    console.log("useProductStore: Buscando todos os dados...");
     setLoading(true);
     try {
-      await Promise.all([
+      const results = await Promise.all([
         fetchProducts(),
         fetchBrands(),
         fetchCategories()
       ]);
+      
+      console.log("Dados carregados: ", {
+        produtos: results[0]?.length || 0,
+        marcas: results[1]?.length || 0,
+        categorias: results[2]?.length || 0
+      });
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     } finally {

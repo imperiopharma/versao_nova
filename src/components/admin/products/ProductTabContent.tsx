@@ -10,12 +10,14 @@ export const BasicInfoTab: React.FC<{
   brands: any[];
   categories: any[];
 }> = ({ formData, handleInputChange, handleSelectChange, brands, categories }) => {
+  console.log("Renderizando BasicInfoTab com dados:", formData);
   console.log("Categorias disponíveis:", categories);
+  console.log("Marcas disponíveis:", brands);
   
   return (
     <div className="space-y-4 py-2">
       <TextField
-        id="product-name"
+        id="name"
         label="Nome do Produto"
         value={formData.name || ''}
         onChange={handleInputChange}
@@ -25,7 +27,7 @@ export const BasicInfoTab: React.FC<{
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextField
-          id="product-sku"
+          id="sku"
           label="SKU / Código"
           value={formData.sku || ''}
           onChange={handleInputChange}
@@ -48,10 +50,10 @@ export const BasicInfoTab: React.FC<{
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SelectField
           label="Marca"
-          value={formData.brand || ''}
+          value={formData.brand || 'selecione'}
           onValueChange={(value) => handleSelectChange('brand', value)}
           options={[
-            { value: "selecione", label: 'Selecione uma marca' }, // Alterado para não usar string vazia
+            { value: "selecione", label: 'Selecione uma marca' },
             ...brands.map(brand => ({
               value: brand.name,
               label: brand.name
@@ -61,10 +63,10 @@ export const BasicInfoTab: React.FC<{
         
         <SelectField
           label="Categoria"
-          value={formData.category || ''}
+          value={formData.category || 'selecione'}
           onValueChange={(value) => handleSelectChange('category', value)}
           options={[
-            { value: "selecione", label: 'Selecione uma categoria' }, // Alterado para não usar string vazia
+            { value: "selecione", label: 'Selecione uma categoria' },
             ...categories.map(category => ({
               value: category.name,
               label: category.name
@@ -74,7 +76,7 @@ export const BasicInfoTab: React.FC<{
       </div>
       
       <TextareaField
-        id="product-description"
+        id="description"
         label="Descrição"
         value={formData.description || ''}
         onChange={handleInputChange}
@@ -89,13 +91,14 @@ export const BasicInfoTab: React.FC<{
 export const PriceStockTab: React.FC<{
   formData: any;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleSelectChange: (name: string, value: string) => void;
 }> = ({ formData, handleInputChange }) => {
+  console.log("Renderizando PriceStockTab com dados:", formData);
+  
   return (
     <div className="space-y-4 py-2">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextField
-          id="product-costPrice"
+          id="costPrice"
           label="Preço de Custo"
           value={formData.costPrice || ''}
           onChange={handleInputChange}
@@ -105,7 +108,7 @@ export const PriceStockTab: React.FC<{
         />
         
         <TextField
-          id="product-sellingPrice"
+          id="sellingPrice"
           label="Preço de Venda"
           value={formData.sellingPrice || ''}
           onChange={handleInputChange}
@@ -117,7 +120,7 @@ export const PriceStockTab: React.FC<{
       </div>
       
       <TextField
-        id="product-promoPrice"
+        id="promoPrice"
         label="Preço Promocional"
         value={formData.promoPrice || ''}
         onChange={handleInputChange}
@@ -125,12 +128,27 @@ export const PriceStockTab: React.FC<{
         type="number"
         description="Preço durante promoções (opcional)"
       />
+      
+      <TextField
+        id="stock"
+        label="Estoque"
+        value={formData.stock || '1'}
+        onChange={handleInputChange}
+        placeholder="1"
+        type="number"
+        description="Quantidade disponível em estoque"
+      />
     </div>
   );
 };
 
 // Componente para imagens
-export const ImagesTab: React.FC = () => {
+export const ImagesTab: React.FC<{
+  formData: any;
+  handleImageChange?: (imageUrl: string) => void;
+}> = ({ formData, handleImageChange }) => {
+  console.log("Renderizando ImagesTab com dados:", formData);
+  
   return (
     <div className="space-y-4 py-2">
       <p className="text-sm text-gray-500 mb-4">
@@ -139,7 +157,7 @@ export const ImagesTab: React.FC = () => {
       
       <ImageUploadField
         label="Imagem Principal"
-        imageUrl="https://via.placeholder.com/300x300?text=Produto"
+        imageUrl={formData.image || "https://via.placeholder.com/300x300?text=Produto"}
         imageName="Imagem de produto"
       />
     </div>

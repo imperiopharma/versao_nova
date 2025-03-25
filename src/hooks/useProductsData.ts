@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProductCommon } from './useProductCommon';
@@ -9,14 +10,18 @@ export function useProductsData() {
   // Buscar produtos do Supabase
   const fetchProducts = async () => {
     try {
+      console.log("Buscando produtos do Supabase...");
       const { data: productsData, error: productsError } = await supabase
         .from('products')
         .select('*');
 
       if (productsError) {
+        console.error("Erro ao buscar produtos:", productsError);
         throw productsError;
       }
 
+      console.log("Produtos recebidos do Supabase:", productsData?.length || 0);
+      
       // Formatar dados dos produtos
       const formattedProducts = productsData.map(product => ({
         id: product.id,
@@ -52,6 +57,8 @@ export function useProductsData() {
   // Adicionar um produto ao Supabase
   const addProduct = async (product: any) => {
     try {
+      console.log("Adicionando produto:", product);
+      
       // Remover propriedades incompatíveis com o esquema do Supabase
       const { 
         id, 
@@ -77,9 +84,9 @@ export function useProductsData() {
         cost_price: Number(costPrice) || 0,
         selling_price: Number(sellingPrice) || 0,
         promo_price: Number(promoPrice) || 0,
-        stock: 1, // Valor padrão para estoque (não é mais usado ativamente)
+        stock: 1, // Valor padrão para estoque
         status: productData.status || 'active',
-        image: productData.image || ''
+        image: productData.image || 'https://via.placeholder.com/300x300?text=Produto'
       };
 
       console.log('Dados enviados para o Supabase:', supabaseProduct);
@@ -96,6 +103,10 @@ export function useProductsData() {
       }
 
       console.log('Resposta do Supabase:', data);
+
+      if (!data) {
+        throw new Error('Produto não foi adicionado ao banco de dados');
+      }
 
       const formattedProduct = {
         id: data.id,
@@ -114,7 +125,8 @@ export function useProductsData() {
         stock: data.stock,
       };
 
-      setProducts(prev => [...prev, formattedProduct]);
+      // Atualizar a lista local de produtos
+      setProducts(prev => [formattedProduct, ...prev]);
       showSuccessToast("Produto adicionado", "O produto foi adicionado com sucesso.");
       return formattedProduct;
     } catch (error) {
@@ -127,6 +139,12 @@ export function useProductsData() {
   // Atualizar um produto no Supabase
   const updateProduct = async (product: any) => {
     try {
+      console.log("Atualizando produto:", product);
+      
+      if (!product.id) {
+        throw new Error('ID do produto não fornecido para atualização');
+      }
+      
       const { 
         id, 
         originalPrice, 
@@ -150,17 +168,23 @@ export function useProductsData() {
         promo_price: Number(promoPrice) || 0,
         stock: Number(productData.stock) || 0,
         status: productData.status || 'active',
-        image: productData.image || '',
+        image: productData.image || 'https://via.placeholder.com/300x300?text=Produto',
         updated_at: formatDateForSupabase()
       };
+
+      console.log('Dados enviados para atualização:', supabaseProduct);
 
       const { error } = await supabase
         .from('products')
         .update(supabaseProduct)
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao atualizar produto:', error);
+        throw error;
+      }
 
+      // Atualizar o produto na lista local
       setProducts(prev => prev.map(p => p.id === id ? { ...product } : p));
       showSuccessToast("Produto atualizado", "O produto foi atualizado com sucesso.");
       return product;
@@ -173,13 +197,23 @@ export function useProductsData() {
   // Excluir um produto do Supabase
   const deleteProduct = async (productId: string) => {
     try {
+      console.log("Excluindo produto:", productId);
+      
+      if (!productId) {
+        throw new Error('ID do produto não fornecido para exclusão');
+      }
+      
       const { error } = await supabase
         .from('products')
         .delete()
         .eq('id', productId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro ao excluir produto:', error);
+        throw error;
+      }
 
+      // Remover o produto da lista local
       setProducts(prev => prev.filter(p => p.id !== productId));
       showSuccessToast("Produto excluído", "O produto foi excluído com sucesso.");
     } catch (error) {
