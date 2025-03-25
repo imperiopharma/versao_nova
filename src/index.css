@@ -67,9 +67,7 @@
     --input: 215 25% 27%;
     --ring: 215 25% 27%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -100,6 +98,97 @@
   
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/40;
+  }
+  
+  /* Utility classes */
+  .glass-effect {
+    @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  
+  .neo-glass {
+    @apply bg-white/30 backdrop-blur-md border border-white/40 shadow-lg;
+  }
+  
+  .tech-card {
+    @apply relative bg-gradient-to-br from-white/90 to-white/60 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg overflow-hidden;
+  }
+  
+  .tech-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-imperio-extra-light-navy/20 pointer-events-none;
+  }
+  
+  .tech-card::after {
+    content: '';
+    @apply absolute inset-0 bg-[radial-gradient(#00000010_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none;
+  }
+  
+  /* Paraguai colors - utilities */
+  .bg-paraguai-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-white to-red-600;
+  }
+  
+  .text-paraguai-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-imperio-navy to-red-600 bg-clip-text text-transparent;
+  }
+  
+  .border-paraguai-gradient {
+    @apply border-l-blue-500 border-r-red-500 border-t-white border-b-white;
+  }
+  
+  /* Futuristic card styles */
+  .card-futuristic {
+    @apply rounded-2xl bg-white border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden relative;
+  }
+  
+  .card-futuristic::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-imperio-extra-light-navy/30 pointer-events-none;
+  }
+  
+  .card-ai {
+    @apply relative bg-gradient-to-br from-white/90 to-white/60 backdrop-blur-sm border border-white/50 rounded-2xl shadow-md overflow-hidden;
+  }
+  
+  .card-ai::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-imperio-extra-light-navy/20 pointer-events-none;
+  }
+  
+  .card-ai::after {
+    content: '';
+    @apply absolute inset-0 bg-[radial-gradient(#00000010_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none;
+  }
+  
+  /* Efeito de brilho animado */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Efeito de partículas flutuantes */
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-10px) translateX(5px);
+    }
+    100% {
+      transform: translateY(0) translateX(0);
+    }
+  }
+  
+  .floating-particle {
+    animation: float 5s ease-in-out infinite;
   }
   
   /* Utility classes */

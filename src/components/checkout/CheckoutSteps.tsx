@@ -21,12 +21,30 @@ export const CheckoutSteps: React.FC<CheckoutStepsProps> = ({ currentStep }) => 
 
   return (
     <div className="mb-10 animate-fade-in">
-      {/* Barra de progresso avançada com gradiente */}
-      <div className="mb-2">
+      {/* Barra de progresso futurista com gradiente nas cores do Paraguai */}
+      <div className="mb-3 relative">
         <Progress 
           value={calculateProgress()} 
-          className="h-2 bg-gray-200 overflow-hidden rounded-full"
+          className="h-3 bg-gradient-to-r from-gray-200 to-gray-100 overflow-hidden rounded-full border border-white/50 shadow-inner"
         />
+        
+        {/* Overlay de efeito brilhante */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent pointer-events-none"></div>
+        
+        {/* Marcas nas etapas na barra de progresso */}
+        {steps.map((step, index) => (
+          <div 
+            key={`mark-${step.id}`}
+            className={`absolute top-0 bottom-0 transition-all duration-300 ${
+              index === 0 ? 'left-0' : index === steps.length - 1 ? 'right-0' : `left-[${(index / (steps.length - 1)) * 100}%]`
+            }`}
+            style={{ left: index !== 0 && index !== steps.length - 1 ? `${(index / (steps.length - 1)) * 100}%` : undefined }}
+          >
+            <div className={`absolute top-1/2 -translate-y-1/2 w-1 h-6 rounded-full ${
+              step.id <= currentStep ? 'bg-imperio-navy/30' : 'bg-gray-300/40'
+            }`}></div>
+          </div>
+        ))}
       </div>
       
       <div className="grid grid-cols-4 gap-1 relative">
@@ -58,8 +76,13 @@ export const CheckoutSteps: React.FC<CheckoutStepsProps> = ({ currentStep }) => 
               
               {/* Efeito de brilho dentro do círculo */}
               <div className={`absolute inset-0 rounded-full bg-white/20 z-0 ${
-                step.id <= currentStep ? 'opacity-20' : 'opacity-0'
+                step.id <= currentStep ? 'opacity-30' : 'opacity-0'
               }`}></div>
+              
+              {/* Efeito de pulso para etapa atual */}
+              {step.id === currentStep && (
+                <div className="absolute -inset-1 rounded-full bg-blue-400/30 z-0 animate-pulse"></div>
+              )}
             </div>
             
             {/* Nome da etapa */}
