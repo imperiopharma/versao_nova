@@ -1,57 +1,27 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
 import { adminCredentials } from '@/components/admin/layout/menuItems';
+import { useAuth } from '@/hooks/useAuth';
 
 export const AdminLoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
-    if (!email.trim() || !password.trim()) {
-      setError('Preencha todos os campos');
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      // Simular verificação de credenciais
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      if (email === adminCredentials.email && password === adminCredentials.password) {
-        // Simular login bem-sucedido
-        localStorage.setItem('adminLoggedIn', 'true');
-        
-        toast({
-          title: 'Login administrativo realizado com sucesso!',
-          description: 'Bem-vindo ao painel de administração.',
-          duration: 3000,
-        });
-        
-        navigate('/admin');
-      } else {
-        setError('Email ou senha incorretos');
-      }
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      setError('Erro ao processar sua solicitação');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { 
+    email, 
+    password, 
+    loading, 
+    error, 
+    handleEmailChange, 
+    handlePasswordChange, 
+    handleLogin 
+  } = useAuth({
+    isAdmin: true,
+    redirectPath: '/admin',
+    storageKey: 'adminLoggedIn',
+    validCredentials: adminCredentials
+  });
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -67,7 +37,7 @@ export const AdminLoginPage: React.FC = () => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
               Email
@@ -82,7 +52,7 @@ export const AdminLoginPage: React.FC = () => {
                 placeholder="Digite seu email administrativo"
                 className="pl-10"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 disabled={loading}
               />
             </div>
@@ -102,7 +72,7 @@ export const AdminLoginPage: React.FC = () => {
                 placeholder="Digite sua senha"
                 className="pl-10"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 disabled={loading}
               />
             </div>

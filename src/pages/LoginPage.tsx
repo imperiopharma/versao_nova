@@ -1,25 +1,34 @@
+
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { ChevronLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 export const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { toast } = useToast();
-  
   const nextPath = searchParams.get('next') || '/';
+  
+  const { 
+    email, 
+    password, 
+    loading, 
+    error, 
+    setError,
+    handleEmailChange, 
+    handlePasswordChange, 
+    handleLogin 
+  } = useAuth({
+    redirectPath: nextPath
+  });
   
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -57,51 +66,35 @@ export const LoginPage: React.FC = () => {
       return;
     }
     
-    setLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    if (isLogin) {
+      handleLogin(e);
+    } else {
+      // Lógica de cadastro
+      setLoading(true);
       
-      // Here you would use Clerk API in a real app
-      // For example, if isLogin is true, use Clerk's signIn method,
-      // otherwise use Clerk's signUp method
-      
-      if (isLogin) {
-        // Mock login
-        if (email === 'usuario@exemplo.com' && password === 'senha123') {
-          localStorage.setItem('isLoggedIn', 'true');
-          toast({
-            title: 'Login realizado com sucesso!',
-            description: 'Bem-vindo de volta.',
-            duration: 3000,
-          });
-          navigate(nextPath);
-        } else {
-          setErrors({ form: 'Email ou senha incorretos' });
-        }
-      } else {
-        // Mock registration
+      try {
+        // Simulação de cadastro
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         localStorage.setItem('isLoggedIn', 'true');
         toast({
           title: 'Cadastro realizado com sucesso!',
           description: 'Seja bem-vindo à Império Pharma.',
           duration: 3000,
         });
+        
         navigate(nextPath);
+      } catch (error) {
+        console.error('Auth error:', error);
+        setErrors({ form: 'Erro ao processar sua solicitação' });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Auth error:', error);
-      setErrors({ form: 'Erro ao processar sua solicitação' });
-    } finally {
-      setLoading(false);
     }
   };
   
   const handleGoogleLogin = async () => {
-    // Here you would use Clerk's OAuth method
-    // For the mock, we'll just simulate a successful login
-    
+    // Simulação de login com Google
     setLoading(true);
     
     try {
@@ -140,6 +133,13 @@ export const LoginPage: React.FC = () => {
             <h1 className="text-2xl font-semibold text-imperio-navy mb-6">
               {isLogin ? 'Acesse sua Conta' : 'Criar nova conta'}
             </h1>
+            
+            {error && (
+              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
+                <AlertCircle size={18} className="text-imperio-red mr-2 mt-0.5" />
+                <p className="text-imperio-red text-sm">{error}</p>
+              </div>
+            )}
             
             {errors.form && (
               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
@@ -188,7 +188,7 @@ export const LoginPage: React.FC = () => {
                     placeholder="Digite seu email"
                     className={`pl-10 ${errors.email ? 'border-imperio-red' : ''}`}
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleEmailChange}
                     disabled={loading}
                   />
                 </div>
@@ -211,7 +211,7 @@ export const LoginPage: React.FC = () => {
                     placeholder="Digite sua senha"
                     className={`pl-10 ${errors.password ? 'border-imperio-red' : ''}`}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     disabled={loading}
                   />
                 </div>
