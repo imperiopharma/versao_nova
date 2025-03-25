@@ -10,8 +10,8 @@ export const useHomeData = () => {
     national: [],
     various: [],
     categories: [
-      { id: 'emagrecedores', name: 'Emagrecedores', icon: <Pill className="w-8 h-8 mb-2 text-white" /> },
-      { id: 'farmacia', name: 'Produtos de Farmácia', icon: <Heart className="w-8 h-8 mb-2 text-white" /> },
+      { id: 'emagrecedores', name: 'Emagrecedores', icon: () => <Pill className="w-8 h-8 mb-2 text-white" /> },
+      { id: 'farmacia', name: 'Produtos de Farmácia', icon: () => <Heart className="w-8 h-8 mb-2 text-white" /> },
     ],
   });
   
@@ -90,7 +90,7 @@ export const useHomeData = () => {
       id: 'emagrecedores',
       title: 'Emagrecedores',
       description: 'Produtos para a perda de peso',
-      icon: <Pill size={20} />,
+      icon: () => <Pill size={20} />,
       link: '/categoria/emagrecedores',
       color: 'bg-white'
     },
@@ -98,7 +98,7 @@ export const useHomeData = () => {
       id: 'farmacia',
       title: 'Farmácia',
       description: 'Medicamentos e suplementos essenciais',
-      icon: <Heart size={20} />,
+      icon: () => <Heart size={20} />,
       link: '/categoria/farmacia',
       color: 'bg-white'
     }
@@ -109,7 +109,7 @@ export const useHomeData = () => {
       id: 'faq',
       title: 'FAQ',
       description: 'Perguntas frequentes',
-      icon: <Phone size={20} />,
+      icon: () => <Phone size={20} />,
       link: '/faq',
       color: 'bg-blue-100'
     },
@@ -117,7 +117,7 @@ export const useHomeData = () => {
       id: 'fretes',
       title: 'Fretes',
       description: 'Consulte nossas opções',
-      icon: <Truck size={20} />,
+      icon: () => <Truck size={20} />,
       link: '/fretes',
       color: 'bg-green-100'
     },
@@ -125,7 +125,7 @@ export const useHomeData = () => {
       id: 'pedidos',
       title: 'Ciclos Prontos',
       description: 'Combos preparados',
-      icon: <CalendarIcon size={20} />,
+      icon: () => <CalendarIcon size={20} />,
       link: '/ciclos',
       color: 'bg-yellow-100'
     }
