@@ -1,80 +1,63 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  ResponsiveContainer, 
-  Tooltip,
-  Legend
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const CustomerGrowth: React.FC = () => {
-  // Dummy data for demonstration
+interface CustomerGrowthProps {
+  className?: string;
+  loading?: boolean;
+}
+
+export const CustomerGrowth: React.FC<CustomerGrowthProps> = ({ className, loading = false }) => {
+  // Dados de exemplo para o gráfico
   const data = [
-    { month: 'Jan', novos: 120, recorrentes: 80, total: 200 },
-    { month: 'Fev', novos: 145, recorrentes: 90, total: 235 },
-    { month: 'Mar', novos: 160, recorrentes: 100, total: 260 },
-    { month: 'Abr', novos: 190, recorrentes: 110, total: 300 },
-    { month: 'Mai', novos: 220, recorrentes: 130, total: 350 },
-    { month: 'Jun', novos: 250, recorrentes: 150, total: 400 },
+    { name: 'Jan', clientes: 20 },
+    { name: 'Fev', clientes: 35 },
+    { name: 'Mar', clientes: 45 },
+    { name: 'Abr', clientes: 40 },
+    { name: 'Mai', clientes: 55 },
+    { name: 'Jun', clientes: 65 },
   ];
 
   return (
-    <Card className="border-none shadow-md">
-      <CardHeader className="pb-0">
+    <Card className={`border-none shadow-md ${className || ''}`}>
+      <CardHeader>
         <CardTitle className="text-lg">Crescimento de Clientes</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 10, right: 10, left: 20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <XAxis 
-                dataKey="month" 
-                axisLine={false} 
-                tickLine={false}
-                tick={{ fontSize: 12 }}
-              />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false}
-                tick={{ fontSize: 12 }}
-              />
-              <Tooltip labelFormatter={(label) => `Mês: ${label}`} />
-              <Legend wrapperStyle={{ paddingTop: 10 }} />
-              <Line 
-                type="monotone" 
-                dataKey="novos" 
-                name="Novos Clientes"
-                stroke="#3b82f6" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="recorrentes" 
-                name="Clientes Recorrentes"
-                stroke="#10b981" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="total" 
-                name="Total de Clientes"
-                stroke="#001f3f" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="h-[250px] w-full">
+          {loading ? (
+            <div className="h-full w-full flex items-center justify-center bg-gray-50 rounded-md">
+              <Skeleton className="h-full w-full rounded-md" />
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 12 }} 
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 12 }} 
+                  width={30}
+                />
+                <Tooltip formatter={(value) => [`${value} clientes`, 'Total']} />
+                <Bar 
+                  dataKey="clientes" 
+                  fill="#7dd3fc" 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={30} 
+                  name="Clientes"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </CardContent>
     </Card>
