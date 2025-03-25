@@ -175,7 +175,7 @@ export function useProductStore() {
         stock: product.stock,
         status: product.status,
         image: product.image,
-        updated_at: new Date()
+        updated_at: new Date().toISOString() // Convert Date to string
       };
 
       const { error } = await supabase
@@ -257,7 +257,7 @@ export function useProductStore() {
         category: brand.category,
         logo_url: brand.logoUrl,
         status: brand.status,
-        updated_at: new Date()
+        updated_at: new Date().toISOString() // Convert Date to string
       };
 
       const { error } = await supabase
@@ -333,7 +333,7 @@ export function useProductStore() {
         slug: category.slug,
         description: category.description,
         status: category.status,
-        updated_at: new Date()
+        updated_at: new Date().toISOString() // Convert Date to string
       };
 
       const { error } = await supabase
