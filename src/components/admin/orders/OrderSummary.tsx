@@ -30,7 +30,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
           variant="outline" 
           className={`${getStatusConfig(order.status).color} border-none`}
         >
-          {getStatusConfig(order.status).text}
+          {getStatusConfig(order.status).label}
         </Badge>
       </div>
       
@@ -45,7 +45,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ order }) => {
           <div className="font-medium">Informações de Pagamento</div>
           <div>Método: {order.paymentMethod}</div>
           <div className="text-sm text-muted-foreground">
-            Status: {getStatusConfig(order.status).text}
+            Status: {getStatusConfig(order.status).label}
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ export const useOrderMessage = () => {
     message = message
       .replace('{orderNumber}', order.orderNumber)
       .replace('{date}', formatDate(order.date))
-      .replace('{status}', getStatusConfig(order.status).text)
+      .replace('{status}', getStatusConfig(order.status).label)
       .replace('{customer.name}', order.customer.name)
       .replace('{customer.email}', order.customer.email)
       .replace('{paymentMethod}', order.paymentMethod)

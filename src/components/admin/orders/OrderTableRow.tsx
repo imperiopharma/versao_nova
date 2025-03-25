@@ -57,7 +57,7 @@ export const OrderTableRow: React.FC<OrderTableRowProps> = ({
           variant="outline" 
           className={`${getStatusConfig(order.status).color} border-none`}
         >
-          {getStatusConfig(order.status).text}
+          {getStatusConfig(order.status).label}
         </Badge>
       </TableCell>
       <TableCell>
