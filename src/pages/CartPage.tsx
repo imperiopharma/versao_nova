@@ -133,7 +133,7 @@ export const CartPage: React.FC = () => {
                             {item.originalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                           </span>
                         )}
-                        <span className="font-medium">
+                        <span className="font-bold text-lg text-imperio-navy">
                           {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                         </span>
                       </div>
@@ -174,16 +174,13 @@ export const CartPage: React.FC = () => {
                       Aplicar
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Digite DESCONTO10 para 10% de desconto
-                  </p>
                 </div>
                 
                 {/* Cálculos */}
                 <div className="border-t border-b py-4 space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>{subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                    <span className="font-medium">{subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                   </div>
                   
                   {discount > 0 && (

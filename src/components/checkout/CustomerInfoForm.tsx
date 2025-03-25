@@ -4,7 +4,6 @@ import { User, Phone, Mail, CreditCard } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { InputMask } from '@/components/ui/input-mask';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CustomerData } from '@/contexts/CheckoutContext';
 
 interface CustomerInfoFormProps {
@@ -19,12 +18,12 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
   formErrors,
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
-      <h2 className="text-xl font-medium mb-6">Informações Pessoais</h2>
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
+      <h2 className="text-xl font-semibold mb-6 text-imperio-navy border-b pb-3">Informações Pessoais</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:col-span-2">
-          <Label htmlFor="name" className="mb-1 block">
+          <Label htmlFor="name" className="mb-1 block font-medium">
             Nome Completo *
           </Label>
           <div className="relative">
@@ -45,7 +44,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="cpf" className="mb-1 block">
+          <Label htmlFor="cpf" className="mb-1 block font-medium">
             CPF *
           </Label>
           <div className="relative">
@@ -67,7 +66,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="whatsapp" className="mb-1 block">
+          <Label htmlFor="whatsapp" className="mb-1 block font-medium">
             WhatsApp *
           </Label>
           <div className="relative">
@@ -89,7 +88,7 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="email" className="mb-1 block">
+          <Label htmlFor="email" className="mb-1 block font-medium">
             E-mail *
           </Label>
           <div className="relative">
@@ -108,27 +107,6 @@ export const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
           {formErrors.email && (
             <p className="text-imperio-red text-sm mt-1">{formErrors.email}</p>
           )}
-        </div>
-        
-        <div>
-          <Label htmlFor="howDidYouFindUs" className="mb-1 block">
-            Como nos conheceu?
-          </Label>
-          <Select
-            value={customerData.howDidYouFindUs}
-            onValueChange={(value) => handleChangeInput('howDidYouFindUs', value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione uma opção" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="google">Google</SelectItem>
-              <SelectItem value="instagram">Instagram</SelectItem>
-              <SelectItem value="facebook">Facebook</SelectItem>
-              <SelectItem value="friend">Indicação de amigo</SelectItem>
-              <SelectItem value="other">Outro</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
     </div>

@@ -86,11 +86,20 @@ export const useCheckoutForm = () => {
         description: 'Por favor, preencha todos os campos obrigatórios corretamente.',
         variant: 'destructive',
       });
+      
+      // Encontrar o primeiro campo com erro e rolar até ele
+      const firstErrorField = document.querySelector('[class*="border-imperio-red"]');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
       return;
     }
     
     // Proceed to next step
     setCheckoutStep(3);
+    
+    // Navegar para a próxima página e garantir que a rolagem seja para o topo
     navigate('/checkout/resumo');
   };
   

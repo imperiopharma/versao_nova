@@ -22,28 +22,30 @@ export const CheckoutSteps: React.FC<CheckoutStepsProps> = ({ currentStep }) => 
             <div className="flex flex-col items-center">
               <div 
                 className={`
-                  flex items-center justify-center w-8 h-8 rounded-full 
+                  flex items-center justify-center w-10 h-10 rounded-full shadow-sm
                   ${step.id < currentStep 
                     ? 'bg-imperio-navy text-white' 
                     : step.id === currentStep 
-                      ? 'border-2 border-imperio-navy text-imperio-navy' 
-                      : 'border-2 border-gray-300 text-gray-300'
+                      ? 'border-2 border-imperio-navy text-imperio-navy bg-white' 
+                      : 'border-2 border-gray-300 text-gray-300 bg-white'
                   }
                   transition-all duration-300
                 `}
               >
                 {step.id < currentStep ? (
-                  <Check size={16} />
+                  <Check size={20} className="stroke-[3]" />
                 ) : (
-                  <span>{step.id}</span>
+                  <span className="font-semibold">{step.id}</span>
                 )}
               </div>
               <span 
                 className={`
-                  text-xs mt-2 text-center 
+                  text-xs mt-2 text-center font-medium
                   ${step.id === currentStep 
-                    ? 'font-medium text-imperio-navy'
-                    : 'text-gray-500'
+                    ? 'text-imperio-navy'
+                    : step.id < currentStep
+                      ? 'text-imperio-light-navy'
+                      : 'text-gray-500'
                   }
                 `}
               >

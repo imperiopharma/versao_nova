@@ -37,6 +37,11 @@ export const CheckoutResumoPage: React.FC = () => {
   const [showInsuranceDetails, setShowInsuranceDetails] = React.useState(false);
   const navigate = useNavigate();
   
+  // Rolar para o topo quando a página carregar
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+  
   // Check if user came from previous step
   useEffect(() => {
     if (!customerData.name || !customerData.email || !shippingMethod) {
@@ -69,12 +74,12 @@ export const CheckoutResumoPage: React.FC = () => {
           <CheckoutSteps currentStep={3} />
         </div>
         
-        <h1 className="text-3xl font-semibold text-imperio-navy mb-8">Resumo do Pedido</h1>
+        <h1 className="text-3xl font-semibold text-imperio-navy mb-8 text-center">Resumo do Pedido</h1>
         
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-medium">Endereço de Entrega</h2>
+              <h2 className="text-xl font-semibold text-imperio-navy">Endereço de Entrega</h2>
               <Button variant="ghost" size="sm" className="text-imperio-navy" asChild>
                 <Link to="/checkout/dados">
                   <Edit2 size={18} className="mr-2" />
@@ -83,7 +88,7 @@ export const CheckoutResumoPage: React.FC = () => {
               </Button>
             </div>
             
-            <div className="bg-imperio-extra-light-navy rounded-lg p-4">
+            <div className="bg-imperio-extra-light-navy rounded-lg p-4 border border-imperio-navy/10">
               <p className="font-medium">{customerData.name}</p>
               <p>{customerData.street}, {customerData.number}</p>
               {customerData.complement && <p>{customerData.complement}</p>}
@@ -97,9 +102,9 @@ export const CheckoutResumoPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-medium">Frete escolhido</h2>
+              <h2 className="text-xl font-semibold text-imperio-navy">Frete escolhido</h2>
               <Button variant="ghost" size="sm" className="text-imperio-navy" asChild>
                 <Link to="/checkout/dados">
                   <Edit2 size={18} className="mr-2" />
@@ -108,18 +113,18 @@ export const CheckoutResumoPage: React.FC = () => {
               </Button>
             </div>
             
-            <div className="bg-imperio-extra-light-navy rounded-lg p-4">
+            <div className="bg-imperio-extra-light-navy rounded-lg p-4 border border-imperio-navy/10">
               <div className="flex justify-between items-center">
                 <span className="font-medium">{getShippingMethodDisplay()}</span>
-                <span className="font-medium">
+                <span className="font-semibold text-imperio-navy text-lg">
                   {shippingCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </span>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
-            <h2 className="text-xl font-medium mb-4">Itens do pedido</h2>
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
+            <h2 className="text-xl font-semibold mb-4 text-imperio-navy border-b pb-3">Itens do pedido</h2>
             
             <div className="max-h-60 overflow-y-auto mb-4 pr-2">
               {items.map((item) => (
@@ -135,7 +140,7 @@ export const CheckoutResumoPage: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">
+                    <p className="font-bold text-imperio-navy">
                       {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </p>
                   </div>
@@ -170,14 +175,14 @@ export const CheckoutResumoPage: React.FC = () => {
               
               <div className="flex justify-between font-semibold text-lg mt-2 pt-2 border-t border-gray-200">
                 <span>Total</span>
-                <span>{total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                <span className="text-imperio-navy font-bold">{(hasInsurance ? total * 1.2 : total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-medium">Seguro opcional</h2>
+              <h2 className="text-xl font-semibold text-imperio-navy">Seguro opcional</h2>
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -207,11 +212,11 @@ export const CheckoutResumoPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
             <Button
               variant="outline"
               asChild
-              className="sm:order-1"
+              className="sm:order-1 border-imperio-navy text-imperio-navy hover:bg-imperio-extra-light-navy"
             >
               <Link to="/checkout/dados">
                 <ChevronLeft size={18} className="mr-2" />

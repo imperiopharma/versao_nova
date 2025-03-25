@@ -42,10 +42,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         return;
       }
       
-      handleChangeInput('street', data.logradouro);
-      handleChangeInput('neighborhood', data.bairro);
-      handleChangeInput('city', data.localidade);
-      handleChangeInput('state', data.uf);
+      handleChangeInput('street', data.logradouro || '');
+      handleChangeInput('neighborhood', data.bairro || '');
+      handleChangeInput('city', data.localidade || '');
+      handleChangeInput('state', data.uf || '');
       
     } catch (error) {
       console.error('Erro ao buscar endereço:', error);
@@ -63,12 +63,12 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
-      <h2 className="text-xl font-medium mb-6">Endereço de Entrega</h2>
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
+      <h2 className="text-xl font-semibold mb-6 text-imperio-navy border-b pb-3">Endereço de Entrega</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <Label htmlFor="cep" className="mb-1 block">
+          <Label htmlFor="cep" className="mb-1 block font-medium">
             CEP *
           </Label>
           <div className="relative">
@@ -101,7 +101,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div className="md:col-span-2">
-          <Label htmlFor="street" className="mb-1 block">
+          <Label htmlFor="street" className="mb-1 block font-medium">
             Endereço (Rua) *
           </Label>
           <Input
@@ -117,7 +117,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="number" className="mb-1 block">
+          <Label htmlFor="number" className="mb-1 block font-medium">
             Número *
           </Label>
           <Input
@@ -133,7 +133,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="complement" className="mb-1 block">
+          <Label htmlFor="complement" className="mb-1 block font-medium">
             Complemento
           </Label>
           <Input
@@ -145,7 +145,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="neighborhood" className="mb-1 block">
+          <Label htmlFor="neighborhood" className="mb-1 block font-medium">
             Bairro *
           </Label>
           <Input
@@ -161,7 +161,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="city" className="mb-1 block">
+          <Label htmlFor="city" className="mb-1 block font-medium">
             Cidade *
           </Label>
           <Input
@@ -177,7 +177,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
         </div>
         
         <div>
-          <Label htmlFor="state" className="mb-1 block">
+          <Label htmlFor="state" className="mb-1 block font-medium">
             Estado *
           </Label>
           <Select
