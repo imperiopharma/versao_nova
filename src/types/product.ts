@@ -7,6 +7,21 @@ export interface Product {
   image: string;
   category: string;
   discount?: number;
+  sku?: string;
+  description?: string;
+  status?: string;
+  stock?: number;
+  originalPrice?: number;
+  costPrice?: number;
+  sellingPrice?: number;
+  promoPrice?: number;
+}
+
+export interface ProductInputData extends Product {
+  // Campos adicionais específicos para entrada de dados
+  costPrice?: number;
+  sellingPrice?: number;
+  promoPrice?: number;
 }
 
 export interface FlashSaleItem {

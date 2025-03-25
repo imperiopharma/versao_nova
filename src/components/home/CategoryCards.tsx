@@ -4,15 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-
-interface Category {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode | (() => React.ReactNode);
-  link: string;
-  color: string;
-}
+import { Category } from '@/types/category';
 
 interface CategoryCardsProps {
   categories: Category[];
