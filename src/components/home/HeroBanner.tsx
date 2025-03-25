@@ -1,15 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HeroSlide } from '@/types/hero';
 
-interface HeroSlide {
-  image: string;
-}
-
-interface HeroBannerProps {
+export interface HeroBannerProps {
   slides: HeroSlide[];
 }
 

@@ -20,17 +20,15 @@ import { useHomeData } from '@/hooks/useHomeData';
 import { useProducts } from '@/hooks/useProducts';
 import { useBrands } from '@/hooks/useBrands';
 import { useFaq } from '@/hooks/useFaq';
-import { mockCategories } from '@/data/mock/categories';
-import { Category } from '@/types/category';
+import { useCategories } from '@/hooks/useCategories';
 
 export const HomePage: React.FC = () => {
-  const { heroData } = useHero();
+  const { heroData, heroSlides } = useHero();
   const { homeData } = useHomeData();
   const { featuredProducts, flashSaleItems } = useProducts();
-  const { brands } = useBrands();
-  const { faqItems } = useFaq();
-  
-  const categories: Category[] = mockCategories;
+  const brands = useBrands();
+  const faqItems = useFaq();
+  const { categories, serviceCards } = useCategories();
 
   return (
     <Layout>
@@ -41,35 +39,28 @@ export const HomePage: React.FC = () => {
       )}
       
       <HeroBanner 
-        title={heroData.title}
-        subtitle={heroData.subtitle}
-        ctaText={heroData.ctaText}
-        ctaLink={heroData.ctaLink}
-        backgroundImage={heroData.backgroundImage}
+        slides={heroSlides}
       />
       
       <CategoryCards categories={categories} />
       
       <FeaturedProducts 
-        title="Produtos em Destaque"
-        subtitle="Conheça nossos produtos mais vendidos"
         products={featuredProducts}
       />
       
       <FlashSaleSection 
-        title="Ofertas Imperdíveis"
-        subtitle="Por tempo limitado"
         items={flashSaleItems}
       />
       
       <BrandsSection 
-        title="Nossas Marcas" 
         brands={brands}
       />
       
       <GuaranteesSection />
       
-      <PromoCardsSection />
+      <PromoCardsSection 
+        cards={serviceCards}
+      />
       
       {homeData.showVipSection && (
         <VipMembershipSection />
@@ -80,7 +71,6 @@ export const HomePage: React.FC = () => {
       <LocationSection />
       
       <FaqSection 
-        title="Perguntas Frequentes"
         items={faqItems}
       />
       

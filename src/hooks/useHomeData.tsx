@@ -6,11 +6,11 @@ import { useFaq } from './useFaq';
 import { useHero } from './useHero';
 
 export const useHomeData = () => {
-  const brands = useBrands();
   const { featuredProducts, flashSaleItems } = useProducts();
   const { categories, serviceCards } = useCategories();
   const faqItems = useFaq();
-  const heroSlides = useHero();
+  const { heroData, heroSlides } = useHero();
+  const brands = useBrands();
 
   return {
     brands,
@@ -19,6 +19,12 @@ export const useHomeData = () => {
     heroSlides,
     categories,
     serviceCards,
-    faqItems
+    faqItems,
+    homeData: {
+      showPromoHeader: true,
+      promoHeaderText: "Frete grátis em compras acima de R$ 200,00",
+      showVipSection: true,
+      showAppBanner: false
+    }
   };
 };

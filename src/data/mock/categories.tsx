@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TagIcon, PillIcon, HeartIcon, MoonIcon, ActivityIcon, ScrollIcon } from 'lucide-react';
-import { Category } from '@/types/category';
+import { Category, ServiceCard } from '@/types/category';
 
 export const mockCategories: Category[] = [
   {
@@ -57,5 +57,30 @@ export const mockCategories: Category[] = [
     icon: () => <ScrollIcon className="h-6 w-6" />,
     link: '/categoria/fitoterapicos',
     color: 'bg-emerald-500'
+  }
+];
+
+// Adicionando o export que estava faltando
+export const mockServiceCards: ServiceCard[] = [
+  {
+    id: '1',
+    title: 'Entrega Expressa',
+    description: 'Entrega em até 24h para capitais',
+    icon: () => <TagIcon className="h-6 w-6" />,
+    color: 'bg-blue-500'
+  },
+  {
+    id: '2',
+    title: 'Atendimento 24h',
+    description: 'Suporte disponível a qualquer hora',
+    icon: () => <HeartIcon className="h-6 w-6" />,
+    color: 'bg-green-500'
+  },
+  {
+    id: '3',
+    title: 'Qualidade Garantida',
+    description: 'Produtos com certificação de qualidade',
+    icon: () => <ActivityIcon className="h-6 w-6" />,
+    color: 'bg-purple-500'
   }
 ];
