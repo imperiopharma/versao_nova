@@ -33,13 +33,11 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
   };
   
   return (
-    <section className="py-6 relative overflow-hidden">
-      {/* Efeito de fundo decorativo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50 -z-10"></div>
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-imperio-navy via-white to-imperio-navy opacity-30"></div>
-      
+    <section className="py-4 relative overflow-hidden">
       <div className="section-container">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <h2 className="text-xl font-bold text-imperio-navy mb-4">Serviços</h2>
+        
+        <div className="grid grid-cols-2 gap-3">
           {cards.map((card, index) => (
             <motion.div
               key={card.id}
@@ -48,15 +46,13 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
               whileInView="visible"
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
+              className="h-full"
             >
               <Link 
                 to={card.link} 
                 className={`relative p-4 flex flex-col rounded-xl ${card.color} hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden h-full group`}
               >
-                {/* Efeito de hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-imperio-navy/5 to-imperio-navy/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                
-                <div className="bg-white/50 backdrop-blur-sm rounded-full p-2 w-fit mb-3 text-imperio-navy">
+                <div className="bg-white/50 backdrop-blur-sm rounded-full p-2 w-fit mb-2 text-imperio-navy">
                   {card.icon}
                 </div>
                 
@@ -64,9 +60,6 @@ export const PromoCardsSection: React.FC<PromoCardsSectionProps> = ({ cards }) =
                 <p className="text-xs text-gray-600 line-clamp-2 relative z-10">
                   {card.description}
                 </p>
-                
-                {/* Elemento decorativo */}
-                <div className="absolute bottom-0 right-0 w-20 h-20 bg-imperio-navy/5 rounded-full -mb-10 -mr-10 opacity-30"></div>
               </Link>
             </motion.div>
           ))}

@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
-import { Pill, Heart, Sparkles, TrendingUp, ShoppingBag, BarChart3, Zap, Smartphone } from 'lucide-react';
+import { Pill, Heart, Sparkles, TrendingUp, ShoppingBag, BarChart3, Zap, Smartphone, PhoneCall, Truck, Map, Calendar, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from "@/components/ui/card";
 
 // Import components
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -12,6 +12,8 @@ import { BrandsSection } from '../components/home/BrandsSection';
 import { CategoryCards } from '../components/home/CategoryCards';
 import { FeaturedProducts } from '../components/home/FeaturedProducts';
 import { NewsletterSection } from '../components/home/NewsletterSection';
+import { PromoCardsSection } from '../components/home/PromoCardsSection';
+import { FlashSaleSection } from '../components/home/FlashSaleSection';
 
 export const HomePage: React.FC = () => {
   const [brands, setBrands] = useState<any>({
@@ -63,6 +65,25 @@ export const HomePage: React.FC = () => {
       discount: 5
     }
   ]);
+  
+  const flashSaleItems = [
+    {
+      id: 'combo1',
+      name: 'Kit Emagrecedor - 3 produtos',
+      brand: 'Império Pharma',
+      price: 199.90,
+      originalPrice: 299.90,
+      image: 'https://via.placeholder.com/300x300?text=Kit+1'
+    },
+    {
+      id: 'combo2',
+      name: 'Kit Imunidade - Vitaminas Essenciais',
+      brand: 'Império Pharma',
+      price: 149.90,
+      originalPrice: 199.90,
+      image: 'https://via.placeholder.com/300x300?text=Kit+2'
+    }
+  ];
   
   // Buscar dados do Supabase ao carregar a página
   useEffect(() => {
@@ -174,117 +195,188 @@ export const HomePage: React.FC = () => {
     }
   ];
 
-  // App banner
-  const appPromo = {
-    title: 'Baixe nosso Aplicativo',
-    description: 'Compre mais rápido e tenha acesso a promoções exclusivas',
-    icon: <Smartphone size={48} className="text-white mb-4" />,
-    buttonText: 'Baixar Agora',
-    buttonLink: '#',
-    color: 'bg-gradient-to-r from-blue-600 to-blue-800'
-  };
-
-  // Container animation variants
-  const containerAnimation = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
+  // Cards de serviços
+  const serviceCards = [
+    {
+      id: 'atendimento',
+      title: 'Atendimento',
+      description: 'Suporte disponível 24h',
+      icon: <PhoneCall size={20} />,
+      link: '/atendimento',
+      color: 'bg-blue-100'
+    },
+    {
+      id: 'entrega',
+      title: 'Entrega Rápida',
+      description: 'Para todo o Brasil',
+      icon: <Truck size={20} />,
+      link: '/entregas',
+      color: 'bg-green-100'
+    },
+    {
+      id: 'localizacao',
+      title: 'Localização',
+      description: 'Estamos no Paraguai',
+      icon: <Map size={20} />,
+      link: '/onde-estamos',
+      color: 'bg-yellow-100'
+    },
+    {
+      id: 'pagamento',
+      title: 'Pagamento',
+      description: 'Várias formas disponíveis',
+      icon: <CreditCard size={20} />,
+      link: '/pagamentos',
+      color: 'bg-red-100'
     }
-  };
+  ];
+
+  // FAQ items
+  const faqItems = [
+    {
+      question: 'Como fazer um pedido no site?',
+      answer: 'Navegue pelo catálogo, adicione produtos ao carrinho e siga o processo de checkout para finalizar sua compra.'
+    },
+    {
+      question: 'Quais são as formas de pagamento?',
+      answer: 'Aceitamos cartões de crédito, PIX, boleto bancário e transferência bancária.'
+    },
+    {
+      question: 'Qual o prazo de entrega?',
+      answer: 'O prazo de entrega varia conforme sua localização, geralmente entre 7 a 15 dias úteis.'
+    }
+  ];
 
   return (
     <Layout>
-      {/* Hero Banner com animação de entrada */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <HeroBanner slides={heroSlides} />
-      </motion.div>
+      {/* Banner principal */}
+      <div className="bg-imperio-navy text-white p-4 sm:text-center flex justify-center items-center">
+        <div className="max-w-screen-xl flex flex-col sm:flex-row justify-center items-center gap-2">
+          <Truck size={18} className="shrink-0" />
+          <p className="text-sm">Frete grátis para compras acima de R$ 500,00</p>
+          <div className="hidden sm:block">|</div>
+          <div className="flex items-center gap-2">
+            <CreditCard size={18} className="shrink-0" />
+            <p className="text-sm">Até 12x sem juros no cartão</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Logo e Título */}
+      <div className="section-container py-4">
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-2xl font-bold text-imperio-navy">
+            <span className="text-imperio-navy">Império</span>
+            <span className="text-imperio-red">Pharma</span>
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">A sua farmácia online</p>
+        </div>
+      </div>
       
       {/* Categorias em cards coloridos */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="py-6"
-      >
-        <CategoryCards categories={categories} />
-      </motion.div>
+      <CategoryCards categories={categories} />
       
-      {/* Brands Section com animação suave */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <BrandsSection 
-          imported={brands.imported}
-          premium={brands.premium}
-          national={brands.national}
-          various={brands.various}
-          categories={brands.categories}
-        />
-      </motion.div>
+      {/* Service Cards */}
+      <PromoCardsSection cards={serviceCards} />
       
       {/* Produtos em destaque */}
-      <motion.div
-        variants={containerAnimation}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-        <FeaturedProducts products={featuredProducts} />
-      </motion.div>
+      <FeaturedProducts products={featuredProducts} />
       
-      {/* App Promo Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="py-6"
-      >
+      {/* VIP Membership */}
+      <section className="py-4">
         <div className="section-container">
-          <div className={`rounded-xl p-6 md:p-8 ${appPromo.color} text-white text-center`}>
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              {appPromo.icon}
-            </motion.div>
-            <h2 className="text-xl md:text-2xl font-bold mb-2">{appPromo.title}</h2>
-            <p className="mb-4 opacity-90">{appPromo.description}</p>
+          <Card className="bg-imperio-navy text-white overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex flex-col items-center text-center">
+                <h2 className="text-lg font-bold mb-2">Entre no Grupo VIP</h2>
+                <p className="text-sm mb-3">Receba ofertas exclusivas, descontos e atualizações sobre novos produtos</p>
+                <Link 
+                  to="/vip" 
+                  className="bg-white text-imperio-navy font-semibold py-2 px-4 rounded-full text-sm hover:bg-gray-100 transition-colors"
+                >
+                  Entrar no Grupo VIP
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+      
+      {/* Sobre Nós */}
+      <section className="py-4">
+        <div className="section-container">
+          <Card>
+            <CardContent className="p-4">
+              <h2 className="text-xl font-bold text-imperio-navy mb-2">Sobre Nós</h2>
+              <p className="text-sm text-gray-600 mb-3">
+                Somos uma empresa especializada na importação e distribuição de produtos farmacêuticos, suplementos e cosméticos de alta qualidade. Com anos de experiência no mercado, garantimos produtos originais com preços acessíveis.
+              </p>
+              <Link 
+                to="/sobre" 
+                className="text-imperio-red hover:underline text-sm font-medium"
+              >
+                Saiba mais →
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+      
+      {/* FAQ Section */}
+      <section className="py-4">
+        <div className="section-container">
+          <h2 className="text-xl font-bold text-imperio-navy mb-4">Perguntas Frequentes</h2>
+          
+          <div className="space-y-3">
+            {faqItems.map((item, index) => (
+              <Card key={index} className="overflow-hidden">
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-imperio-navy text-sm mb-2">{item.question}</h3>
+                  <p className="text-sm text-gray-600">{item.answer}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="mt-4 text-center">
             <Link 
-              to={appPromo.buttonLink} 
-              className="inline-block bg-white text-blue-600 font-bold py-3 px-6 rounded-full hover:bg-blue-50 transition-colors"
+              to="/faq" 
+              className="text-imperio-red hover:underline text-sm font-medium"
             >
-              {appPromo.buttonText}
+              Ver todas as perguntas →
             </Link>
           </div>
         </div>
-      </motion.div>
+      </section>
+
+      {/* Mapa e Localização */}
+      <section className="py-4">
+        <div className="section-container">
+          <Card>
+            <CardContent className="p-4">
+              <h2 className="text-xl font-bold text-imperio-navy mb-2">Estamos no Paraguai</h2>
+              <p className="text-sm text-gray-600 mb-3">
+                Visite nossa loja física em Ciudad del Este e confira nossos produtos
+              </p>
+              <div className="rounded-lg overflow-hidden h-48 bg-gray-200 mb-3">
+                {/* Placeholder para o mapa */}
+                <div className="w-full h-full flex items-center justify-center text-gray-500">
+                  <Map size={32} />
+                </div>
+              </div>
+              <Link 
+                to="/localizacao" 
+                className="text-imperio-red hover:underline text-sm font-medium"
+              >
+                Ver no mapa →
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
       
-      {/* Newsletter Section com animação de fade-in */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        <NewsletterSection />
-      </motion.div>
-      
-      {/* Elementos decorativos */}
-      <div className="fixed top-40 left-10 w-40 h-40 bg-imperio-navy/5 rounded-full blur-3xl -z-10"></div>
-      <div className="fixed bottom-40 right-10 w-60 h-60 bg-imperio-light-navy/5 rounded-full blur-3xl -z-10"></div>
+      {/* Newsletter Section */}
+      <NewsletterSection />
     </Layout>
   );
 };

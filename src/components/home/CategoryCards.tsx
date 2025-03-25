@@ -23,30 +23,32 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   };
   
   return (
-    <section className="py-8">
+    <section className="py-4">
       <div className="section-container">
-        <h2 className="text-2xl font-bold text-imperio-navy mb-6 text-center">Categorias em Destaque</h2>
+        <h2 className="text-xl font-bold text-imperio-navy mb-4">Categorias em Destaque</h2>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
               variants={itemVariants}
               whileHover={{ 
-                y: -5,
+                y: -2,
                 boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
               }}
-              className="flex flex-col"
+              className="w-full"
             >
               <Link 
                 to={category.link} 
-                className={`${category.color} rounded-xl p-4 h-full flex flex-col items-center text-center text-white`}
+                className={`${category.color} rounded-xl p-4 flex items-center w-full text-white shadow-sm`}
               >
-                <div className="rounded-full bg-white/20 p-3 mb-3">
+                <div className="rounded-full bg-white/20 p-2 mr-3">
                   {category.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-1">{category.title}</h3>
-                <p className="text-sm opacity-90">{category.description}</p>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg">{category.title}</h3>
+                  <p className="text-sm opacity-90">{category.description}</p>
+                </div>
               </Link>
             </motion.div>
           ))}
