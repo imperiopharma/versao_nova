@@ -1,12 +1,12 @@
 
 import { useEffect, useState } from 'react';
-import { useProductCommon } from './useProductCommon';
 import { useProductsData } from './useProductsData';
 import { useBrandsData } from './useBrandsData';
 import { useCategoriesData } from './useCategoriesData';
+import { useProductToast } from './products/useProductToast';
 
 export function useProductStore() {
-  const { loading, setLoading } = useProductCommon();
+  const { loading, setLoading } = useProductToast();
   const [initialized, setInitialized] = useState(false);
   
   const { 
