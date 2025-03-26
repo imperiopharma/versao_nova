@@ -63,9 +63,9 @@ export const BrandItem: React.FC<BrandItemProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="font-medium">{brand.name}</TableCell>
-      <TableCell className="max-w-xs truncate">{brand.description || '-'}</TableCell>
-      <TableCell className="text-center">{displayCategory()}</TableCell>
+      <TableCell className="font-medium max-w-[120px] truncate">{brand.name}</TableCell>
+      <TableCell className="max-w-xs truncate hidden sm:table-cell">{brand.description || '-'}</TableCell>
+      <TableCell className="text-center hidden sm:table-cell">{displayCategory()}</TableCell>
       <TableCell className="text-center">
         <span className={`px-2 py-1 rounded-full text-xs ${
           brand.status === 'active' 
@@ -76,10 +76,10 @@ export const BrandItem: React.FC<BrandItemProps> = ({
         </span>
       </TableCell>
       <TableCell>
-        <div className="flex justify-center items-center space-x-2">
+        <div className="flex justify-center items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
                 <span className="sr-only">Ações</span>
               </Button>

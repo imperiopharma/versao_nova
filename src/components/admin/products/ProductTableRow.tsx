@@ -50,17 +50,15 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
   const sellingPrice = typeof product.sellingPrice === 'number' ? product.sellingPrice : 0;
   const status = product.status || 'inactive';
   
-  console.log("Renderizando linha para produto:", product.id, name);
-  
   return (
     <TableRow key={product.id}>
       <TableCell className="font-medium">{sku}</TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell>{brand}</TableCell>
-      <TableCell>{category}</TableCell>
-      <TableCell className="text-right">{formatCurrency(costPrice)}</TableCell>
+      <TableCell className="max-w-[120px] truncate">{name}</TableCell>
+      <TableCell className="hidden sm:table-cell">{brand}</TableCell>
+      <TableCell className="hidden sm:table-cell">{category}</TableCell>
+      <TableCell className="text-right hidden sm:table-cell">{formatCurrency(costPrice)}</TableCell>
       <TableCell className="text-right">{formatCurrency(sellingPrice)}</TableCell>
-      <TableCell className="text-center">
+      <TableCell className="text-center hidden sm:table-cell">
         <span className={`px-2 py-1 rounded-full text-xs ${
           status === 'active' 
             ? 'bg-green-100 text-green-800' 
@@ -75,11 +73,26 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
               : 'Inativo'}
         </span>
       </TableCell>
+      <TableCell className="text-center">
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          status === 'active' 
+            ? 'bg-green-100 text-green-800' 
+            : status === 'out_of_stock' 
+              ? 'bg-amber-100 text-amber-800' 
+              : 'bg-red-100 text-red-800'
+        }`}>
+          {status === 'active' 
+            ? 'Ativo' 
+            : status === 'out_of_stock' 
+              ? 'Sem Est.' 
+              : 'Inativo'}
+        </span>
+      </TableCell>
       <TableCell>
-        <div className="flex justify-center items-center space-x-2">
+        <div className="flex justify-center items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
                 <span className="sr-only">Ações</span>
               </Button>
