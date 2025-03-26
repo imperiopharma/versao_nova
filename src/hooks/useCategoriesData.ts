@@ -25,7 +25,7 @@ export function useCategoriesData() {
         slug: category.slug,
         description: category.description,
         status: category.status,
-        active: category.active
+        active: category.status === 'active' // Convertendo status para um booleano active
       }));
 
       setCategories(formattedCategories);
@@ -40,15 +40,14 @@ export function useCategoriesData() {
   const addCategory = async (category: any) => {
     try {
       // Remover propriedades incompatíveis com o esquema do Supabase
-      const { id, ...categoryData } = category;
+      const { id, active, ...categoryData } = category;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseCategory = {
         name: categoryData.name,
         slug: categoryData.slug,
         description: categoryData.description,
-        status: categoryData.status,
-        active: categoryData.active !== undefined ? categoryData.active : true
+        status: active ? 'active' : 'inactive', // Converter booleano active para status string
       };
 
       console.log('Enviando categoria para Supabase:', supabaseCategory);
@@ -72,7 +71,7 @@ export function useCategoriesData() {
         slug: data.slug,
         description: data.description,
         status: data.status,
-        active: data.active
+        active: data.status === 'active' // Convertendo status para um booleano active
       };
 
       setCategories(prev => [...prev, formattedCategory]);
@@ -87,15 +86,14 @@ export function useCategoriesData() {
   // Atualizar uma categoria no Supabase
   const updateCategory = async (category: any) => {
     try {
-      const { id, ...categoryData } = category;
+      const { id, active, ...categoryData } = category;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabaseCategory = {
         name: categoryData.name,
         slug: categoryData.slug,
         description: categoryData.description,
-        status: categoryData.status,
-        active: categoryData.active,
+        status: active ? 'active' : 'inactive', // Converter booleano active para status string
         updated_at: formatDateForSupabase()
       };
 
@@ -120,13 +118,16 @@ export function useCategoriesData() {
     try {
       const { error } = await supabase
         .from('categories')
-        .update({ active, updated_at: formatDateForSupabase() })
+        .update({ 
+          status: active ? 'active' : 'inactive', // Converter booleano active para status string
+          updated_at: formatDateForSupabase() 
+        })
         .eq('id', categoryId);
 
       if (error) throw error;
 
       setCategories(prev => prev.map(c => 
-        c.id === categoryId ? { ...c, active } : c
+        c.id === categoryId ? { ...c, active, status: active ? 'active' : 'inactive' } : c
       ));
       
       showSuccessToast(

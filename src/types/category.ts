@@ -11,6 +11,7 @@ export type Category = {
   link?: string;
   title?: string;
   active?: boolean;
+  status?: string;
 };
 
 export type ServiceCard = {
