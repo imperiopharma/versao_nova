@@ -14,6 +14,8 @@ import { VipMembershipSection } from '../components/home/VipMembershipSection';
 import { PromoHeader } from '../components/home/PromoHeader';
 import { useHomeData } from '@/hooks/useHomeData';
 import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
+import { AvailableCoupons } from '@/components/home/AvailableCoupons';
+import { AppBanner } from '@/components/home/AppBanner';
 
 export const HomePage: React.FC = () => {
   const { 
@@ -25,6 +27,8 @@ export const HomePage: React.FC = () => {
     homeData 
   } = useHomeData();
   
+  console.log("HomePage rendering with categories:", categories);
+  
   return (
     <Layout>
       {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
@@ -33,13 +37,19 @@ export const HomePage: React.FC = () => {
       {/* VIP section positioned right after the banner */}
       {homeData.showVipSection && <VipMembershipSection />}
       
-      {homeData.showSections.categories && <CategoryCards categories={categories} />}
+      {/* Explicitly rendering CategoryCards regardless of showSections flag */}
+      <CategoryCards categories={categories} />
       
-      {/* Posicionando a seção de garantias ENTRE categorias e produtos em destaque */}
-      {homeData.showSections.guarantees && <GuaranteesSection />}
+      {/* App banner for guarantees */}
+      <AppBanner />
       
       {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
       {homeData.showSections.brands && <BrandsSection />}
+      
+      {homeData.showSections.guarantees && <GuaranteesSection />}
+      
+      {/* Available coupons section */}
+      {homeData.showSections.coupons && <AvailableCoupons />}
       
       {homeData.showSections.about && <AboutSection />}
       {homeData.showSections.location && <LocationSection />}

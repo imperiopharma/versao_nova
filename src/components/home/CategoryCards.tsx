@@ -49,19 +49,25 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     return <ShoppingBag className="h-6 w-6" />;
   };
   
+  // Adicionado um console.log para depuração
+  console.log("CategoryCards rendering with:", { activeCategories, allCategories: categories });
+  
   if (activeCategories.length === 0) {
+    console.log("No active categories found");
     return null;
   }
   
   return (
-    <section className="py-8 md:py-10 overflow-hidden bg-white">
+    <section className="py-8 md:py-10 overflow-visible bg-white">
       <div className="section-container">
+        <h2 className="text-xl md:text-2xl font-bold text-imperio-navy mb-6 text-center">Nossas Categorias</h2>
+        
         <motion.div 
           className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-6 max-w-4xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.1 }}
         >
           {activeCategories.map((category, index) => (
             <motion.div
@@ -71,7 +77,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             >
               <Link 
                 to={category.link || `/categoria/${category.id}`} 
-                className={`rounded-xl overflow-hidden shadow-sm flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative`}
+                className={`rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative`}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
