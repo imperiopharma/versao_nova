@@ -16,8 +16,8 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
-  // Limitamos a 4 categorias para maior organização visual
-  const displayCategories = activeCategories.slice(0, 4);
+  // Limitamos a 3 categorias para que fiquem lado a lado com melhor espaçamento
+  const displayCategories = activeCategories.slice(0, 3);
   
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -37,7 +37,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     <section className="py-4">
       <div className="section-container">
         <h2 className="text-lg sm:text-xl font-bold text-imperio-navy mb-3">Categorias</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-3 gap-3 md:gap-6">
           {displayCategories.map((category, index) => (
             <motion.div
               key={category.id}
