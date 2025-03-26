@@ -13,7 +13,6 @@ import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
 import { VipMembershipSection } from '../components/home/VipMembershipSection';
-import { PromoHeader } from '../components/home/PromoHeader';
 import { AvailableCoupons } from '../components/home/AvailableCoupons';
 import { useHero } from '@/hooks/useHero';
 import { useHomeData } from '@/hooks/useHomeData';
@@ -32,12 +31,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <Layout>
-      {homeData.showPromoHeader && (
-        <PromoHeader 
-          text={homeData.promoHeaderText || "Frete grátis em compras acima de R$ 200,00"}
-        />
-      )}
-      
       <HeroBanner 
         slides={heroSlides}
       />

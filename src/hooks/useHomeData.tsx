@@ -21,7 +21,7 @@ export const useHomeData = () => {
     serviceCards,
     faqItems,
     homeData: {
-      showPromoHeader: true,
+      showPromoHeader: false, // Alterado para false
       promoHeaderText: "Frete grátis em compras acima de R$ 200,00",
       showVipSection: true,
       showAppBanner: false
