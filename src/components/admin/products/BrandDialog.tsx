@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { EntityDialog } from '@/components/admin/common/EntityDialog';
-import { TextField, TextareaField, SelectField, ImageUploadField } from '@/components/admin/common/FormFields';
+import { TextField, TextareaField, SelectField } from '@/components/admin/common/FormFields';
+import { FileUploadField } from '@/components/admin/common/FileUploadField';
 import { useDialogForm } from '@/hooks/useDialogForm';
 import { slugify } from '@/lib/utils';
 
@@ -41,6 +42,9 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
     onClose
   });
 
+  // Focar no campo da imagem se indicado
+  const [focusLogo, setFocusLogo] = useState(brand?.focus === 'logo');
+
   // Gerar slug automático baseado no nome
   useEffect(() => {
     if (!isEditing && formData.name && !formData.slug) {
@@ -51,10 +55,11 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
     }
   }, [formData.name, isEditing]);
 
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Lidar com upload de imagem
+  const handleImageUpload = (url: string) => {
     setFormData(prev => ({
       ...prev,
-      logoUrl: e.target.value
+      logoUrl: url
     }));
   };
 
@@ -115,27 +120,12 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
         ]}
       />
       
-      <TextField
-        id="logoUrl"
-        label="URL da Logo"
-        value={formData.logoUrl}
-        onChange={handleImageUrlChange}
-        placeholder="https://exemplo.com/imagem.png"
-        description="Digite a URL da imagem da logo da marca"
+      <FileUploadField
+        label="Logo da Marca"
+        imageUrl={formData.logoUrl}
+        onImageUpload={handleImageUpload}
+        description="Faça upload da logo da marca (formatos recomendados: PNG, JPG ou WEBP)"
       />
-      
-      {formData.logoUrl && (
-        <div className="mt-2">
-          <p className="text-sm font-medium mb-2">Pré-visualização:</p>
-          <div className="border border-gray-200 rounded-md p-4 flex justify-center">
-            <img 
-              src={formData.logoUrl} 
-              alt="Pré-visualização" 
-              className="max-h-24 object-contain" 
-            />
-          </div>
-        </div>
-      )}
     </EntityDialog>
   );
 };
