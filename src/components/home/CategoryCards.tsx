@@ -63,7 +63,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
         <h2 className="text-xl md:text-2xl font-bold text-imperio-navy mb-6 text-center">Nossas Categorias</h2>
         
         <motion.div 
-          className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-6 max-w-4xl mx-auto"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-6 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -77,7 +77,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             >
               <Link 
                 to={category.link || `/categoria/${category.id}`} 
-                className={`rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative hover:bg-blue-200`}
+                className={`block rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all hover:shadow-lg bg-blue-100 py-8 px-3 relative hover:bg-blue-200`}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>

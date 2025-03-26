@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { HeartIcon, PillIcon, Tag as TagIcon, Activity } from 'lucide-react';
+import { HeartIcon, PillIcon, Tag as TagIcon, Activity, ShoppingBag, Dumbbell, Apple } from 'lucide-react';
 import { Category, ServiceCard } from '@/types/category';
 
 export const mockCategories: Category[] = [
@@ -22,6 +22,36 @@ export const mockCategories: Category[] = [
     icon: () => <PillIcon className="h-6 w-6" />,
     link: '/categoria/medicamentos',
     color: 'bg-blue-500',
+    active: true
+  },
+  {
+    id: '3',
+    name: 'Suplementos',
+    title: 'Suplementos',
+    description: 'Para mais energia e disposição',
+    icon: () => <ShoppingBag className="h-6 w-6" />,
+    link: '/categoria/suplementos',
+    color: 'bg-green-500',
+    active: true
+  },
+  {
+    id: '4',
+    name: 'Proteínas',
+    title: 'Proteínas',
+    description: 'Para ganho de massa muscular',
+    icon: () => <Dumbbell className="h-6 w-6" />,
+    link: '/categoria/proteinas',
+    color: 'bg-purple-500',
+    active: true
+  },
+  {
+    id: '5',
+    name: 'Vitaminas',
+    title: 'Vitaminas',
+    description: 'Para sua saúde e bem-estar',
+    icon: () => <Apple className="h-6 w-6" />,
+    link: '/categoria/vitaminas',
+    color: 'bg-yellow-500',
     active: true
   }
 ];
