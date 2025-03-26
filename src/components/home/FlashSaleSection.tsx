@@ -71,18 +71,9 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
   return (
     <section className="py-4">
       <div className="section-container">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center">
-            <Tag className="text-imperio-red mr-2" size={16} />
-            <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">COMBOS</h2>
-          </div>
-          <Link 
-            to="/ofertas" 
-            className="text-xs sm:text-sm font-medium text-imperio-red hover:underline flex items-center"
-          >
-            Ver tudo
-            <ArrowRight size={14} className="ml-1" />
-          </Link>
+        <div className="flex items-center mb-3">
+          <Tag className="text-imperio-red mr-2" size={16} />
+          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">COMBOS</h2>
         </div>
         
         <motion.div 
@@ -142,15 +133,14 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
           })}
         </motion.div>
         
-        {/* Botão "Ver todos combos" */}
-        <div className="flex justify-center mt-4">
+        {/* Botão "Ver todos combos" com destaque */}
+        <div className="flex justify-center mt-6">
           <Link to="/combos">
             <Button 
-              variant="outline" 
-              className="border-imperio-red text-imperio-red hover:bg-imperio-red hover:text-white transition-colors"
+              className="bg-imperio-red text-white hover:bg-imperio-red/90 font-medium px-6 py-2.5 text-sm shadow-md hover:shadow-lg transition-all"
             >
               Ver todos combos
-              <ArrowRight size={16} className="ml-1" />
+              <ArrowRight size={16} className="ml-1.5" />
             </Button>
           </Link>
         </div>
