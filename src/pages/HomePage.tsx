@@ -38,7 +38,7 @@ export const HomePage: React.FC = () => {
       
       {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
       {homeData.showSections.brands && <BrandsSection />}
-      {homeData.showSections.promoCards && <PromoCardsSection cards={serviceCards} />}
+      
       {homeData.showVipSection && <VipMembershipSection />}
       {homeData.showSections.about && <AboutSection />}
       {homeData.showSections.location && <LocationSection />}
