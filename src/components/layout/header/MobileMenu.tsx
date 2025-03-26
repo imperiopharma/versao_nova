@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X, HeartIcon, PillIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useProductStore } from '@/hooks/useProductStore';
 
@@ -77,26 +77,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             ) : (
               <>
                 <Link 
-                  to="/categoria/injetaveis" 
-                  className="block py-1 hover:text-imperio-navy transition-colors"
-                  onClick={() => {
-                    onClose();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                >
-                  Produtos Injetáveis
-                </Link>
-                <Link 
-                  to="/categoria/orais" 
-                  className="block py-1 hover:text-imperio-navy transition-colors"
-                  onClick={() => {
-                    onClose();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                >
-                  Produtos Orais
-                </Link>
-                <Link 
                   to="/categoria/emagrecedores" 
                   className="block py-1 hover:text-imperio-navy transition-colors"
                   onClick={() => {
@@ -104,7 +84,17 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
-                  Emagrecedores
+                  Produtos Emagrecedores
+                </Link>
+                <Link 
+                  to="/categoria/medicamentos" 
+                  className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => {
+                    onClose();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  Medicamentos de Farmácia
                 </Link>
               </>
             )}

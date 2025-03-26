@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { TagIcon, PillIcon, HeartIcon } from 'lucide-react';
+import { TagIcon, PillIcon, HeartIcon, Activity } from 'lucide-react';
 import { Category, ServiceCard } from '@/types/category';
 
 export const mockCategories: Category[] = [
@@ -44,7 +45,7 @@ export const mockServiceCards: ServiceCard[] = [
     id: '3',
     title: 'Qualidade Garantida',
     description: 'Produtos com certificação de qualidade',
-    icon: () => <ActivityIcon className="h-6 w-6" />,
+    icon: () => <Activity className="h-6 w-6" />,
     color: 'bg-purple-500'
   }
 ];
