@@ -23,10 +23,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Mobile sidebar - shown as Sheet */}
       <MobileSidebar title="Admin Painel" />
       
-      {/* Main content - Now with ScrollArea for vertical scrolling only */}
+      {/* Main content - With ScrollArea for vertical scrolling only */}
       <main className="flex-1 overflow-hidden p-2 md:p-6 pt-20 md:pt-6">
-        <ScrollArea className="h-[calc(100vh-24px)]">
-          <div className="w-full mx-auto pb-10">
+        <ScrollArea className="h-[calc(100vh-24px)] overflow-x-hidden">
+          <div className="w-full max-w-full mx-auto pb-10">
             {children}
           </div>
         </ScrollArea>
