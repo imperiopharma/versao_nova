@@ -3,8 +3,8 @@ import { Brand, BrandCategory } from '@/types/brand';
 
 export const mockBrands: Record<BrandCategory, Brand[]> = {
   imported: [
-    { id: 'universal', name: 'Universal', logo: '/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png' },
-    { id: 'lifepronutrition', name: 'Life Pro Nutrition', logo: 'https://via.placeholder.com/150x80/001f3f/ffffff?text=Life+Pro' },
+    { id: 'universal', name: 'Universal', logo: 'https://via.placeholder.com/150x80/001f3f/ffffff?text=Universal' },
+    { id: 'lifepronutrition', name: 'Life Pro Nutrition', logo: 'https://via.placeholder.com/150x80/193f5f/ffffff?text=Life+Pro' },
     { id: 'vitalabs', name: 'Vita Labs', logo: 'https://via.placeholder.com/150x80/e53e3e/ffffff?text=Vita+Labs' },
     { id: 'blackskull', name: 'Black Skull', logo: 'https://via.placeholder.com/150x80/000000/ffffff?text=Black+Skull' }
   ],

@@ -5,6 +5,10 @@ export interface Brand {
   id: string;
   name: string;
   logo: string;
+  description?: string;
+  slug?: string;
+  status?: string;
+  category?: BrandCategory;
 }
 
 export interface BrandCategories {

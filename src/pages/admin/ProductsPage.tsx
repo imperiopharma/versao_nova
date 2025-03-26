@@ -11,15 +11,28 @@ import { ProductsList } from '@/components/admin/products/ProductsList';
 import { BrandsList } from '@/components/admin/products/BrandsList';
 import { CategoriesList } from '@/components/admin/products/CategoriesList';
 import { useProductStore } from '@/hooks/useProductStore';
+import { useToast } from '@/components/ui/use-toast';
 
 export const ProductsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('products');
-  const { fetchData } = useProductStore();
+  const { fetchData, loading } = useProductStore();
+  const { toast } = useToast();
   
   // Carregar todos os dados quando a página for montada
   useEffect(() => {
     console.log("ProductsPage: Buscando dados iniciais...");
-    fetchData();
+    fetchData().then(() => {
+      toast({
+        title: "Dados carregados",
+        description: "Produtos, marcas e categorias foram carregados com sucesso.",
+      });
+    }).catch(error => {
+      toast({
+        title: "Erro ao carregar dados",
+        description: "Ocorreu um erro ao carregar os dados. Tente novamente.",
+        variant: "destructive"
+      });
+    });
   }, []);
   
   return (
