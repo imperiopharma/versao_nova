@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useProductStore } from '@/hooks/useProductStore';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -10,6 +11,19 @@ interface MobileMenuProps {
 }
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const { categories } = useProductStore();
+  const [activeCategories, setActiveCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Filtrar apenas categorias ativas
+    if (categories && categories.length > 0) {
+      const filtered = categories
+        .filter(cat => cat.status === 'active')
+        .slice(0, 5); // Limitar a 5 categorias no menu
+      setActiveCategories(filtered);
+    }
+  }, [categories]);
+
   return (
     <motion.div 
       initial={{ opacity: 0, height: 0 }}
@@ -46,56 +60,54 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             Categorias
           </p>
           <div className="pl-4 space-y-3 text-sm border-l-2 border-imperio-extra-light-navy ml-1">
-            <Link 
-              to="/categoria/injetaveis" 
-              className="block py-1 hover:text-imperio-navy transition-colors"
-              onClick={() => {
-                onClose();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              Produtos Injetáveis
-            </Link>
-            <Link 
-              to="/categoria/orais" 
-              className="block py-1 hover:text-imperio-navy transition-colors"
-              onClick={() => {
-                onClose();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              Produtos Orais
-            </Link>
-            <Link 
-              to="/categoria/emagrecedores" 
-              className="block py-1 hover:text-imperio-navy transition-colors"
-              onClick={() => {
-                onClose();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              Emagrecedores
-            </Link>
-            <Link 
-              to="/categoria/cbd" 
-              className="block py-1 hover:text-imperio-navy transition-colors"
-              onClick={() => {
-                onClose();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              CBD
-            </Link>
-            <Link 
-              to="/categoria/farmacia" 
-              className="block py-1 hover:text-imperio-navy transition-colors"
-              onClick={() => {
-                onClose();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              Produtos de Farmácia
-            </Link>
+            {activeCategories.length > 0 ? (
+              activeCategories.map(category => (
+                <Link 
+                  key={category.id}
+                  to={`/categoria/${category.slug || category.id}`} 
+                  className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => {
+                    onClose();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  {category.name}
+                </Link>
+              ))
+            ) : (
+              <>
+                <Link 
+                  to="/categoria/injetaveis" 
+                  className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => {
+                    onClose();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  Produtos Injetáveis
+                </Link>
+                <Link 
+                  to="/categoria/orais" 
+                  className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => {
+                    onClose();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  Produtos Orais
+                </Link>
+                <Link 
+                  to="/categoria/emagrecedores" 
+                  className="block py-1 hover:text-imperio-navy transition-colors"
+                  onClick={() => {
+                    onClose();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  Emagrecedores
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>

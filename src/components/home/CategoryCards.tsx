@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Category } from '@/types/category';
+import { ShoppingBag, PillIcon, HeartIcon } from 'lucide-react';
 
 interface CategoryCardsProps {
   categories: Category[];
@@ -24,8 +25,22 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   };
   
   // Função auxiliar para renderizar o ícone
-  const renderIcon = (icon: React.ReactNode | (() => React.ReactNode)) => {
-    return typeof icon === 'function' ? icon() : icon;
+  const renderIcon = (icon: React.ReactNode | (() => React.ReactNode), categoryName: string) => {
+    if (typeof icon === 'function') return icon();
+    if (icon) return icon;
+    
+    // Fallback de ícones baseado no nome da categoria
+    switch(categoryName.toLowerCase()) {
+      case 'injetáveis':
+      case 'injetaveis':
+        return <PillIcon className="h-6 w-6" />;
+      case 'orais':
+        return <PillIcon className="h-6 w-6" />;
+      case 'emagrecedores':
+        return <HeartIcon className="h-6 w-6" />;
+      default:
+        return <ShoppingBag className="h-6 w-6" />;
+    }
   };
   
   if (displayCategories.length === 0) {
@@ -50,13 +65,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
               className="w-full"
             >
               <Link 
-                to={category.link} 
+                to={category.link || `/categoria/${category.slug || category.id}`} 
                 className="bg-white rounded-lg p-3 flex flex-col items-center justify-center w-full border border-gray-100 shadow-sm hover:shadow-md transition-all h-full text-center"
               >
                 <div className={`rounded-full ${category.color || 'bg-imperio-navy'} p-2 mb-2 text-white`}>
-                  {renderIcon(category.icon)}
+                  {renderIcon(category.icon, category.name)}
                 </div>
-                <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
+                <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title || category.name}</h3>
               </Link>
             </motion.div>
           ))}
