@@ -67,6 +67,7 @@ export const useChatbotService = () => {
   const [isListeningToSpeech, setIsListeningToSpeech] = useState(false);
   const [synth, setSynth] = useState<SpeechSynthesis | null>(null);
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
   
   // Inicializar o sintetizador de voz e reconhecimento
   useEffect(() => {
@@ -120,7 +121,17 @@ export const useChatbotService = () => {
   
   // Função para obter respostas rápidas sugeridas
   const getQuickReplies = useCallback((botResponse: string) => {
-    return getQuickRepliesForResponse(botResponse);
+    const replies = getQuickRepliesForResponse(botResponse);
+    
+    // Desabilitar input se houver respostas rápidas
+    setIsInputDisabled(replies.length > 0);
+    
+    return replies;
+  }, []);
+  
+  // Função para habilitar o campo de entrada manualmente
+  const enableInput = useCallback(() => {
+    setIsInputDisabled(false);
   }, []);
   
   // Função para sintetizar voz
@@ -180,7 +191,9 @@ export const useChatbotService = () => {
     startListening,
     stopListening,
     transcript,
-    isListeningToSpeech
+    isListeningToSpeech,
+    isInputDisabled,
+    enableInput
   };
 };
 

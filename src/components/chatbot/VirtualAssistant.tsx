@@ -32,7 +32,9 @@ export const VirtualAssistant: React.FC = () => {
     startListening,
     stopListening,
     transcript,
-    isListeningToSpeech
+    isListeningToSpeech,
+    isInputDisabled,
+    enableInput
   } = useChatbotService();
   
   // Adicionar mensagem inicial do assistente quando o chat for aberto
@@ -242,6 +244,7 @@ export const VirtualAssistant: React.FC = () => {
                   <QuickReplies 
                     suggestions={getQuickReplies(messages[messages.length - 1].text)} 
                     onSelect={handleQuickReplyClick}
+                    enableInput={enableInput}
                   />
                 )}
                 
@@ -260,22 +263,24 @@ export const VirtualAssistant: React.FC = () => {
                         handleSendMessage();
                       }
                     }}
-                    placeholder="Digite sua mensagem..."
-                    className="flex-grow resize-none"
+                    placeholder={isInputDisabled ? "Selecione uma opção acima..." : "Digite sua mensagem..."}
+                    className={`flex-grow resize-none ${isInputDisabled ? 'bg-gray-100 text-gray-500' : ''}`}
                     rows={2}
+                    disabled={isInputDisabled}
                   />
                   <div className="flex flex-col ml-2 gap-2">
                     <Button 
                       onClick={handleVoiceInput}
                       className={`h-10 ${isListening ? 'bg-red-500 hover:bg-red-600' : ''}`}
                       aria-label={isListening ? "Parar gravação" : "Gravar mensagem"}
+                      disabled={isInputDisabled}
                     >
                       <Mic size={20} />
                     </Button>
                     <Button 
                       onClick={handleSendMessage}
                       className="h-10"
-                      disabled={input.trim() === ''}
+                      disabled={isInputDisabled || input.trim() === ''}
                     >
                       <Send size={20} />
                     </Button>
