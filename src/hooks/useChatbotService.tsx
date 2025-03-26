@@ -2,11 +2,71 @@
 import { useState, useCallback, useEffect } from 'react';
 import { getResponseForPattern, getQuickRepliesForResponse } from '@/services/chatbotService';
 
+// Definindo as interfaces de tipagem para a Web Speech API
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  [index: number]: SpeechRecognitionResult;
+  item(index: number): SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  readonly length: number;
+  [index: number]: SpeechRecognitionAlternative;
+  item(index: number): SpeechRecognitionAlternative;
+  isFinal: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionOptions {
+  lang?: string;
+  continuous?: boolean;
+  interimResults?: boolean;
+  maxAlternatives?: number;
+}
+
+interface SpeechRecognitionStatic {
+  new (): SpeechRecognition;
+  prototype: SpeechRecognition;
+}
+
+interface SpeechRecognition extends EventTarget {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  serviceURI: string;
+  grammars: any;
+  
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
+  onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onaudiostart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onaudioend: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onnomatch: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onsoundstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onsoundend: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onspeechstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onspeechend: ((this: SpeechRecognition, ev: Event) => any) | null;
+  
+  start(): void;
+  stop(): void;
+  abort(): void;
+}
+
 export const useChatbotService = () => {
   const [transcript, setTranscript] = useState('');
   const [isListeningToSpeech, setIsListeningToSpeech] = useState(false);
   const [synth, setSynth] = useState<SpeechSynthesis | null>(null);
-  const [recognition, setRecognition] = useState<any>(null);
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
   
   // Inicializar o sintetizador de voz e reconhecimento
   useEffect(() => {
@@ -16,14 +76,14 @@ export const useChatbotService = () => {
       
       // Inicializar reconhecimento de voz se disponível no navegador
       if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognitionInstance = new SpeechRecognition();
+        const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognitionInstance = new SpeechRecognitionAPI();
         
         recognitionInstance.lang = 'pt-BR';
         recognitionInstance.continuous = false;
         recognitionInstance.interimResults = false;
         
-        recognitionInstance.onresult = (event: any) => {
+        recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = event.results[0][0].transcript;
           setTranscript(transcript);
           setIsListeningToSpeech(false);
@@ -127,7 +187,7 @@ export const useChatbotService = () => {
 // Adicionar tipos para o navegador
 declare global {
   interface Window {
-    SpeechRecognition?: typeof SpeechRecognition;
-    webkitSpeechRecognition?: typeof SpeechRecognition;
+    SpeechRecognition?: SpeechRecognitionStatic;
+    webkitSpeechRecognition?: SpeechRecognitionStatic;
   }
 }
