@@ -1,10 +1,8 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/hooks/use-toast';
-import { AppliedCoupon } from './AppliedCoupon';
 import { CouponInput } from './CouponInput';
-import { CouponValidationMessage } from './CouponValidationMessage';
+import { AppliedCoupon } from './AppliedCoupon';
 import { PromotionalInfo } from './PromotionalInfo';
 
 interface CouponFormProps {
@@ -12,120 +10,56 @@ interface CouponFormProps {
 }
 
 export const CouponForm: React.FC<CouponFormProps> = ({ simpleVersion = false }) => {
-  const { 
-    couponCode, 
-    discount, 
-    discountType,
-    applyCoupon, 
-    removeCoupon,
-    validateCoupon
-  } = useCart();
+  const { couponCode, validateCoupon, applyCoupon, removeCoupon } = useCart();
+  const [inputCode, setInputCode] = useState<string>('');
+  const [validationResult, setValidationResult] = useState<{ valid: boolean; message: string } | null>(null);
   
-  const [inputCoupon, setInputCoupon] = useState('');
-  const [isApplying, setIsApplying] = useState(false);
-  const [showValidationMessage, setShowValidationMessage] = useState(false);
-  const [validationMessage, setValidationMessage] = useState('');
-  const [isValid, setIsValid] = useState(false);
-  const { toast } = useToast();
-  
-  const handleApplyCoupon = () => {
-    if (inputCoupon.trim() === '') {
-      toast({
-        variant: 'destructive',
-        title: 'Erro',
-        description: 'Por favor, insira um código de cupom válido.',
-      });
+  const handleValidateCoupon = () => {
+    if (!inputCode.trim()) {
+      setValidationResult({ valid: false, message: 'Digite um código de cupom' });
       return;
     }
     
-    setIsApplying(true);
+    const result = validateCoupon(inputCode.trim());
+    setValidationResult(result);
     
-    // Validar cupom antes de aplicar
-    const { valid, message } = validateCoupon(inputCoupon);
-    setValidationMessage(message);
-    setIsValid(valid);
-    setShowValidationMessage(true);
-    
-    // Simulando um tempo de processamento para feedback visual
-    setTimeout(() => {
-      if (valid) {
-        applyCoupon(inputCoupon);
-        setInputCoupon('');
-      }
-      setIsApplying(false);
-      
-      // Esconder a mensagem de validação após alguns segundos
-      setTimeout(() => {
-        setShowValidationMessage(false);
-      }, 5000);
-    }, 600);
+    if (result.valid) {
+      applyCoupon(inputCode.trim());
+      setInputCode('');
+    }
   };
   
-  if (simpleVersion) {
-    // Versão simplificada para uso em páginas de checkout
-    return (
-      <div className="mb-4">
-        {couponCode ? (
-          <AppliedCoupon 
-            couponCode={couponCode}
-            discountType={discountType}
-            discount={discount}
-            removeCoupon={removeCoupon}
-            simpleVersion={true}
-          />
-        ) : (
-          <CouponInput
-            inputCoupon={inputCoupon}
-            setInputCoupon={setInputCoupon}
-            handleApplyCoupon={handleApplyCoupon}
-            isApplying={isApplying}
-            simpleVersion={true}
-          />
-        )}
-        
-        {showValidationMessage && (
-          <div className="mt-2">
-            <CouponValidationMessage
-              showValidationMessage={showValidationMessage}
-              isValid={isValid}
-              validationMessage={validationMessage}
-            />
-          </div>
-        )}
-      </div>
-    );
-  }
+  const handleInputChange = (value: string) => {
+    setInputCode(value);
+    
+    // Limpar a mensagem de validação quando o usuário começa a digitar
+    if (validationResult) {
+      setValidationResult(null);
+    }
+  };
   
-  // Versão completa para o carrinho
+  const handleRemoveCoupon = () => {
+    removeCoupon();
+    setValidationResult(null);
+  };
+  
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium text-gray-700">Cupom de desconto</h3>
-      
       {couponCode ? (
         <AppliedCoupon 
-          couponCode={couponCode}
-          discountType={discountType}
-          discount={discount}
-          removeCoupon={removeCoupon}
+          couponCode={couponCode} 
+          onRemove={handleRemoveCoupon} 
         />
       ) : (
         <>
-          <CouponInput
-            inputCoupon={inputCoupon}
-            setInputCoupon={setInputCoupon}
-            handleApplyCoupon={handleApplyCoupon}
-            isApplying={isApplying}
+          <CouponInput 
+            inputCode={inputCode}
+            onInputChange={handleInputChange}
+            onApply={handleValidateCoupon}
+            validationResult={validationResult}
           />
           
-          {showValidationMessage && (
-            <CouponValidationMessage
-              showValidationMessage={showValidationMessage}
-              isValid={isValid}
-              validationMessage={validationMessage}
-            />
-          )}
-          
-          <PromotionalInfo />
+          {!simpleVersion && <PromotionalInfo />}
         </>
       )}
     </div>
