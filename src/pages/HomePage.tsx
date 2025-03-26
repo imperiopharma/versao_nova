@@ -31,13 +31,13 @@ export const HomePage: React.FC = () => {
   return (
     <Layout>
       {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
-      
-      {/* Posicionando a seção de garantias logo acima do banner */}
-      {homeData.showSections.guarantees && <GuaranteesSection />}
-      
       <HeroBanner slides={heroSlides} />
       
       {homeData.showSections.categories && <CategoryCards categories={categories} />}
+      
+      {/* Posicionando a seção de garantias ENTRE categorias e produtos em destaque */}
+      {homeData.showSections.guarantees && <GuaranteesSection />}
+      
       {homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />}
       {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
       {homeData.showSections.brands && <BrandsSection />}
