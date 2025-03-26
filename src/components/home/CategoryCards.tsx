@@ -57,16 +57,6 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     <section className="py-8 md:py-10 overflow-hidden bg-white">
       <div className="section-container">
         <motion.div 
-          className="mb-4 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-imperio-navy">Categorias em Destaque</h2>
-          <p className="text-muted-foreground mt-2">Explore nossos produtos por categoria</p>
-        </motion.div>
-        
-        <motion.div 
           className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-6 max-w-4xl mx-auto"
           variants={containerVariants}
           initial="hidden"
@@ -84,7 +74,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                 className={`rounded-xl overflow-hidden shadow-sm flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative`}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
-                <div className={`rounded-full bg-blue-500 p-4 mb-3 text-white shadow-md`}>
+                <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
                   {renderIcon(category.icon, category.name)}
                 </div>
                 

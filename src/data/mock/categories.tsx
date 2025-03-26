@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { TagIcon, PillIcon, HeartIcon, Activity } from 'lucide-react';
+import { HeartIcon, PillIcon } from 'lucide-react';
 import { Category, ServiceCard } from '@/types/category';
 
 export const mockCategories: Category[] = [
