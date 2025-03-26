@@ -29,6 +29,17 @@ export const BrandItem: React.FC<BrandItemProps> = ({
   onEdit, 
   onDelete 
 }) => {
+  // Transformar categoria para exibição
+  const displayCategory = () => {
+    switch (brand.category) {
+      case 'imported': return 'Importada';
+      case 'premium': return 'Premium';
+      case 'national': return 'Nacional';
+      case 'various': return 'Diversos';
+      default: return brand.category || 'Não definida';
+    }
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -36,13 +47,13 @@ export const BrandItem: React.FC<BrandItemProps> = ({
           <img 
             src={brand.logoUrl || brand.logo || 'https://placehold.co/100x100?text=Logo'} 
             alt={brand.name} 
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
           />
         </div>
       </TableCell>
       <TableCell className="font-medium">{brand.name}</TableCell>
-      <TableCell className="max-w-xs truncate">{brand.description}</TableCell>
-      <TableCell className="text-center">{brand.category}</TableCell>
+      <TableCell className="max-w-xs truncate">{brand.description || '-'}</TableCell>
+      <TableCell className="text-center">{displayCategory()}</TableCell>
       <TableCell className="text-center">
         <span className={`px-2 py-1 rounded-full text-xs ${
           brand.status === 'active' 
@@ -68,7 +79,7 @@ export const BrandItem: React.FC<BrandItemProps> = ({
                 <Edit className="h-4 w-4 mr-2" />
                 Editar Marca
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onEdit({...brand, focus: 'logo'})}>
                 <Image className="h-4 w-4 mr-2" />
                 Alterar Logo
               </DropdownMenuItem>

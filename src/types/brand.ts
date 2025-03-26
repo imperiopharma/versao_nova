@@ -9,7 +9,7 @@ export interface Brand {
   slug?: string;
   status?: string;
   category?: BrandCategory;
-  logoUrl?: string; // Adicionando campo logoUrl para compatibilidade com o admin
+  logoUrl?: string; // Campo para a URL da logo armazenada no Supabase
 }
 
 export interface BrandCategories {

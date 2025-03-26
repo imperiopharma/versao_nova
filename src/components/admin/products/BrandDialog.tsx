@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EntityDialog } from '@/components/admin/common/EntityDialog';
 import { TextField, TextareaField, SelectField, ImageUploadField } from '@/components/admin/common/FormFields';
 import { useDialogForm } from '@/hooks/useDialogForm';
+import { slugify } from '@/lib/utils';
 
 interface BrandDialogProps {
   brand?: any;
@@ -28,6 +29,7 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
   
   const { 
     formData, 
+    setFormData,
     handleInputChange, 
     handleSelectChange, 
     handleSubmit 
@@ -39,6 +41,23 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
     onClose
   });
 
+  // Gerar slug automático baseado no nome
+  useEffect(() => {
+    if (!isEditing && formData.name && !formData.slug) {
+      setFormData(prev => ({
+        ...prev,
+        slug: slugify(formData.name)
+      }));
+    }
+  }, [formData.name, isEditing]);
+
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      logoUrl: e.target.value
+    }));
+  };
+
   return (
     <EntityDialog
       title={isEditing ? 'Editar Marca' : 'Adicionar Nova Marca'}
@@ -48,7 +67,7 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
       submitButtonText={isEditing ? 'Salvar Alterações' : 'Adicionar Marca'}
     >
       <TextField
-        id="brand-name"
+        id="name"
         label="Nome da Marca"
         value={formData.name}
         onChange={handleInputChange}
@@ -57,7 +76,7 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
       />
       
       <TextField
-        id="brand-slug"
+        id="slug"
         label="Slug (URL)"
         value={formData.slug}
         onChange={handleInputChange}
@@ -67,7 +86,7 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
       />
       
       <TextareaField
-        id="brand-description"
+        id="description"
         label="Descrição"
         value={formData.description}
         onChange={handleInputChange}
@@ -96,11 +115,27 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
         ]}
       />
       
-      <ImageUploadField
-        label="Logo da Marca"
-        imageUrl={formData.logoUrl}
-        imageName={formData.name}
+      <TextField
+        id="logoUrl"
+        label="URL da Logo"
+        value={formData.logoUrl}
+        onChange={handleImageUrlChange}
+        placeholder="https://exemplo.com/imagem.png"
+        description="Digite a URL da imagem da logo da marca"
       />
+      
+      {formData.logoUrl && (
+        <div className="mt-2">
+          <p className="text-sm font-medium mb-2">Pré-visualização:</p>
+          <div className="border border-gray-200 rounded-md p-4 flex justify-center">
+            <img 
+              src={formData.logoUrl} 
+              alt="Pré-visualização" 
+              className="max-h-24 object-contain" 
+            />
+          </div>
+        </div>
+      )}
     </EntityDialog>
   );
 };

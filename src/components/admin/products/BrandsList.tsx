@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { BrandDialog } from './BrandDialog';
@@ -7,13 +7,20 @@ import { SearchBar } from '../common/SearchBar';
 import { useProductStore } from '@/hooks/useProductStore';
 import { BrandsTable } from './BrandsTable';
 import { DeleteBrandDialog } from './DeleteBrandDialog';
+import { useToast } from '@/components/ui/use-toast';
 
 export const BrandsList: React.FC = () => {
-  const { brands, deleteBrand } = useProductStore();
+  const { brands, deleteBrand, fetchData } = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<any>(null);
   const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
   const [brandToDelete, setBrandToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // Recarregar a lista de marcas quando o componente for montado
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleAddBrand = () => {
     setSelectedBrand(null);
@@ -35,8 +42,17 @@ export const BrandsList: React.FC = () => {
     try {
       await deleteBrand(brandToDelete);
       setBrandToDelete(null);
+      toast({
+        title: "Marca excluída",
+        description: "A marca foi excluída com sucesso",
+      });
     } catch (error) {
       console.error("Erro ao excluir marca:", error);
+      toast({
+        title: "Erro ao excluir",
+        description: "Ocorreu um erro ao excluir a marca",
+        variant: "destructive"
+      });
     }
   };
 

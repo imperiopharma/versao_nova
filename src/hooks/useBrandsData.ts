@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProductCommon } from './useProductCommon';
+import { Brand, BrandCategory } from '@/types/brand';
+import { slugify } from '@/lib/utils';
 
 export function useBrandsData() {
   const [brands, setBrands] = useState<any[]>([]);
@@ -10,9 +12,11 @@ export function useBrandsData() {
   // Buscar marcas do Supabase
   const fetchBrands = async () => {
     try {
+      console.log('Buscando marcas do Supabase...');
       const { data: brandsData, error: brandsError } = await supabase
         .from('brands')
-        .select('*');
+        .select('*')
+        .order('name');
 
       if (brandsError) {
         throw brandsError;
@@ -29,6 +33,7 @@ export function useBrandsData() {
         category: brand.category
       }));
 
+      console.log(`Encontradas ${formattedBrands.length} marcas no Supabase`);
       setBrands(formattedBrands);
       return formattedBrands;
     } catch (error) {
@@ -40,13 +45,21 @@ export function useBrandsData() {
   // Adicionar uma marca ao Supabase
   const addBrand = async (brand: any) => {
     try {
+      // Verificar se o nome e slug existem
+      if (!brand.name) {
+        throw new Error('Nome da marca é obrigatório');
+      }
+      
+      // Gerar slug automaticamente se não existir
+      const slug = brand.slug || slugify(brand.name);
+      
       // Remover propriedades incompatíveis com o esquema do Supabase
       const { id, logoUrl, ...brandData } = brand;
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabbaseBrand = {
         name: brandData.name,
-        slug: brandData.slug,
+        slug: slug,
         description: brandData.description,
         category: brandData.category,
         logo_url: logoUrl,
@@ -91,6 +104,11 @@ export function useBrandsData() {
   const updateBrand = async (brand: any) => {
     try {
       const { id, logoUrl, ...brandData } = brand;
+      
+      // Verificar se o ID existe
+      if (!id) {
+        throw new Error('ID da marca é necessário para atualização');
+      }
       
       // Converter nomes de propriedades para o formato do Supabase
       const supabbaseBrand = {
