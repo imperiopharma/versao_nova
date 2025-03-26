@@ -21,6 +21,7 @@ import { MarketplacePage } from "./pages/MarketplacePage";
 import { FreightInfoPage } from "./pages/FreightInfoPage";
 import NotFound from "./pages/NotFound";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
+import CombosPage from "./pages/CombosPage";
 
 // Admin pages
 import { AdminLoginPage } from "./pages/admin/LoginPage";
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
               <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
               <Route path="/produto/:productId" element={<ProductDetailsPage />} />
+              <Route path="/combos" element={<CombosPage />} />
               
               {/* Admin login route - public access */}
               <Route path="/admin/login" element={<AdminLoginPage />} />
