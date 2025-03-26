@@ -97,9 +97,9 @@ export const CategoriesList: React.FC = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>Descrição</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-center">Ações</TableHead>
+              <TableHead className="hidden md:table-cell">Descrição</TableHead>
+              <TableHead className="text-center w-[90px]">Status</TableHead>
+              <TableHead className="text-center w-[60px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,7 +119,7 @@ export const CategoriesList: React.FC = () => {
               filteredCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">{category.name}</TableCell>
-                  <TableCell className="max-w-xs truncate">{category.description}</TableCell>
+                  <TableCell className="max-w-xs truncate hidden md:table-cell">{category.description}</TableCell>
                   <TableCell className="text-center">
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       category.status === 'active' 
@@ -130,10 +130,10 @@ export const CategoriesList: React.FC = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-center items-center space-x-2">
+                    <div className="flex justify-center items-center">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
                             <MoreVertical className="h-4 w-4" />
                             <span className="sr-only">Ações</span>
                           </Button>

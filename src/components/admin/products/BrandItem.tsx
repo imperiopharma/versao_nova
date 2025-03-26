@@ -63,10 +63,17 @@ export const BrandItem: React.FC<BrandItemProps> = ({
           />
         </div>
       </TableCell>
-      <TableCell className="font-medium max-w-[120px] truncate">{brand.name}</TableCell>
-      <TableCell className="max-w-xs truncate hidden sm:table-cell">{brand.description || '-'}</TableCell>
-      <TableCell className="text-center hidden sm:table-cell">{displayCategory()}</TableCell>
-      <TableCell className="text-center">
+      <TableCell className="font-medium">
+        <div>
+          <p className="truncate max-w-[120px]">{brand.name}</p>
+          <p className="text-xs text-muted-foreground md:hidden">
+            {brand.status === 'active' ? 'Ativo' : 'Inativo'}
+          </p>
+        </div>
+      </TableCell>
+      <TableCell className="max-w-xs truncate hidden md:table-cell">{brand.description || '-'}</TableCell>
+      <TableCell className="text-center hidden md:table-cell">{displayCategory()}</TableCell>
+      <TableCell className="text-center hidden md:table-cell">
         <span className={`px-2 py-1 rounded-full text-xs ${
           brand.status === 'active' 
             ? 'bg-green-100 text-green-800'

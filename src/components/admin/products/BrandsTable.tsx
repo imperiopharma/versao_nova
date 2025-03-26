@@ -23,16 +23,16 @@ export const BrandsTable: React.FC<BrandsTableProps> = ({
 }) => {
   return (
     <div className="w-full overflow-hidden rounded-md border">
-      <div className="w-full overflow-x-auto sm:overflow-x-hidden">
+      <div className="w-full">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80px]">Logo</TableHead>
               <TableHead className="min-w-[150px]">Nome</TableHead>
-              <TableHead className="min-w-[200px] hidden sm:table-cell">Descrição</TableHead>
-              <TableHead className="text-center w-[100px] hidden sm:table-cell">Categoria</TableHead>
+              <TableHead className="min-w-[200px] hidden md:table-cell">Descrição</TableHead>
+              <TableHead className="text-center w-[100px] hidden md:table-cell">Categoria</TableHead>
               <TableHead className="text-center w-[80px]">Status</TableHead>
-              <TableHead className="text-center w-[70px]">Ações</TableHead>
+              <TableHead className="text-center w-[60px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

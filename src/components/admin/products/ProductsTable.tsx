@@ -27,19 +27,19 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 }) => {
   return (
     <div className="w-full overflow-hidden rounded-md border">
-      <div className="w-full overflow-x-auto sm:overflow-x-hidden">
+      <div className="w-full">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80px]">SKU</TableHead>
               <TableHead className="min-w-[180px]">Nome</TableHead>
-              <TableHead className="min-w-[120px] hidden sm:table-cell">Marca</TableHead>
-              <TableHead className="min-w-[120px] hidden sm:table-cell">Categoria</TableHead>
-              <TableHead className="text-right min-w-[120px] hidden sm:table-cell">Preço de Custo</TableHead>
+              <TableHead className="min-w-[120px] hidden md:table-cell">Marca</TableHead>
+              <TableHead className="min-w-[120px] hidden md:table-cell">Categoria</TableHead>
+              <TableHead className="text-right min-w-[120px] hidden md:table-cell">Preço de Custo</TableHead>
               <TableHead className="text-right min-w-[120px]">Preço</TableHead>
-              <TableHead className="text-center w-[80px] hidden sm:table-cell">Estoque</TableHead>
+              <TableHead className="text-center w-[80px] hidden md:table-cell">Estoque</TableHead>
               <TableHead className="text-center w-[80px]">Status</TableHead>
-              <TableHead className="text-center w-[70px]">Ações</TableHead>
+              <TableHead className="text-center w-[60px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

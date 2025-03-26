@@ -40,42 +40,40 @@ export const OrderTableRow: React.FC<OrderTableRowProps> = ({
 }) => {
   return (
     <TableRow key={order.id}>
-      <TableCell className="font-medium">{order.orderNumber}</TableCell>
-      <TableCell>{formatDate(order.date)}</TableCell>
-      <TableCell>
-        <div>
-          <div className="font-medium">{order.customer.name}</div>
-          <div className="text-sm text-muted-foreground">{order.customer.email}</div>
+      <TableCell className="font-medium">
+        <div className="flex flex-col">
+          <span>{order.orderNumber}</span>
+          <span className="text-xs text-muted-foreground md:hidden">
+            {formatDate(order.date)}
+          </span>
         </div>
       </TableCell>
-      <TableCell className="text-right font-medium">
+      <TableCell className="hidden md:table-cell">{formatDate(order.date)}</TableCell>
+      <TableCell>
+        <div>
+          <div className="font-medium truncate max-w-[120px]">{order.customer.name}</div>
+          <div className="text-xs text-muted-foreground hidden md:block truncate max-w-[120px]">{order.customer.email}</div>
+        </div>
+      </TableCell>
+      <TableCell className="text-right font-medium hidden md:table-cell">
         {formatCurrency(order.total)}
       </TableCell>
-      <TableCell>{order.paymentMethod}</TableCell>
+      <TableCell className="hidden md:table-cell">{order.paymentMethod}</TableCell>
       <TableCell>
         <Badge 
           variant="outline" 
-          className={`${getStatusConfig(order.status).color} border-none`}
+          className={`${getStatusConfig(order.status).color} border-none text-xs whitespace-nowrap`}
         >
           {getStatusConfig(order.status).label}
         </Badge>
       </TableCell>
       <TableCell>
-        <div className="flex justify-center items-center space-x-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => onViewOrder(order)}
-          >
-            <Eye className="h-4 w-4" />
-            <span className="sr-only">Ver pedido</span>
-          </Button>
-          
+        <div className="flex justify-center items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
-                <span className="sr-only">Mais ações</span>
+                <span className="sr-only">Ações</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -87,14 +85,6 @@ export const OrderTableRow: React.FC<OrderTableRowProps> = ({
               <DropdownMenuItem>
                 <FileEdit className="h-4 w-4 mr-2" />
                 Editar Pedido
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Send className="h-4 w-4 mr-2" />
-                Enviar E-mail
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Printer className="h-4 w-4 mr-2" />
-                Imprimir
               </DropdownMenuItem>
               
               <DropdownMenuSeparator />

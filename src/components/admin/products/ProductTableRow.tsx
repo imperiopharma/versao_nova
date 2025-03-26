@@ -53,12 +53,19 @@ export const ProductTableRow: React.FC<ProductTableRowProps> = ({
   return (
     <TableRow key={product.id}>
       <TableCell className="font-medium">{sku}</TableCell>
-      <TableCell className="max-w-[120px] truncate">{name}</TableCell>
-      <TableCell className="hidden sm:table-cell">{brand}</TableCell>
-      <TableCell className="hidden sm:table-cell">{category}</TableCell>
-      <TableCell className="text-right hidden sm:table-cell">{formatCurrency(costPrice)}</TableCell>
-      <TableCell className="text-right">{formatCurrency(sellingPrice)}</TableCell>
-      <TableCell className="text-center hidden sm:table-cell">
+      <TableCell>
+        <div>
+          <p className="truncate max-w-[120px] font-medium">{name}</p>
+          <p className="text-xs text-muted-foreground md:hidden">
+            {formatCurrency(sellingPrice)}
+          </p>
+        </div>
+      </TableCell>
+      <TableCell className="hidden md:table-cell">{brand}</TableCell>
+      <TableCell className="hidden md:table-cell">{category}</TableCell>
+      <TableCell className="text-right hidden md:table-cell">{formatCurrency(costPrice)}</TableCell>
+      <TableCell className="text-right hidden md:table-cell">{formatCurrency(sellingPrice)}</TableCell>
+      <TableCell className="text-center hidden md:table-cell">
         <span className={`px-2 py-1 rounded-full text-xs ${
           status === 'active' 
             ? 'bg-green-100 text-green-800' 
