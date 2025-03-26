@@ -13,7 +13,7 @@ export const useHero = () => {
       subtitle: "Produtos farmacêuticos e suplementos de alta qualidade",
       ctaText: "Comprar Agora",
       ctaLink: "/marcas",
-      backgroundImage: heroSlides[0]?.image || "/background.jpg"
+      backgroundImage: heroSlides[0]?.desktopImage || "/background.jpg"
     },
     heroSlides
   };

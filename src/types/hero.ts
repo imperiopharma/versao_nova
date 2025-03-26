@@ -1,4 +1,5 @@
 
 export interface HeroSlide {
-  image: string;
+  desktopImage: string;
+  mobileImage: string;
 }

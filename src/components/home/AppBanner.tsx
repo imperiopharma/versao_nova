@@ -2,6 +2,6 @@
 import React from 'react';
 
 export const AppBanner: React.FC = () => {
-  // This component is intentionally empty as it's being removed
+  // Este componente está vazio intencionalmente pois está sendo removido
   return null;
 };

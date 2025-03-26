@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -109,7 +110,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
               >
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out transform scale-105"
-                  style={{ backgroundImage: `url(${slide.image})` }}
+                  style={{ 
+                    backgroundImage: `url(${isMobile ? slide.mobileImage : slide.desktopImage})` 
+                  }}
                 ></div>
               </motion.div>
             )

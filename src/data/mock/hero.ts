@@ -1,12 +1,15 @@
 
 export const mockHeroSlides = [
   {
-    image: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png",
+    desktopImage: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png",
+    mobileImage: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png", // Temporariamente usamos a mesma imagem
   },
   {
-    image: "https://via.placeholder.com/1200x800?text=Slide+2",
+    desktopImage: "https://via.placeholder.com/1920x1080?text=Desktop+Slide+2",
+    mobileImage: "https://via.placeholder.com/800x1200?text=Mobile+Slide+2",
   },
   {
-    image: "https://via.placeholder.com/1200x800?text=Slide+3",
+    desktopImage: "https://via.placeholder.com/1920x1080?text=Desktop+Slide+3",
+    mobileImage: "https://via.placeholder.com/800x1200?text=Mobile+Slide+3",
   }
 ];
