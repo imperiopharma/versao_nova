@@ -5,6 +5,7 @@ import { ArrowRight, Tag } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from "@/components/ui/button";
 
 interface FlashSaleItem {
   id: string;
@@ -140,6 +141,19 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
             );
           })}
         </motion.div>
+        
+        {/* Botão "Ver todos combos" */}
+        <div className="flex justify-center mt-4">
+          <Link to="/combos">
+            <Button 
+              variant="outline" 
+              className="border-imperio-red text-imperio-red hover:bg-imperio-red hover:text-white transition-colors"
+            >
+              Ver todos combos
+              <ArrowRight size={16} className="ml-1" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
