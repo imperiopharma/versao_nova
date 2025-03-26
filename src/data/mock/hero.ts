@@ -1,11 +1,11 @@
 
 export const mockHeroSlides = [
   {
-    desktopImage: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png",
-    mobileImage: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png", // Temporariamente usamos a mesma imagem
+    desktopImage: "https://via.placeholder.com/1920x1080/001f3f/ffffff?text=Banner+Principal+1",
+    mobileImage: "https://via.placeholder.com/800x1200/001f3f/ffffff?text=Banner+Mobile+1",
   },
   {
-    desktopImage: "https://via.placeholder.com/1920x1080/001f3f/ffffff?text=Banner+Principal+2",
+    desktopImage: "https://via.placeholder.com/1920x1080/193f5f/ffffff?text=Banner+Principal+2",
     mobileImage: "https://via.placeholder.com/800x1200/193f5f/ffffff?text=Banner+Mobile+2",
   },
   {
