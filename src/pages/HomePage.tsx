@@ -3,7 +3,6 @@ import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { HeroBanner } from '../components/home/HeroBanner';
 import { CategoryCards } from '../components/home/CategoryCards';
-import { FeaturedProducts } from '../components/home/FeaturedProducts';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
 import { GuaranteesSection } from '../components/home/GuaranteesSection';
@@ -20,7 +19,6 @@ import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
 export const HomePage: React.FC = () => {
   const { 
     heroSlides, 
-    featuredProducts, 
     flashSaleItems, 
     categories, 
     serviceCards, 
@@ -38,7 +36,6 @@ export const HomePage: React.FC = () => {
       {/* Posicionando a seção de garantias ENTRE categorias e produtos em destaque */}
       {homeData.showSections.guarantees && <GuaranteesSection />}
       
-      {homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />}
       {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
       {homeData.showSections.brands && <BrandsSection />}
       {homeData.showSections.promoCards && <PromoCardsSection cards={serviceCards} />}
