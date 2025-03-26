@@ -10,7 +10,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar - Hidden on mobile */}
       <aside className="hidden md:flex md:w-72 flex-shrink-0 flex-col bg-white shadow-lg z-20 border-r border-gray-100">
         <div className="p-5 border-b border-gray-100">
@@ -23,13 +23,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Mobile sidebar - shown as Sheet */}
       <MobileSidebar title="Admin Painel" />
       
-      {/* Main content - Com ajustes para evitar cortes */}
-      <main className="flex-1 overflow-hidden p-2 md:p-0 pt-20 md:pt-0">
-        <ScrollArea className="h-[calc(100vh-24px)] w-full px-2 md:px-6 py-4 md:py-6">
-          <div className="w-full pb-10">
-            {children}
-          </div>
-        </ScrollArea>
+      {/* Main content */}
+      <main className="flex-1 overflow-hidden pt-16 md:pt-0">
+        <div className="h-full w-full overflow-auto p-4">
+          {children}
+        </div>
       </main>
     </div>
   );

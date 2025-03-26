@@ -7,7 +7,6 @@ import { ProductsTable } from './ProductsTable';
 import { DeleteProductDialog } from './DeleteProductDialog';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const ProductsList: React.FC = () => {
   const { products, loading, deleteProduct, fetchData } = useProductStore();
@@ -20,8 +19,6 @@ export const ProductsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
   
-  console.log("ProductsList renderizado, total de produtos:", products.length);
-  
   // Formatação de moeda
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -32,14 +29,11 @@ export const ProductsList: React.FC = () => {
   
   // Atualizar os dados quando a página carregar
   useEffect(() => {
-    console.log("Buscando dados de produtos...");
     fetchData();
   }, []);
   
   // Filtrar produtos quando a lista de produtos ou a consulta de pesquisa mudarem
   useEffect(() => {
-    console.log(`Aplicando filtro: ${searchQuery} em ${products.length} produtos`);
-    
     if (!searchQuery.trim()) {
       setFilteredProducts(products);
       return;
@@ -55,7 +49,6 @@ export const ProductsList: React.FC = () => {
       );
     });
     
-    console.log(`Resultados filtrados: ${filtered.length} produtos`);
     setFilteredProducts(filtered);
     setCurrentPage(1); // Reset para a primeira página ao filtrar
   }, [products, searchQuery]);
@@ -68,14 +61,12 @@ export const ProductsList: React.FC = () => {
 
   // Manipulador para editar um produto
   const handleEditProduct = (product: any) => {
-    console.log("Produto selecionado para edição:", product);
     setSelectedProduct(product);
     setIsProductDialogOpen(true);
   };
 
   // Manipulador para o clique de exclusão
   const handleDeleteClick = (productId: string) => {
-    console.log("Produto selecionado para exclusão:", productId);
     setProductToDelete(productId);
     setDeleteDialogOpen(true);
   };
@@ -84,7 +75,6 @@ export const ProductsList: React.FC = () => {
   const confirmDelete = async () => {
     if (productToDelete) {
       try {
-        console.log("Confirmando exclusão do produto:", productToDelete);
         await deleteProduct(productToDelete);
         setDeleteDialogOpen(false);
         setProductToDelete(null);
@@ -98,7 +88,6 @@ export const ProductsList: React.FC = () => {
 
   // Manipulador para fechar o diálogo de produto
   const handleCloseProductDialog = () => {
-    console.log("Fechando diálogo de produto");
     setIsProductDialogOpen(false);
     setSelectedProduct(null);
     // Recarregar dados após fechar o diálogo
@@ -123,36 +112,34 @@ export const ProductsList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <SearchBar 
           placeholder="Buscar produtos..." 
           value={searchQuery} 
           onChange={handleSearchChange} 
-          className="w-full sm:w-auto"
+          className="sm:w-64"
         />
         
         <Button 
           onClick={handleAddProduct} 
-          className="flex items-center gap-1 w-full sm:w-auto"
+          className="w-full sm:w-auto bg-imperio-navy"
         >
-          <PlusCircle size={18} />
-          <span>Adicionar Produto</span>
+          <PlusCircle size={18} className="mr-2" />
+          Adicionar Produto
         </Button>
       </div>
       
-      <div className="w-full overflow-hidden">
-        <ProductsTable
-          loading={loading}
-          filteredProducts={paginatedProducts}
-          formatCurrency={formatCurrency}
-          handleEditProduct={handleEditProduct}
-          handleDeleteClick={handleDeleteClick}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      <ProductsTable
+        loading={loading}
+        filteredProducts={paginatedProducts}
+        formatCurrency={formatCurrency}
+        handleEditProduct={handleEditProduct}
+        handleDeleteClick={handleDeleteClick}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       
       {isProductDialogOpen && (
         <ProductDialog 

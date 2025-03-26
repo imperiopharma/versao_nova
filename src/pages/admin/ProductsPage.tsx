@@ -37,7 +37,7 @@ export const ProductsPage: React.FC = () => {
   
   return (
     <AdminLayout>
-      <div className="py-4 w-full">
+      <div className="container mx-auto px-0 sm:px-4 py-4">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Gerenciar Produtos</h1>
         </div>
