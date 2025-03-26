@@ -71,61 +71,67 @@ export const BrandDialog: React.FC<BrandDialogProps> = ({
       onSubmit={handleSubmit}
       submitButtonText={isEditing ? 'Salvar Alterações' : 'Adicionar Marca'}
     >
-      <TextField
-        id="name"
-        label="Nome da Marca"
-        value={formData.name}
-        onChange={handleInputChange}
-        placeholder="Nome da marca"
-        required
-      />
-      
-      <TextField
-        id="slug"
-        label="Slug (URL)"
-        value={formData.slug}
-        onChange={handleInputChange}
-        placeholder="slug-da-marca"
-        required
-        description="O slug será usado na URL para acessar a página da marca"
-      />
-      
-      <TextareaField
-        id="description"
-        label="Descrição"
-        value={formData.description}
-        onChange={handleInputChange}
-        placeholder="Descrição da marca..."
-      />
-      
-      <SelectField
-        label="Status"
-        value={formData.status}
-        onValueChange={(value) => handleSelectChange('status', value)}
-        options={[
-          { value: 'active', label: 'Ativo' },
-          { value: 'inactive', label: 'Inativo' }
-        ]}
-      />
-      
-      <SelectField
-        label="Categoria"
-        value={formData.category}
-        onValueChange={(value) => handleSelectChange('category', value)}
-        options={[
-          { value: 'imported', label: 'Importada' },
-          { value: 'premium', label: 'Premium' },
-          { value: 'national', label: 'Nacional' },
-          { value: 'various', label: 'Diversos' }
-        ]}
-      />
-      
-      <FileUploadField
-        label="Logo da Marca"
-        imageUrl={formData.logoUrl}
-        onImageUpload={handleImageUpload}
-        description="Faça upload da logo da marca (formatos recomendados: PNG, JPG ou WEBP)"
-      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-4 sm:col-span-1">
+          <TextField
+            id="name"
+            label="Nome da Marca"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Nome da marca"
+            required
+          />
+          
+          <TextField
+            id="slug"
+            label="Slug (URL)"
+            value={formData.slug}
+            onChange={handleInputChange}
+            placeholder="slug-da-marca"
+            required
+            description="O slug será usado na URL para acessar a página da marca"
+          />
+          
+          <SelectField
+            label="Status"
+            value={formData.status}
+            onValueChange={(value) => handleSelectChange('status', value)}
+            options={[
+              { value: 'active', label: 'Ativo' },
+              { value: 'inactive', label: 'Inativo' }
+            ]}
+          />
+          
+          <SelectField
+            label="Categoria"
+            value={formData.category}
+            onValueChange={(value) => handleSelectChange('category', value)}
+            options={[
+              { value: 'imported', label: 'Importada' },
+              { value: 'premium', label: 'Premium' },
+              { value: 'national', label: 'Nacional' },
+              { value: 'various', label: 'Diversos' }
+            ]}
+          />
+        </div>
+        
+        <div className="space-y-4 sm:col-span-1">
+          <TextareaField
+            id="description"
+            label="Descrição"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="Descrição da marca..."
+          />
+          
+          <FileUploadField
+            label="Logo da Marca"
+            imageUrl={formData.logoUrl}
+            onImageUpload={handleImageUpload}
+            description="Faça upload da logo da marca (formatos recomendados: PNG, JPG ou WEBP)"
+          />
+        </div>
+      </div>
     </EntityDialog>
   );
 };

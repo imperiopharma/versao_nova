@@ -26,47 +26,49 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
   handleDeleteClick
 }) => {
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>SKU</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Marca</TableHead>
-            <TableHead>Categoria</TableHead>
-            <TableHead className="text-right">Preço de Custo</TableHead>
-            <TableHead className="text-right">Preço de Venda</TableHead>
-            <TableHead className="text-center">Estoque</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {loading ? (
+    <div className="w-full overflow-hidden rounded-md border">
+      <div className="w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={9} className="h-24 text-center">
-                Carregando produtos...
-              </TableCell>
+              <TableHead className="w-[80px]">SKU</TableHead>
+              <TableHead className="min-w-[180px]">Nome</TableHead>
+              <TableHead className="min-w-[120px]">Marca</TableHead>
+              <TableHead className="min-w-[120px]">Categoria</TableHead>
+              <TableHead className="text-right min-w-[120px]">Preço de Custo</TableHead>
+              <TableHead className="text-right min-w-[120px]">Preço de Venda</TableHead>
+              <TableHead className="text-center w-[80px]">Estoque</TableHead>
+              <TableHead className="text-center w-[80px]">Status</TableHead>
+              <TableHead className="text-center w-[100px]">Ações</TableHead>
             </TableRow>
-          ) : filteredProducts.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={9} className="h-24 text-center">
-                Nenhum produto encontrado.
-              </TableCell>
-            </TableRow>
-          ) : (
-            filteredProducts.map((product) => (
-              <ProductTableRow
-                key={product.id}
-                product={product}
-                formatCurrency={formatCurrency}
-                handleEditProduct={handleEditProduct}
-                handleDeleteClick={handleDeleteClick}
-              />
-            ))
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={9} className="h-24 text-center">
+                  Carregando produtos...
+                </TableCell>
+              </TableRow>
+            ) : filteredProducts.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={9} className="h-24 text-center">
+                  Nenhum produto encontrado.
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredProducts.map((product) => (
+                <ProductTableRow
+                  key={product.id}
+                  product={product}
+                  formatCurrency={formatCurrency}
+                  handleEditProduct={handleEditProduct}
+                  handleDeleteClick={handleDeleteClick}
+                />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

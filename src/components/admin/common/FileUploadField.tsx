@@ -100,7 +100,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
   };
   
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full max-w-full">
       <Label>{label}</Label>
       
       {preview ? (
@@ -130,7 +130,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-full">
           {isUploading ? (
             <div className="flex flex-col items-center space-y-2">
               <Loader2 className="h-10 w-10 text-gray-400 animate-spin" />
