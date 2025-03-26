@@ -13,8 +13,8 @@ import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
 import { VipMembershipSection } from '../components/home/VipMembershipSection';
-import { AppBanner } from '../components/home/AppBanner';
 import { PromoHeader } from '../components/home/PromoHeader';
+import { AvailableCoupons } from '../components/home/AvailableCoupons';
 import { useHero } from '@/hooks/useHero';
 import { useHomeData } from '@/hooks/useHomeData';
 import { useProducts } from '@/hooks/useProducts';
@@ -48,6 +48,8 @@ export const HomePage: React.FC = () => {
         products={featuredProducts}
       />
       
+      <AvailableCoupons />
+      
       <FlashSaleSection 
         items={flashSaleItems}
       />
@@ -73,10 +75,6 @@ export const HomePage: React.FC = () => {
       />
       
       <NewsletterSection />
-      
-      {homeData.showAppBanner && (
-        <AppBanner />
-      )}
     </Layout>
   );
 };

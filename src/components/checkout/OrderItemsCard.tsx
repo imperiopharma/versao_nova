@@ -1,11 +1,14 @@
 
 import React from 'react';
 import { CartItem } from '@/contexts/CartContext';
+import { Tag } from 'lucide-react';
 
 interface OrderItemsCardProps {
   items: CartItem[];
   subtotal: number;
   discount: number;
+  discountType?: string | null;
+  couponCode?: string | null;
   shippingCost: number;
   hasInsurance: boolean;
   total: number;
@@ -15,10 +18,30 @@ export const OrderItemsCard: React.FC<OrderItemsCardProps> = ({
   items,
   subtotal,
   discount,
+  discountType,
+  couponCode,
   shippingCost,
   hasInsurance,
   total
 }) => {
+  // Calcular o total final considerando o seguro
+  const finalTotal = hasInsurance ? total * 1.2 : total;
+  
+  // Função para formatar o texto do desconto com base no tipo
+  const getDiscountText = (): string => {
+    if (!couponCode) return "Desconto";
+    
+    if (discountType === 'percentage') {
+      return `Desconto (${couponCode})`;
+    } else if (discountType === 'fixed') {
+      return `Desconto fixo (${couponCode})`;
+    } else if (discountType === 'shipping') {
+      return `Frete grátis (${couponCode})`;
+    }
+    
+    return "Desconto";
+  };
+  
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
       <h2 className="text-xl font-semibold mb-4 text-imperio-navy border-b pb-3">Itens do pedido</h2>
@@ -53,7 +76,10 @@ export const OrderItemsCard: React.FC<OrderItemsCardProps> = ({
         
         {discount > 0 && (
           <div className="flex justify-between mb-2 text-green-600">
-            <span>Desconto</span>
+            <span className="flex items-center">
+              <Tag size={14} className="mr-1.5" />
+              {getDiscountText()}
+            </span>
             <span>-{discount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
           </div>
         )}
@@ -72,7 +98,7 @@ export const OrderItemsCard: React.FC<OrderItemsCardProps> = ({
         
         <div className="flex justify-between font-semibold text-lg mt-2 pt-2 border-t border-gray-200">
           <span>Total</span>
-          <span className="text-imperio-navy font-bold">{(hasInsurance ? total * 1.2 : total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+          <span className="text-imperio-navy font-bold">{finalTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
         </div>
       </div>
     </div>

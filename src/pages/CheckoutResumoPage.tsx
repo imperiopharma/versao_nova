@@ -10,6 +10,7 @@ import { ShippingMethodCard } from '../components/checkout/ShippingMethodCard';
 import { OrderItemsCard } from '../components/checkout/OrderItemsCard';
 import { InsuranceOptionCard } from '../components/checkout/InsuranceOptionCard';
 import { CheckoutNavigation } from '../components/checkout/CheckoutNavigation';
+import { CouponForm } from '../components/checkout/CouponForm';
 
 export const CheckoutResumoPage: React.FC = () => {
   const { 
@@ -21,6 +22,8 @@ export const CheckoutResumoPage: React.FC = () => {
     items, 
     subtotal, 
     discount, 
+    discountType,
+    couponCode,
     shippingMethod, 
     shippingCost, 
     total,
@@ -66,11 +69,19 @@ export const CheckoutResumoPage: React.FC = () => {
             shippingCost={shippingCost} 
           />
           
+          {/* Opção de Cupom */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-100">
+            <h2 className="text-xl font-semibold mb-4 text-imperio-navy border-b pb-3">Cupom de Desconto</h2>
+            <CouponForm simpleVersion={true} />
+          </div>
+          
           {/* Itens do Pedido */}
           <OrderItemsCard 
             items={items}
             subtotal={subtotal}
             discount={discount}
+            discountType={discountType}
+            couponCode={couponCode}
             shippingCost={shippingCost}
             hasInsurance={hasInsurance}
             total={total}

@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { 
   Minus, Plus, Trash2, ShoppingBag, 
   ChevronRight, AlertTriangle, 
-  Tag, ShieldCheck, Truck, ArrowRight
+  ShieldCheck, Truck, ArrowRight
 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import { CouponForm } from '@/components/checkout/CouponForm';
 
 export const CartPage: React.FC = () => {
   const { 
@@ -20,45 +20,11 @@ export const CartPage: React.FC = () => {
     removeItem, 
     subtotal, 
     discount, 
-    couponCode, 
-    setCouponCode,
     total
   } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [coupon, setCoupon] = useState(couponCode || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const handleApplyCoupon = () => {
-    if (coupon.trim() === '') {
-      toast({
-        variant: 'destructive',
-        title: 'Erro',
-        description: 'Por favor, insira um código de cupom válido.',
-      });
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // Simulando um tempo de processamento para feedback visual
-    setTimeout(() => {
-      if (coupon === 'DESCONTO10') {
-        setCouponCode(coupon);
-        toast({
-          title: 'Cupom aplicado!',
-          description: 'Desconto de 10% aplicado com sucesso.',
-        });
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Cupom inválido',
-          description: 'O código inserido não é válido ou expirou.',
-        });
-      }
-      setIsSubmitting(false);
-    }, 600);
-  };
   
   const container = {
     hidden: { opacity: 0 },
@@ -144,7 +110,7 @@ export const CartPage: React.FC = () => {
               initial="hidden"
               animate="show"
             >
-              {items.map((cartItem, index) => (
+              {items.map((cartItem) => (
                 <motion.div 
                   key={cartItem.id}
                   variants={itemAnimationVariant}
@@ -164,10 +130,7 @@ export const CartPage: React.FC = () => {
                   
                   <div className="flex-grow">
                     <h3 className="font-medium text-lg">{cartItem.name}</h3>
-                    <p className="text-sm text-gray-500 flex items-center">
-                      <Tag size={14} className="mr-1 text-imperio-navy/60" />
-                      {cartItem.brand}
-                    </p>
+                    <p className="text-sm text-gray-500">{cartItem.brand}</p>
                     
                     <div className="flex flex-wrap items-center justify-between mt-4 gap-3">
                       <div className="flex items-center">
@@ -238,27 +201,7 @@ export const CartPage: React.FC = () => {
                 
                 <div className="space-y-6">
                   {/* Cupom de Desconto */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex-1 relative">
-                        <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-imperio-navy/60" />
-                        <Input
-                          placeholder="Digite o código"
-                          value={coupon}
-                          onChange={(e) => setCoupon(e.target.value)}
-                          className="pl-10 border-imperio-navy/20 bg-white shadow-sm rounded-lg hover:border-imperio-navy/40 focus:ring-imperio-navy/30"
-                        />
-                      </div>
-                      <Button 
-                        onClick={handleApplyCoupon}
-                        disabled={isSubmitting}
-                        className="whitespace-nowrap bg-gradient-to-r from-imperio-navy to-imperio-light-navy hover:brightness-110 text-white rounded-lg relative overflow-hidden group"
-                      >
-                        <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                        {isSubmitting ? 'Aplicando...' : 'Aplicar'}
-                      </Button>
-                    </div>
-                  </div>
+                  <CouponForm />
                   
                   {/* Cálculos */}
                   <div className="border-t border-b border-imperio-navy/10 py-5 space-y-3">
@@ -270,7 +213,6 @@ export const CartPage: React.FC = () => {
                     {discount > 0 && (
                       <div className="flex justify-between items-center text-green-600">
                         <span className="flex items-center">
-                          <Tag size={16} className="mr-1" />
                           Desconto
                         </span>
                         <span>-{discount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
