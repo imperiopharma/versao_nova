@@ -10,7 +10,7 @@ interface CouponFormProps {
 }
 
 export const CouponForm: React.FC<CouponFormProps> = ({ simpleVersion = false }) => {
-  const { couponCode, validateCoupon, applyCoupon, removeCoupon } = useCart();
+  const { couponCode, validateCoupon, applyCoupon, removeCoupon, discount, discountType } = useCart();
   const [inputCode, setInputCode] = useState<string>('');
   const [validationResult, setValidationResult] = useState<{ valid: boolean; message: string } | null>(null);
   
@@ -47,8 +47,11 @@ export const CouponForm: React.FC<CouponFormProps> = ({ simpleVersion = false })
     <div className="space-y-4">
       {couponCode ? (
         <AppliedCoupon 
-          couponCode={couponCode} 
-          onRemove={handleRemoveCoupon} 
+          couponCode={couponCode}
+          discountType={discountType}
+          discount={discount}
+          onRemove={handleRemoveCoupon}
+          simpleVersion={simpleVersion}
         />
       ) : (
         <>
@@ -57,6 +60,7 @@ export const CouponForm: React.FC<CouponFormProps> = ({ simpleVersion = false })
             onInputChange={handleInputChange}
             onApply={handleValidateCoupon}
             validationResult={validationResult}
+            simpleVersion={simpleVersion}
           />
           
           {!simpleVersion && <PromotionalInfo />}

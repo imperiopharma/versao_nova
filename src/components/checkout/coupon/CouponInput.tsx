@@ -5,22 +5,22 @@ import { Button } from '@/components/ui/button';
 import { Tag } from 'lucide-react';
 
 interface CouponInputProps {
-  inputCoupon: string;
-  setInputCoupon: (value: string) => void;
-  handleApplyCoupon: () => void;
-  isApplying: boolean;
+  inputCode: string; // Changed from inputCoupon to inputCode
+  onInputChange: (value: string) => void; // Changed from setInputCoupon
+  onApply: () => void; // Changed from handleApplyCoupon
+  validationResult: { valid: boolean; message: string } | null;
   simpleVersion?: boolean;
 }
 
 export const CouponInput: React.FC<CouponInputProps> = ({
-  inputCoupon,
-  setInputCoupon,
-  handleApplyCoupon,
-  isApplying,
+  inputCode, // Changed property name
+  onInputChange, // Changed property name
+  onApply, // Changed property name
+  validationResult,
   simpleVersion = false
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputCoupon(e.target.value.toUpperCase());
+    onInputChange(e.target.value.toUpperCase());
   };
 
   if (simpleVersion) {
@@ -30,18 +30,18 @@ export const CouponInput: React.FC<CouponInputProps> = ({
           <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-imperio-navy/60" />
           <Input
             placeholder="Adicionar cupom"
-            value={inputCoupon}
+            value={inputCode}
             onChange={handleInputChange}
             className="pl-10 border-imperio-navy/20 bg-white"
           />
         </div>
         <Button 
-          onClick={handleApplyCoupon}
-          disabled={isApplying || !inputCoupon}
+          onClick={onApply}
+          disabled={!inputCode}
           className="bg-imperio-navy hover:bg-imperio-light-navy text-white"
           size="sm"
         >
-          {isApplying ? 'Aplicando...' : 'Aplicar'}
+          Aplicar
         </Button>
       </div>
     );
@@ -53,22 +53,17 @@ export const CouponInput: React.FC<CouponInputProps> = ({
         <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-imperio-navy/60" />
         <Input
           placeholder="Digite o código do cupom"
-          value={inputCoupon}
+          value={inputCode}
           onChange={handleInputChange}
           className="pl-10 border-imperio-navy/20 bg-white shadow-sm"
         />
       </div>
       <Button 
-        onClick={handleApplyCoupon}
-        disabled={isApplying || !inputCoupon}
+        onClick={onApply}
+        disabled={!inputCode}
         className="whitespace-nowrap bg-imperio-navy hover:bg-imperio-light-navy text-white"
       >
-        {isApplying ? (
-          <>
-            <div className="w-4 h-4 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
-            Aplicando...
-          </>
-        ) : 'Aplicar Cupom'}
+        Aplicar Cupom
       </Button>
     </div>
   );

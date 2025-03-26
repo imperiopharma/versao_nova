@@ -8,7 +8,7 @@ interface AppliedCouponProps {
   couponCode: string;
   discountType: CouponType | null;
   discount: number;
-  removeCoupon: () => void;
+  onRemove: () => void; // Added this property to match what's being passed
   simpleVersion?: boolean;
 }
 
@@ -16,7 +16,7 @@ export const AppliedCoupon: React.FC<AppliedCouponProps> = ({
   couponCode,
   discountType,
   discount,
-  removeCoupon,
+  onRemove,
   simpleVersion = false
 }) => {
   // Formatar o tipo de desconto para exibição
@@ -51,7 +51,7 @@ export const AppliedCoupon: React.FC<AppliedCouponProps> = ({
           variant="ghost" 
           size="sm" 
           className="h-8 w-8 p-0" 
-          onClick={removeCoupon}
+          onClick={onRemove}
         >
           <X size={16} className="text-imperio-navy" />
         </Button>
@@ -77,7 +77,7 @@ export const AppliedCoupon: React.FC<AppliedCouponProps> = ({
           variant="outline" 
           size="sm" 
           className="h-8 text-imperio-red border-imperio-red/20 hover:bg-imperio-red/10" 
-          onClick={removeCoupon}
+          onClick={onRemove}
         >
           <X size={16} className="mr-1" />
           Remover
