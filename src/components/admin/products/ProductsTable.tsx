@@ -43,7 +43,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
                 <TableHead className="min-w-[150px]">Nome</TableHead>
                 <TableHead className="min-w-[100px] hidden md:table-cell">Marca</TableHead>
                 <TableHead className="min-w-[100px] hidden md:table-cell">Categoria</TableHead>
-                <TableHead className="text-right min-w-[100px] hidden md:table-cell">Preço de Custo</TableHead>
+                <TableHead className="text-right min-w-[100px] hidden sm:table-cell">Preço de Custo</TableHead>
                 <TableHead className="text-right min-w-[100px]">Preço</TableHead>
                 <TableHead className="text-center w-[80px] hidden md:table-cell">Estoque</TableHead>
                 <TableHead className="text-center w-[80px]">Status</TableHead>
@@ -80,13 +80,13 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
       </div>
       
       {!loading && filteredProducts.length > 0 && totalPages > 1 && (
-        <div className="mt-4">
+        <div className="mt-4 flex justify-center">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious 
                   onClick={() => onPageChange?.(Math.max(1, currentPage - 1))}
-                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
+                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                 />
               </PaginationItem>
               
@@ -95,6 +95,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
                   <PaginationLink 
                     isActive={page === currentPage}
                     onClick={() => onPageChange?.(page)}
+                    className="cursor-pointer"
                   >
                     {page}
                   </PaginationLink>
@@ -104,7 +105,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
               <PaginationItem>
                 <PaginationNext 
                   onClick={() => onPageChange?.(Math.min(totalPages, currentPage + 1))}
-                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
+                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                 />
               </PaginationItem>
             </PaginationContent>

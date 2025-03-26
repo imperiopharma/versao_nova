@@ -37,27 +37,27 @@ export const ProductsPage: React.FC = () => {
   
   return (
     <AdminLayout>
-      <div className="py-6">
+      <div className="py-4 w-full">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Gerenciar Produtos</h1>
         </div>
         
-        <Tabs defaultValue="products" value={activeTab} onValueChange={setActiveTab}>
+        <Tabs defaultValue="products" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-3 mb-6">
             <TabsTrigger value="products">Produtos</TabsTrigger>
             <TabsTrigger value="brands">Marcas</TabsTrigger>
             <TabsTrigger value="categories">Categorias</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="products">
+          <TabsContent value="products" className="w-full">
             <ProductsList />
           </TabsContent>
           
-          <TabsContent value="brands">
+          <TabsContent value="brands" className="w-full">
             <BrandsList />
           </TabsContent>
           
-          <TabsContent value="categories">
+          <TabsContent value="categories" className="w-full">
             <CategoriesList />
           </TabsContent>
         </Tabs>

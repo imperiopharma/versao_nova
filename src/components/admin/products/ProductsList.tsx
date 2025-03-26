@@ -123,25 +123,25 @@ export const ProductsList: React.FC = () => {
   };
 
   return (
-    <ScrollArea className="h-[calc(100vh-180px)]">
-      <div className="space-y-4 px-1 py-2">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-          <SearchBar 
-            placeholder="Buscar produtos..." 
-            value={searchQuery} 
-            onChange={handleSearchChange} 
-            className="w-full sm:w-auto"
-          />
-          
-          <Button 
-            onClick={handleAddProduct} 
-            className="flex items-center gap-1 w-full sm:w-auto"
-          >
-            <PlusCircle size={18} />
-            <span>Adicionar Produto</span>
-          </Button>
-        </div>
+    <div className="space-y-4 w-full">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+        <SearchBar 
+          placeholder="Buscar produtos..." 
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+          className="w-full sm:w-auto"
+        />
         
+        <Button 
+          onClick={handleAddProduct} 
+          className="flex items-center gap-1 w-full sm:w-auto"
+        >
+          <PlusCircle size={18} />
+          <span>Adicionar Produto</span>
+        </Button>
+      </div>
+      
+      <div className="w-full overflow-hidden">
         <ProductsTable
           loading={loading}
           filteredProducts={paginatedProducts}
@@ -152,21 +152,21 @@ export const ProductsList: React.FC = () => {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-        
-        {isProductDialogOpen && (
-          <ProductDialog 
-            product={selectedProduct}
-            isOpen={isProductDialogOpen}
-            onClose={handleCloseProductDialog}
-          />
-        )}
-        
-        <DeleteProductDialog
-          isOpen={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
-          onConfirm={confirmDelete}
-        />
       </div>
-    </ScrollArea>
+      
+      {isProductDialogOpen && (
+        <ProductDialog 
+          product={selectedProduct}
+          isOpen={isProductDialogOpen}
+          onClose={handleCloseProductDialog}
+        />
+      )}
+      
+      <DeleteProductDialog
+        isOpen={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDelete}
+      />
+    </div>
   );
 };
