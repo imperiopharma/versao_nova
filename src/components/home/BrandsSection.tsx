@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useBrands } from '@/hooks/useBrands';
@@ -53,15 +52,8 @@ export const BrandsSection: React.FC = () => {
         viewport={{ once: true, margin: "-50px" }}
         className="mb-5"
       >
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2">
           <h3 className="text-sm font-medium text-imperio-navy">{title}</h3>
-          <Link 
-            to={`/marcas/${title.toLowerCase().replace(' ', '-')}`}
-            className="text-xs text-imperio-red font-medium flex items-center"
-          >
-            Ver mais
-            <ArrowRight size={12} className="ml-1" />
-          </Link>
         </div>
         
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -103,15 +95,8 @@ export const BrandsSection: React.FC = () => {
   return (
     <section className="py-4 bg-gray-50">
       <div className="section-container">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4">
           <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
-          <Link 
-            to="/marcas" 
-            className="text-sm text-imperio-red font-medium flex items-center"
-          >
-            Ver todas
-            <ArrowRight size={14} className="ml-1" />
-          </Link>
         </div>
         
         {/* Exibir todas as categorias com marcas disponíveis */}
