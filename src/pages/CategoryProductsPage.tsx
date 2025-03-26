@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { supabase } from '@/integrations/supabase/client';
 import { ProductCard } from '../components/product/ProductCard';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export const CategoryProductsPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -25,8 +25,6 @@ export const CategoryProductsPage: React.FC = () => {
           id: categoryId,
           name: categoryId === 'emagrecedores' ? 'Produtos Emagrecedores' : 
                 categoryId === 'farmacia' ? 'Produtos de Farmácia' : 
-                categoryId === 'suplementos' ? 'Suplementos' :
-                categoryId === 'proteinas' ? 'Proteínas' :
                 categoryId
         };
         
@@ -92,8 +90,6 @@ export const CategoryProductsPage: React.FC = () => {
     if (categoryId === 'orais') return 'Produtos Orais';
     if (categoryId === 'injetaveis') return 'Produtos Injetáveis';
     if (categoryId === 'cbd') return 'Produtos CBD';
-    if (categoryId === 'suplementos') return 'Suplementos';
-    if (categoryId === 'proteinas') return 'Proteínas';
     
     return categoryId ? categoryId.charAt(0).toUpperCase() + categoryId.slice(1) : 'Categoria';
   };
@@ -106,8 +102,6 @@ export const CategoryProductsPage: React.FC = () => {
     if (categoryId === 'orais') return 'Produtos orais de alta qualidade para diversos tratamentos.';
     if (categoryId === 'injetaveis') return 'Produtos injetáveis seguros e eficazes.';
     if (categoryId === 'cbd') return 'Produtos à base de CBD para diversos tratamentos.';
-    if (categoryId === 'suplementos') return 'Suplementos diversos para performance e saúde.';
-    if (categoryId === 'proteinas') return 'Suplementos proteicos para ganho de massa muscular.';
     
     return `Confira todos os produtos da categoria ${categoryId}`;
   };
@@ -115,18 +109,11 @@ export const CategoryProductsPage: React.FC = () => {
   return (
     <Layout>
       <div className="section-container py-8">
-        <Link to="/" className="flex items-center text-imperio-navy mb-4 hover:underline">
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Voltar para a página inicial
-        </Link>
-        
         <div className="bg-white rounded-lg shadow-subtle p-6 mb-8">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="text-imperio-navy text-4xl">
               {categoryId === 'emagrecedores' && <span className="text-3xl">💊</span>}
               {categoryId === 'farmacia' && <span className="text-3xl">💊</span>}
-              {categoryId === 'suplementos' && <span className="text-3xl">💪</span>}
-              {categoryId === 'proteinas' && <span className="text-3xl">🥛</span>}
             </div>
             
             <div>
@@ -164,3 +151,4 @@ export const CategoryProductsPage: React.FC = () => {
     </Layout>
   );
 };
+
