@@ -13,7 +13,7 @@ interface CategoryCardsProps {
 export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   const isMobile = useIsMobile();
   
-  // Filtramos apenas as categorias ativas
+  // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
   const itemVariants = {
