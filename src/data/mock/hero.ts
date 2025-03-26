@@ -5,11 +5,19 @@ export const mockHeroSlides = [
     mobileImage: "/lovable-uploads/416a2e5d-6d33-4904-9792-2d94c332c8c0.png", // Temporariamente usamos a mesma imagem
   },
   {
-    desktopImage: "https://via.placeholder.com/1920x1080?text=Desktop+Slide+2",
-    mobileImage: "https://via.placeholder.com/800x1200?text=Mobile+Slide+2",
+    desktopImage: "https://via.placeholder.com/1920x1080/001f3f/ffffff?text=Banner+Principal+2",
+    mobileImage: "https://via.placeholder.com/800x1200/193f5f/ffffff?text=Banner+Mobile+2",
   },
   {
-    desktopImage: "https://via.placeholder.com/1920x1080?text=Desktop+Slide+3",
-    mobileImage: "https://via.placeholder.com/800x1200?text=Mobile+Slide+3",
+    desktopImage: "https://via.placeholder.com/1920x1080/e53e3e/ffffff?text=Promoções+Especiais",
+    mobileImage: "https://via.placeholder.com/800x1200/e53e3e/ffffff?text=Promoções+Mobile",
+  },
+  {
+    desktopImage: "https://via.placeholder.com/1920x1080/38a169/ffffff?text=Produtos+Naturais",
+    mobileImage: "https://via.placeholder.com/800x1200/38a169/ffffff?text=Naturais+Mobile",
+  },
+  {
+    desktopImage: "https://via.placeholder.com/1920x1080/9f7aea/ffffff?text=Linha+Premium",
+    mobileImage: "https://via.placeholder.com/800x1200/9f7aea/ffffff?text=Premium+Mobile",
   }
 ];

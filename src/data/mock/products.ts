@@ -7,7 +7,7 @@ export const mockFeaturedProducts: Product[] = [
     name: 'Suplemento Emagrecedor',
     brand: 'HealthMax',
     price: 89.90,
-    image: 'https://via.placeholder.com/300x300?text=Produto+1',
+    image: 'https://via.placeholder.com/300x300/e53e3e/ffffff?text=Emagrecedor',
     category: 'emagrecedores',
     discount: 15
   },
@@ -16,7 +16,7 @@ export const mockFeaturedProducts: Product[] = [
     name: 'Vitamina C 1000mg',
     brand: 'VitaForce',
     price: 49.90,
-    image: 'https://via.placeholder.com/300x300?text=Produto+2',
+    image: 'https://via.placeholder.com/300x300/ed8936/ffffff?text=Vitamina+C',
     category: 'vitaminas',
     discount: 10
   },
@@ -25,7 +25,7 @@ export const mockFeaturedProducts: Product[] = [
     name: 'Proteína Isolada',
     brand: 'PowerNutrition',
     price: 129.90,
-    image: 'https://via.placeholder.com/300x300?text=Produto+3',
+    image: 'https://via.placeholder.com/300x300/38a169/ffffff?text=Proteína',
     category: 'suplementos',
     discount: 20
   },
@@ -34,7 +34,7 @@ export const mockFeaturedProducts: Product[] = [
     name: 'Colágeno Hidrolisado',
     brand: 'BeautyHealth',
     price: 79.90,
-    image: 'https://via.placeholder.com/300x300?text=Produto+4',
+    image: 'https://via.placeholder.com/300x300/9f7aea/ffffff?text=Colágeno',
     category: 'beleza',
     discount: 5
   }
@@ -47,7 +47,7 @@ export const mockFlashSaleItems: FlashSaleItem[] = [
     brand: 'Império Pharma',
     price: 199.90,
     originalPrice: 299.90,
-    image: 'https://via.placeholder.com/300x300?text=Kit+1'
+    image: 'https://via.placeholder.com/300x300/e53e3e/ffffff?text=Kit+Emagrecedor'
   },
   {
     id: 'combo2',
@@ -55,6 +55,6 @@ export const mockFlashSaleItems: FlashSaleItem[] = [
     brand: 'Império Pharma',
     price: 149.90,
     originalPrice: 199.90,
-    image: 'https://via.placeholder.com/300x300?text=Kit+2'
+    image: 'https://via.placeholder.com/300x300/38a169/ffffff?text=Kit+Imunidade'
   }
 ];
