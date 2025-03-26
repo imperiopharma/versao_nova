@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, X, Bot, MessageCircle, Mic, Volume2, VolumeX } from 'lucide-react';
@@ -27,6 +26,7 @@ export const VirtualAssistant: React.FC = () => {
   const {
     getResponse,
     getQuickReplies,
+    checkAndUpdateInputState,
     speechSynthesis,
     stopSpeech,
     startListening,
@@ -37,7 +37,6 @@ export const VirtualAssistant: React.FC = () => {
     enableInput
   } = useChatbotService();
   
-  // Adicionar mensagem inicial do assistente quando o chat for aberto
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
@@ -52,32 +51,37 @@ export const VirtualAssistant: React.FC = () => {
       if (!isMuted) {
         speechSynthesis(welcomeMessage.text);
       }
+      
+      checkAndUpdateInputState(welcomeMessage.text);
     }
-  }, [isOpen, messages.length, isMuted, speechSynthesis]);
+  }, [isOpen, messages.length, isMuted, speechSynthesis, checkAndUpdateInputState]);
 
-  // Rolar para o final da conversa quando novas mensagens são adicionadas
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
   
-  // Atualizar input quando o reconhecimento de voz retornar texto
   useEffect(() => {
     if (transcript) {
       setInput(transcript);
     }
   }, [transcript]);
   
-  // Gerenciar estado de escuta
   useEffect(() => {
     setIsListening(isListeningToSpeech);
   }, [isListeningToSpeech]);
+  
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.sender === 'bot' && !lastMessage.isTyping) {
+      checkAndUpdateInputState(lastMessage.text);
+    }
+  }, [messages, checkAndUpdateInputState]);
 
   const handleSendMessage = () => {
     if (input.trim() === '') return;
     
-    // Adicionar mensagem do usuário
     const userMessage: Message = {
       id: Date.now().toString(),
       text: input,
@@ -88,7 +92,6 @@ export const VirtualAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     
-    // Adicionar indicador de digitação
     const typingIndicator: Message = {
       id: `typing-${Date.now()}`,
       text: '...',
@@ -99,12 +102,9 @@ export const VirtualAssistant: React.FC = () => {
     
     setMessages(prev => [...prev, typingIndicator]);
     
-    // Obter resposta do bot
     setTimeout(() => {
-      // Remover indicador de digitação
       setMessages(prev => prev.filter(msg => !msg.isTyping));
       
-      // Obter resposta do serviço
       const botResponse = getResponse(input);
       
       const botMessage: Message = {
@@ -116,7 +116,8 @@ export const VirtualAssistant: React.FC = () => {
       
       setMessages(prev => [...prev, botMessage]);
       
-      // Sintetizar voz se não estiver mutado
+      checkAndUpdateInputState(botResponse);
+      
       if (!isMuted) {
         speechSynthesis(botResponse);
       }
@@ -129,13 +130,11 @@ export const VirtualAssistant: React.FC = () => {
   };
   
   const toggleSpeech = () => {
-    // Se estiver falando, pare
     if (isSpeaking) {
       stopSpeech();
       setIsSpeaking(false);
     }
     
-    // Alternar estado de mudo
     setIsMuted(!isMuted);
   };
   
@@ -149,7 +148,6 @@ export const VirtualAssistant: React.FC = () => {
 
   return (
     <>
-      {/* Botão flutuante para abrir o chat */}
       <div className="fixed bottom-20 right-4 z-50 sm:bottom-6 sm:right-6">
         <motion.button
           whileHover={{ scale: 1.1 }}
@@ -162,7 +160,6 @@ export const VirtualAssistant: React.FC = () => {
         </motion.button>
       </div>
       
-      {/* Janela do chat */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -173,7 +170,6 @@ export const VirtualAssistant: React.FC = () => {
             className="fixed bottom-28 right-4 z-50 w-[calc(100%-2rem)] max-w-md sm:bottom-20 sm:right-6"
           >
             <div className="bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col h-[450px] max-h-[80vh] overflow-hidden">
-              {/* Cabeçalho do chat */}
               <div className="p-3 border-b flex items-center justify-between bg-imperio-navy text-white rounded-t-lg">
                 <div className="flex items-center">
                   <Bot size={20} className="mr-2" />
@@ -197,7 +193,6 @@ export const VirtualAssistant: React.FC = () => {
                 </div>
               </div>
               
-              {/* Corpo da conversa */}
               <div className="flex-grow p-3 overflow-y-auto bg-gray-50">
                 {messages.map((message) => (
                   <div 
@@ -239,7 +234,6 @@ export const VirtualAssistant: React.FC = () => {
                   </div>
                 ))}
                 
-                {/* Botões de resposta rápida após a última mensagem do bot */}
                 {messages.length > 0 && messages[messages.length - 1].sender === 'bot' && !messages[messages.length - 1].isTyping && (
                   <QuickReplies 
                     suggestions={getQuickReplies(messages[messages.length - 1].text)} 
@@ -251,7 +245,6 @@ export const VirtualAssistant: React.FC = () => {
                 <div ref={messagesEndRef} />
               </div>
               
-              {/* Input para enviar mensagem */}
               <div className="p-3 border-t">
                 <div className="flex">
                   <Textarea

@@ -120,13 +120,17 @@ export const useChatbotService = () => {
   }, []);
   
   // Função para obter respostas rápidas sugeridas
+  // Modificada para não atualizar o estado diretamente durante a renderização
   const getQuickReplies = useCallback((botResponse: string) => {
     const replies = getQuickRepliesForResponse(botResponse);
-    
-    // Desabilitar input se houver respostas rápidas
-    setIsInputDisabled(replies.length > 0);
-    
     return replies;
+  }, []);
+  
+  // Função separada para verificar se devemos desabilitar o input
+  // Esta função deve ser chamada em useEffect, não durante a renderização
+  const checkAndUpdateInputState = useCallback((botResponse: string) => {
+    const replies = getQuickRepliesForResponse(botResponse);
+    setIsInputDisabled(replies.length > 0);
   }, []);
   
   // Função para habilitar o campo de entrada manualmente
@@ -186,6 +190,7 @@ export const useChatbotService = () => {
   return {
     getResponse,
     getQuickReplies,
+    checkAndUpdateInputState,
     speechSynthesis,
     stopSpeech,
     startListening,
