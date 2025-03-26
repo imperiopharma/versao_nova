@@ -51,30 +51,30 @@ export const AvailableCoupons: React.FC = () => {
     }
   };
   
-  // Limitamos a exibição a apenas 3 cupons para ficar mais organizado
-  const displayCoupons = availableCoupons.slice(0, 3);
+  // Limitamos a exibição a apenas 2 cupons para ficar mais organizado
+  const displayCoupons = availableCoupons.slice(0, 2);
   
   if (displayCoupons.length === 0) {
     return null;
   }
   
   return (
-    <section className="pt-6 pb-10 bg-white relative">
+    <section className="py-4 bg-white relative">
       <div className="section-container max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-6"
+          className="text-center mb-4"
         >
-          <div className="inline-flex items-center justify-center gap-2 mb-3">
+          <div className="inline-flex items-center justify-center gap-2">
             <BadgePercent className="w-5 h-5 text-imperio-navy" />
             <h2 className="text-lg font-bold text-imperio-navy">Cupons Disponíveis</h2>
           </div>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {displayCoupons.map((coupon, index) => {
             const { title, description } = getCouponInfo(coupon);
             
@@ -87,10 +87,6 @@ export const AvailableCoupons: React.FC = () => {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="relative bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-gray-100"
               >
-                <div className="absolute right-2 top-2 text-gray-300">
-                  <Scissors size={12} />
-                </div>
-                
                 <div className="p-3">
                   <h3 className="font-bold text-imperio-navy text-base">
                     {title}

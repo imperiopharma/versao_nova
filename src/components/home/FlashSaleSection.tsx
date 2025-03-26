@@ -24,6 +24,13 @@ interface FlashSaleSectionProps {
 export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => {
   const isMobile = useIsMobile();
   
+  // Limitamos a 4 itens para manter a página limpa
+  const displayItems = items.slice(0, 4);
+  
+  if (displayItems.length === 0) {
+    return null;
+  }
+  
   // Calcular o preço de venda e o preço original com fallbacks
   const getSalePrice = (item: FlashSaleItem): number => {
     return item.price || item.sellingPrice || 0;
@@ -61,7 +68,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
   };
 
   return (
-    <section className="py-3 sm:py-4">
+    <section className="py-4">
       <div className="section-container">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
@@ -78,13 +85,13 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
         </div>
         
         <motion.div 
-          className="grid grid-cols-2 gap-2 sm:gap-3"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {items.map((item) => {
+          {displayItems.map((item) => {
             const salePrice = getSalePrice(item);
             const originalPrice = getOriginalPrice(item);
             const discount = calculateDiscount(originalPrice, salePrice);
@@ -100,7 +107,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
               >
                 <Link 
                   to={`/produto/${item.id}`}
-                  className="imperio-card hover-lift overflow-hidden bg-white rounded-lg border border-gray-100 shadow-sm block"
+                  className="imperio-card hover-lift overflow-hidden bg-white rounded-lg border border-gray-100 shadow-sm block h-full"
                 >
                   <div className="relative">
                     <img 

@@ -16,6 +16,9 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
+  // Limitamos a 4 categorias para maior organização visual
+  const displayCategories = activeCategories.slice(0, 4);
+  
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 300 } }
@@ -26,12 +29,16 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     return typeof icon === 'function' ? icon() : icon;
   };
   
+  if (displayCategories.length === 0) {
+    return null;
+  }
+  
   return (
-    <section className="py-3 sm:py-4">
+    <section className="py-4">
       <div className="section-container">
         <h2 className="text-lg sm:text-xl font-bold text-imperio-navy mb-3">Categorias</h2>
-        <div className="grid grid-cols-1 gap-2.5">
-          {activeCategories.map((category, index) => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {displayCategories.map((category, index) => (
             <motion.div
               key={category.id}
               variants={itemVariants}
@@ -46,18 +53,15 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             >
               <Link 
                 to={category.link} 
-                className={`${category.color} rounded-lg p-3 flex items-center justify-between w-full border border-gray-100 shadow-sm hover:shadow-md transition-all bg-white`}
+                className="bg-white rounded-lg p-3 flex flex-col items-center justify-center w-full border border-gray-100 shadow-sm hover:shadow-md transition-all h-full text-center"
               >
-                <div className="flex items-center">
-                  <div className={`rounded-full ${category.id === 'emagrecedores' ? 'bg-blue-500' : 'bg-red-500'} p-2 mr-3 text-white`}>
-                    {renderIcon(category.icon)}
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
-                    <p className="text-xs text-gray-600">{category.description}</p>
-                  </div>
+                <div className={`rounded-full ${category.color || 'bg-imperio-navy'} p-2 mb-2 text-white`}>
+                  {renderIcon(category.icon)}
                 </div>
-                <ChevronRight className="text-gray-400" size={18} />
+                <div>
+                  <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
+                  <p className="text-xs text-gray-600 mt-1">{category.description}</p>
+                </div>
               </Link>
             </motion.div>
           ))}

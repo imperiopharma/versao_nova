@@ -14,60 +14,48 @@ import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
 import { VipMembershipSection } from '../components/home/VipMembershipSection';
 import { AvailableCoupons } from '../components/home/AvailableCoupons';
-import { useHero } from '@/hooks/useHero';
+import { PromoHeader } from '../components/home/PromoHeader';
 import { useHomeData } from '@/hooks/useHomeData';
-import { useProducts } from '@/hooks/useProducts';
-import { useBrands } from '@/hooks/useBrands';
-import { useFaq } from '@/hooks/useFaq';
-import { useCategories } from '@/hooks/useCategories';
 
 export const HomePage: React.FC = () => {
-  const { heroData, heroSlides } = useHero();
-  const { homeData } = useHomeData();
-  const { featuredProducts, flashSaleItems } = useProducts();
-  const brands = useBrands();
-  const faqItems = useFaq();
-  const { categories, serviceCards } = useCategories();
+  const { 
+    heroSlides, 
+    featuredProducts, 
+    flashSaleItems, 
+    categories, 
+    serviceCards, 
+    faqItems, 
+    homeData 
+  } = useHomeData();
+  
+  // Mapeamento de componentes de seção para renderização dinâmica
+  const sectionComponents: Record<string, React.ReactNode> = {
+    categories: homeData.showSections.categories && <CategoryCards categories={categories} />,
+    featuredProducts: homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />,
+    coupons: homeData.showSections.coupons && <AvailableCoupons />,
+    flashSale: homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />,
+    brands: homeData.showSections.brands && <BrandsSection />,
+    guarantees: homeData.showSections.guarantees && <GuaranteesSection />,
+    promoCards: homeData.showSections.promoCards && <PromoCardsSection cards={serviceCards} />,
+    vip: homeData.showVipSection && <VipMembershipSection />,
+    about: homeData.showSections.about && <AboutSection />,
+    location: homeData.showSections.location && <LocationSection />,
+    faq: homeData.showSections.faq && <FaqSection items={faqItems} />,
+    newsletter: homeData.showSections.newsletter && <NewsletterSection />
+  };
 
   return (
     <Layout>
-      <HeroBanner 
-        slides={heroSlides}
-      />
+      {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
       
-      <CategoryCards categories={categories} />
+      <HeroBanner slides={heroSlides} />
       
-      <FeaturedProducts 
-        products={featuredProducts}
-      />
-      
-      <AvailableCoupons />
-      
-      <FlashSaleSection 
-        items={flashSaleItems}
-      />
-      
-      <BrandsSection />
-      
-      <GuaranteesSection />
-      
-      <PromoCardsSection 
-        cards={serviceCards}
-      />
-      
-      {homeData.showVipSection && (
-        <VipMembershipSection />
-      )}
-      
-      <AboutSection />
-      
-      <LocationSection />
-      
-      <FaqSection 
-        items={faqItems}
-      />
-      
-      <NewsletterSection />
+      {/* Renderização dinâmica das seções baseada na ordem configurada */}
+      {homeData.sectionsOrder.map((sectionKey, index) => (
+        <React.Fragment key={`section-${sectionKey}-${index}`}>
+          {sectionComponents[sectionKey]}
+        </React.Fragment>
+      ))}
     </Layout>
   );
 };
