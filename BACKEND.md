@@ -1,172 +1,121 @@
 
-# Documentação Backend (Supabase)
+# Imperio Farmácia - Documentação Backend
 
-## Arquitetura
+## Visão Geral
 
-O backend da loja Imperio Farmácia utiliza Supabase como Backend-as-a-Service (BaaS), oferecendo:
+O backend da Imperio Farmácia é implementado utilizando o Supabase, uma plataforma de Backend as a Service (BaaS) baseada em PostgreSQL. Esta abordagem serverless nos permite concentrar o desenvolvimento nas funcionalidades de negócio, enquanto o Supabase gerencia a infraestrutura, segurança e escalabilidade.
 
-- **Banco de Dados PostgreSQL**: Armazenamento relacional
-- **Autenticação**: Sistema completo de login/registro
-- **Storage**: Armazenamento de arquivos (imagens de produtos)
-- **Edge Functions**: Funcionalidades serverless
-- **Realtime**: Atualizações em tempo real
+## Arquitetura Supabase
 
-Esta abordagem "serverless" permite desenvolvimento rápido e escalabilidade sem gerenciar infraestrutura.
+### Banco de Dados PostgreSQL
 
-## Estrutura do Banco de Dados
+O coração do backend é um banco de dados PostgreSQL, estruturado com as seguintes tabelas principais:
 
-### Tabelas Principais
+- `products`: Catálogo de produtos
+- `categories`: Categorias de produtos
+- `brands`: Marcas de produtos
+- `orders`: Pedidos realizados
+- `order_items`: Itens individuais de cada pedido
+- `customers`: Informações dos clientes
+- `profiles`: Dados de perfil estendidos
+- `addresses`: Endereços de entrega
+- `coupons`: Cupons de desconto
+- `inventory`: Controle de estoque
 
-1. **products**
-   - id (PK)
-   - name
-   - description
-   - price
-   - sale_price
-   - stock_quantity
-   - category_id (FK)
-   - brand_id (FK)
-   - images
-   - created_at
-   - updated_at
-   - status
+### Autenticação e Autorização
 
-2. **categories**
-   - id (PK)
-   - name
-   - description
-   - slug
-   - icon
-   - status
-   - created_at
-   - updated_at
+- Sistema de login/registro via e-mail/senha
+- Autenticação por provedores sociais (Google, Facebook)
+- Redefinição de senha
+- Confirmação de e-mail
+- Perfis de acesso (cliente, administrador)
+- Políticas de segurança baseadas em Row Level Security (RLS)
 
-3. **brands**
-   - id (PK)
-   - name
-   - logo_url
-   - description
-   - status
-   - created_at
-   - updated_at
+### Storage
 
-4. **customers**
-   - id (PK, relacionado ao auth.users)
-   - first_name
-   - last_name
-   - email
-   - phone
-   - address
-   - created_at
-   - updated_at
+- Armazenamento de imagens de produtos
+- Documentos (notas fiscais, comprovantes)
+- Avatares de usuários
+- Organização em buckets por tipo de arquivo
 
-5. **orders**
-   - id (PK)
-   - customer_id (FK)
-   - status
-   - total_amount
-   - shipping_address
-   - payment_method
-   - created_at
-   - updated_at
+### Funções Edge Functions
 
-6. **order_items**
-   - id (PK)
-   - order_id (FK)
-   - product_id (FK)
-   - quantity
-   - price
-   - subtotal
-   - created_at
+Funções serverless para lógica de negócio complexa:
 
-## Autenticação e Autorização
+- Processamento de pagamentos
+- Validação de cupons
+- Cálculo de frete
+- Notificações e e-mails automatizados
+- Geração de relatórios
 
-O sistema usa Supabase Auth com:
+### Realtime
 
-- Login por email/senha
-- Login social (opcional)
-- Níveis de acesso:
-  - Cliente: Acesso à loja e próprios pedidos
-  - Admin: Acesso ao painel administrativo completo
+Funcionalidades em tempo real:
 
-Políticas RLS (Row Level Security) controlam acesso aos dados:
-- Clientes acessam apenas seus próprios dados
-- Admins têm acesso completo às tabelas
+- Atualizações de status de pedidos
+- Notificações para administradores
+- Atualizações de estoque
+- Chat de suporte ao cliente
 
-## Fluxo de Dados
+## Integração Frontend-Backend
 
-1. **Listagem de Produtos**:
-   ```sql
-   SELECT * FROM products 
-   WHERE status = 'active' 
-   ORDER BY created_at DESC;
-   ```
+A comunicação entre o frontend e o Supabase é gerenciada através:
 
-2. **Filtro por Categoria**:
-   ```sql
-   SELECT p.* FROM products p
-   JOIN categories c ON p.category_id = c.id
-   WHERE c.slug = 'categoria-slug' AND p.status = 'active';
-   ```
+- Cliente Supabase (`src/integrations/supabase/client.ts`)
+- Hooks personalizados para operações específicas
+- React Query para cache e gerenciamento de estado servidor
 
-3. **Criação de Pedido**:
-   ```sql
-   -- 1. Inserir pedido
-   INSERT INTO orders (customer_id, status, total_amount, ...) 
-   VALUES (...) RETURNING id;
-   
-   -- 2. Inserir itens do pedido
-   INSERT INTO order_items (order_id, product_id, quantity, price, ...)
-   VALUES (...);
-   
-   -- 3. Atualizar estoque
-   UPDATE products 
-   SET stock_quantity = stock_quantity - [quantidade_comprada]
-   WHERE id = [product_id];
-   ```
+## Fluxos de Dados Principais
 
-## Integrações
+### Catálogo de Produtos
 
-O backend se integra com:
+1. Produtos, categorias e marcas são armazenados nas respectivas tabelas
+2. Imagens são armazenadas no bucket `product-images`
+3. Consultas são otimizadas com índices e joins eficientes
+4. Cache de dados frequentes via React Query
 
-1. **Processadores de Pagamento**:
-   - Via Edge Functions que se comunicam com APIs de pagamento
+### Processo de Compra
 
-2. **Notificações**:
-   - Emails automáticos usando Supabase Edge Functions
-   - SMS para atualizações de pedido (opcional)
+1. Carrinho mantido no estado do cliente (CartContext)
+2. No checkout, os dados do cliente e endereço são validados
+3. Ao finalizar, um registro é criado em `orders` e `order_items`
+4. Webhook dispara para processamento de pagamento
+5. Status do pedido é atualizado em tempo real
 
-3. **Relatórios**:
-   - Consultas SQL para gerar relatórios de vendas, estoque, etc.
+### Autenticação
+
+1. Login/registro via métodos do Supabase Auth
+2. Token JWT armazenado e gerenciado automaticamente
+3. Sessão persistida entre visitas
+4. Permissões baseadas em claims e RLS
+
+### Painel Administrativo
+
+1. Acesso protegido por autenticação e verificação de papel
+2. CRUD completo para todas as entidades
+3. Relatórios gerados via consultas SQL ou funções serverless
+4. Notificações em tempo real para novos pedidos
 
 ## Segurança
 
-- Todas as senhas são armazenadas com hash via Supabase Auth
-- Dados sensíveis são protegidos por RLS
-- Validação de entrada tanto no frontend quanto no backend
-- CORS configurado para permitir apenas origens confiáveis
-
-## Ambiente de Desenvolvimento
-
-O projeto usa:
-- Supabase CLI para desenvolvimento local
-- Migrations para versionamento de esquema
-- Seed scripts para popular dados iniciais
-
-## Monitoramento e Logs
-
-- Logs de acesso e erros via Supabase
-- Monitoramento de performance de consultas
-- Alertas para operações críticas
-
-## Backups e Recuperação
-
-- Backups automáticos diários via Supabase
-- Procedimento de recuperação documentado para emergências
+- Todas as requisições autenticadas via JWT
+- Políticas RLS para controle granular de acesso
+- Validação de dados no servidor
+- Proteção contra SQL injection nativa do Supabase
+- Sanitização de inputs no cliente e servidor
+- CORS configurado corretamente
 
 ## Escalabilidade
 
-A arquitetura Supabase escala automaticamente:
-- Banco de dados PostgreSQL com otimização de consultas
-- CDN para assets estáticos
-- Funções serverless que escalam sob demanda
+- Modelo serverless escala automaticamente
+- Cache implementado para consultas frequentes
+- Paginação em todas as listagens
+- Consultas otimizadas com índices apropriados
+- Monitoramento de performance via Supabase Dashboard
+
+## Ambiente de Desenvolvimento
+
+- Projeto Supabase local para desenvolvimento
+- Migrações para controle de versão do esquema
+- Seed data para testes e desenvolvimento
+- Variáveis de ambiente para configurações

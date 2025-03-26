@@ -13,13 +13,25 @@ Este é o projeto da loja virtual Imperio Farmácia, construído com React, Type
 ```
 /
 ├── src/                    # Código-fonte frontend
-│   ├── components/         # Componentes React
-│   ├── contexts/           # Contextos para gerenciamento de estado
+│   ├── components/         # Componentes React reutilizáveis
+│   │   ├── admin/          # Componentes do painel administrativo
+│   │   ├── auth/           # Componentes de autenticação
+│   │   ├── cart/           # Componentes relacionados ao carrinho
+│   │   ├── checkout/       # Componentes de checkout e finalização de compra
+│   │   ├── home/           # Componentes específicos da página inicial
+│   │   ├── layout/         # Componentes de estrutura (header, footer, etc)
+│   │   ├── product/        # Componentes relacionados a produtos
+│   │   └── ui/             # Componentes de UI base (shadcn)
+│   ├── contexts/           # Contextos para gerenciamento de estado (CartContext, etc)
 │   ├── data/               # Dados estáticos e mocks
+│   │   └── mock/           # Dados fictícios para desenvolvimento
 │   ├── hooks/              # Custom hooks React
+│   │   └── products/       # Hooks específicos para produtos
 │   ├── integrations/       # Integrações com serviços externos
+│   │   └── supabase/       # Cliente e configurações do Supabase
 │   ├── lib/                # Utilitários e helpers
 │   ├── pages/              # Componentes de página
+│   │   └── admin/          # Páginas do painel administrativo
 │   ├── services/           # Serviços para APIs
 │   └── types/              # Definições de tipos TypeScript
 ├── supabase/               # Configurações do Supabase
@@ -65,6 +77,6 @@ npm run dev
 
 3. Abra http://localhost:8080 no navegador
 
-## Estrutura Detalhada
+## Detalhes da Implementação
 
-Cada pasta principal contém um arquivo README.md com informações detalhadas sobre seu conteúdo e uso.
+Cada pasta principal contém um arquivo README.md com informações detalhadas sobre seu conteúdo e uso. Consulte também os arquivos FRONTEND.md e BACKEND.md para documentação específica.

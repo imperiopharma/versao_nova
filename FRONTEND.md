@@ -1,112 +1,124 @@
 
-# Documentação Frontend
+# Imperio Farmácia - Documentação Frontend
 
-## Arquitetura
+## Visão Geral
 
-O frontend da loja Imperio Farmácia é construído com uma arquitetura baseada em componentes usando React 18 com TypeScript. A aplicação utiliza:
+O frontend da Imperio Farmácia é construído com React, TypeScript e Tailwind CSS, utilizando a biblioteca de componentes Shadcn/UI. A arquitetura segue princípios modernos de desenvolvimento web, com foco em componentização, reusabilidade e responsividade.
 
-- **React** para construção de UI com componentes
-- **TypeScript** para tipagem estática
-- **Tailwind CSS** para estilização
-- **Shadcn/UI** para componentes reutilizáveis
-- **React Router** para navegação
-- **Context API** para gerenciamento de estado global
-- **Custom Hooks** para lógica reutilizável
+## Estrutura de Pastas
 
-## Estrutura de Diretórios
+### `/src/components`
 
-```
-src/
-├── components/           # Componentes React organizados por função
-│   ├── admin/            # Componentes do painel administrativo
-│   ├── auth/             # Componentes de autenticação
-│   ├── cart/             # Componentes do carrinho
-│   ├── chatbot/          # Assistente virtual
-│   ├── checkout/         # Processo de finalização de compra
-│   ├── home/             # Seções da página inicial
-│   ├── layout/           # Estrutura comum (Header, Footer)
-│   ├── product/          # Componentes de exibição de produtos
-│   └── ui/               # Componentes básicos de UI (shadcn)
-├── contexts/             # Context API para estado global
-├── hooks/                # Custom hooks React
-├── lib/                  # Utilitários gerais
-├── pages/                # Componentes de página completa
-└── types/                # Definições de tipos TypeScript
-```
+Contém todos os componentes React reutilizáveis, organizados por domínio:
+
+- `/admin`: Componentes específicos para o painel administrativo
+- `/auth`: Componentes relacionados à autenticação
+- `/cart`: Componentes para o carrinho de compras
+- `/chatbot`: Componentes do assistente virtual
+- `/checkout`: Componentes para o processo de finalização de compra
+- `/home`: Componentes específicos da página inicial
+- `/layout`: Componentes estruturais (header, footer, layouts)
+- `/product`: Componentes relacionados a produtos
+- `/ui`: Componentes base do Shadcn/UI
+
+### `/src/contexts`
+
+Contém os contextos React para gerenciamento de estado global:
+
+- `CartContext.tsx`: Gerencia o estado do carrinho de compras
+- `CheckoutContext.tsx`: Gerencia o estado do processo de checkout
+
+### `/src/data`
+
+Contém dados estáticos e mocks para desenvolvimento:
+
+- `/mock`: Dados fictícios para produtos, categorias, marcas, etc.
+
+### `/src/hooks`
+
+Custom hooks para lógica reutilizável:
+
+- `/products`: Hooks específicos para gerenciamento de produtos
+- `useAuth.tsx`: Hook para autenticação
+- `useMobile.tsx`: Hook para detecção de dispositivos móveis
+- E outros hooks utilitários
+
+### `/src/integrations`
+
+Código para integração com serviços externos:
+
+- `/supabase`: Cliente e configurações para Supabase
+
+### `/src/lib`
+
+Utilitários e helpers:
+
+- `formatters.ts`: Funções para formatação de dados
+- `utils.ts`: Funções utilitárias gerais
+
+### `/src/pages`
+
+Componentes de página completa, mapeados para rotas:
+
+- `/admin`: Páginas do painel administrativo
+- Outras páginas da loja (home, produtos, checkout, etc.)
 
 ## Fluxo de Dados
 
-1. **Estado Global**: Gerenciado via Context API (carrinho, autenticação)
-2. **Estado Local**: Gerenciado via useState e useReducer em componentes
-3. **Fetch de Dados**: Através de custom hooks que encapsulam lógica de API
-4. **Props Drilling**: Minimizado através do uso de Context e composição de componentes
+1. **Dados Externos**: Obtidos do Supabase via `integrations/supabase`
+2. **Estado Global**: Gerenciado via React Context (`contexts/`)
+3. **Estado Local**: Gerenciado com `useState` e React Query
+4. **Renderização**: Componentes recebem dados via props e hooks
 
-## Componentes Principais
+## Estilos e UI
 
-### Layout
-
-- `Layout.tsx`: Wrapper que aplica Header, Footer e estrutura base
-- `Header.tsx`: Navegação principal, login, carrinho
-- `Footer.tsx`: Links de rodapé, informações de contato
-- `MobileNavBar.tsx`: Navegação mobile-friendly
-
-### Página Inicial
-
-A homepage (`HomePage.tsx`) é composta por múltiplas seções:
-- Banner principal rotativo
-- Categorias de produtos
-- Produtos em destaque
-- Seção de promoções
-- Marcas parceiras
-- Informações de garantia
-- Newsletter
-- FAQ
-
-### Produtos
-
-- `ProductCard.tsx`: Exibição compacta de produto com preço, imagem, ações
-- `ProductDetailsPage.tsx`: Página detalhada de produto individual
-
-### Carrinho e Checkout
-
-- Sistema de carrinho persistente via Context API
-- Processo de checkout em múltiplas etapas
-- Formulários para dados de envio e pagamento
-
-### Painel Administrativo
-
-Interface completa para gestão da loja:
-- Dashboard com estatísticas
-- Gerenciamento de produtos, categorias e marcas
-- Monitoramento de pedidos
-- Relatórios financeiros
-- Dados de clientes
-
-## Fluxo de Navegação
-
-1. Usuário navega pela homepage ou categorias
-2. Ao selecionar produto, visualiza detalhes
-3. Adiciona ao carrinho, que atualiza instantaneamente
-4. Finaliza compra através do processo de checkout
-5. Recebe confirmação de pedido
+- **Tailwind CSS**: Sistema principal de estilização
+- **Shadcn/UI**: Componentes base pré-estilizados
+- **Classes Personalizadas**: Definidas no `tailwind.config.ts`
+- **Temas de Cores**: Cores da marca Imperio aplicadas consistentemente
 
 ## Responsividade
 
-A aplicação é totalmente responsiva, adaptando-se a diferentes tamanhos de tela:
-- Desktop: Layout completo com sidebar de navegação
-- Tablet: Layout adaptado com elementos reorganizados
-- Mobile: Interface simplificada com menu hamburger e navegação inferior
+O design é totalmente responsivo, utilizando:
 
-## Convenções de Código
+- Grid layouts flexíveis
+- Media queries via classes Tailwind (`sm:`, `md:`, `lg:`, etc.)
+- Componentes adaptáveis para diferentes tamanhos de tela
+- Navegação específica para dispositivos móveis
 
-- **Nomes de Componentes**: PascalCase (ex: `ProductCard.tsx`)
-- **Nomes de Hooks**: camelCase com prefixo "use" (ex: `useProducts.tsx`)
-- **Props**: Interface TypeScript para todas as props
-- **Estilos**: Classes Tailwind priorizando utilidades compostas
+## Animações e Interações
+
+- Transições suaves entre estados
+- Efeitos de hover
+- Feedback visual para ações do usuário
+- Modal de confirmação para adição ao carrinho
+
+## Rotas
+
+Gerenciadas com React Router:
+
+- `/`: Página inicial
+- `/produtos/:id`: Detalhes do produto
+- `/categorias/:id`: Produtos por categoria
+- `/marcas/:id`: Produtos por marca
+- `/carrinho`: Carrinho de compras
+- `/checkout/dados`: Formulário de dados para checkout
+- `/checkout/resumo`: Resumo do pedido
+- `/checkout/pagamento`: Página de pagamento
+- `/admin/*`: Rotas do painel administrativo (protegidas)
+
+## Práticas de Desenvolvimento
+
+- **Componentização**: Componentes pequenos e focados
+- **TypeScript**: Tipagem forte para todos os componentes e funções
+- **Memoização**: Uso de `React.memo` e `useMemo` para otimização
+- **Lazy Loading**: Carregamento sob demanda para rotas menos frequentes
+- **Testes**: Principais componentes e lógicas testados
 
 ## Performance
 
-- Carregamento lazy de componentes para código-splitting
 - Otimização de imagens
-- Memoização de componentes pesados com React.memo
-- Debounce em operações frequentes como busca
+- Code splitting
+- Minificação de assets
+- Carregamento priorizado de conteúdo visível
+- Pré-busca de dados para navegação mais fluida
