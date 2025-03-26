@@ -7,6 +7,7 @@ import { ProductsTable } from './ProductsTable';
 import { DeleteProductDialog } from './DeleteProductDialog';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const ProductsList: React.FC = () => {
   const { products, loading, deleteProduct, fetchData } = useProductStore();
@@ -16,6 +17,8 @@ export const ProductsList: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
   
   console.log("ProductsList renderizado, total de produtos:", products.length);
   
@@ -54,6 +57,7 @@ export const ProductsList: React.FC = () => {
     
     console.log(`Resultados filtrados: ${filtered.length} produtos`);
     setFilteredProducts(filtered);
+    setCurrentPage(1); // Reset para a primeira página ao filtrar
   }, [products, searchQuery]);
 
   // Manipulador para abrir o diálogo de adição de produto
@@ -106,45 +110,63 @@ export const ProductsList: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
+  // Paginação dos produtos
+  const paginatedProducts = React.useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
-        <SearchBar 
-          placeholder="Buscar produtos..." 
-          value={searchQuery} 
-          onChange={handleSearchChange} 
+    <ScrollArea className="h-[calc(100vh-180px)]">
+      <div className="space-y-4 px-1 py-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+          <SearchBar 
+            placeholder="Buscar produtos..." 
+            value={searchQuery} 
+            onChange={handleSearchChange} 
+            className="w-full sm:w-auto"
+          />
+          
+          <Button 
+            onClick={handleAddProduct} 
+            className="flex items-center gap-1 w-full sm:w-auto"
+          >
+            <PlusCircle size={18} />
+            <span>Adicionar Produto</span>
+          </Button>
+        </div>
+        
+        <ProductsTable
+          loading={loading}
+          filteredProducts={paginatedProducts}
+          formatCurrency={formatCurrency}
+          handleEditProduct={handleEditProduct}
+          handleDeleteClick={handleDeleteClick}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
         
-        <Button 
-          onClick={handleAddProduct} 
-          className="flex items-center gap-1"
-        >
-          <PlusCircle size={18} />
-          <span>Adicionar Produto</span>
-        </Button>
-      </div>
-      
-      <ProductsTable
-        loading={loading}
-        filteredProducts={filteredProducts}
-        formatCurrency={formatCurrency}
-        handleEditProduct={handleEditProduct}
-        handleDeleteClick={handleDeleteClick}
-      />
-      
-      {isProductDialogOpen && (
-        <ProductDialog 
-          product={selectedProduct}
-          isOpen={isProductDialogOpen}
-          onClose={handleCloseProductDialog}
+        {isProductDialogOpen && (
+          <ProductDialog 
+            product={selectedProduct}
+            isOpen={isProductDialogOpen}
+            onClose={handleCloseProductDialog}
+          />
+        )}
+        
+        <DeleteProductDialog
+          isOpen={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          onConfirm={confirmDelete}
         />
-      )}
-      
-      <DeleteProductDialog
-        isOpen={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        onConfirm={confirmDelete}
-      />
-    </div>
+      </div>
+    </ScrollArea>
   );
 };
