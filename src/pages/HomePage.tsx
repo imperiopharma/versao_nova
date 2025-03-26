@@ -16,6 +16,7 @@ import { VipMembershipSection } from '../components/home/VipMembershipSection';
 import { AvailableCoupons } from '../components/home/AvailableCoupons';
 import { PromoHeader } from '../components/home/PromoHeader';
 import { useHomeData } from '@/hooks/useHomeData';
+import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
 
 export const HomePage: React.FC = () => {
   const { 
@@ -56,6 +57,9 @@ export const HomePage: React.FC = () => {
           {sectionComponents[sectionKey]}
         </React.Fragment>
       ))}
+      
+      {/* Assistente Virtual */}
+      <VirtualAssistant />
     </Layout>
   );
 };
