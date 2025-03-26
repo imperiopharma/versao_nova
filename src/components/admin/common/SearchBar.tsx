@@ -8,7 +8,7 @@ interface SearchBarProps {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string; // Adicionando propriedade className opcional
+  className?: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -20,10 +20,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="relative flex-1">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
           placeholder={placeholder}
-          className="pl-8"
+          className="pl-10 bg-white border-gray-200 focus:border-imperio-navy/30 h-10 rounded-lg shadow-sm"
           value={value}
           onChange={onChange}
         />

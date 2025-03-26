@@ -26,19 +26,19 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   onDeleteOrder
 }) => {
   return (
-    <div className="rounded-md border bg-white overflow-hidden">
+    <div className="rounded-xl border bg-white overflow-hidden shadow-sm">
       <ScrollArea className="w-full max-w-full">
         <div className="min-w-full w-max md:w-full">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Pedido</TableHead>
-                <TableHead className="hidden md:table-cell w-[120px]">Data</TableHead>
-                <TableHead className="w-[140px]">Cliente</TableHead>
-                <TableHead className="text-right hidden md:table-cell w-[100px]">Total</TableHead>
-                <TableHead className="hidden md:table-cell w-[120px]">Pagamento</TableHead>
-                <TableHead className="w-[100px]">Status</TableHead>
-                <TableHead className="text-center w-[60px]">Ações</TableHead>
+              <TableRow className="bg-gray-50">
+                <TableHead className="w-[100px] py-3">Pedido</TableHead>
+                <TableHead className="hidden md:table-cell w-[120px] py-3">Data</TableHead>
+                <TableHead className="w-[140px] py-3">Cliente</TableHead>
+                <TableHead className="text-right hidden md:table-cell w-[100px] py-3">Total</TableHead>
+                <TableHead className="hidden md:table-cell w-[120px] py-3">Pagamento</TableHead>
+                <TableHead className="w-[100px] py-3">Status</TableHead>
+                <TableHead className="text-center w-[60px] py-3">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

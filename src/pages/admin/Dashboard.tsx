@@ -93,41 +93,45 @@ export const AdminDashboard: React.FC = () => {
     {
       title: 'Produtos',
       value: formatCurrency(dashboardData.totalProducts),
-      icon: <LineChart className="h-5 w-5 text-muted-foreground" />,
+      icon: <LineChart className="h-5 w-5 text-white" />,
       growth: 12,
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-600',
+      iconBg: 'bg-blue-700'
     },
     {
       title: 'Clientes',
       value: dashboardData.totalCustomers.toString(),
-      icon: <Users className="h-5 w-5 text-muted-foreground" />,
+      icon: <Users className="h-5 w-5 text-white" />,
       growth: 18,
-      bgColor: 'bg-green-50'
+      bgColor: 'bg-green-600',
+      iconBg: 'bg-green-700'
     },
     {
       title: 'Pedidos',
       value: dashboardData.totalOrders.toString(),
-      icon: <ShoppingBag className="h-5 w-5 text-muted-foreground" />,
+      icon: <ShoppingBag className="h-5 w-5 text-white" />,
       growth: 2.3,
-      bgColor: 'bg-yellow-50'
+      bgColor: 'bg-amber-600',
+      iconBg: 'bg-amber-700'
     },
     {
       title: 'Faturamento',
       value: formatCurrency(dashboardData.totalRevenue),
-      icon: <DollarSign className="h-5 w-5 text-muted-foreground" />,
+      icon: <DollarSign className="h-5 w-5 text-white" />,
       growth: 1.2,
-      bgColor: 'bg-purple-50'
+      bgColor: 'bg-purple-600',
+      iconBg: 'bg-purple-700'
     }
   ];
 
   return (
     <AdminLayout>
       <div className="flex flex-col">
-        <div className="flex-1 space-y-4 p-6">
-          <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex-1 space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-800">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <Button>Download Relatório</Button>
+              <Button className="bg-imperio-navy hover:bg-imperio-light-navy">Download Relatório</Button>
             </div>
           </div>
           
@@ -136,17 +140,17 @@ export const AdminDashboard: React.FC = () => {
             loading={loading}
           />
           
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <SalesChart className="lg:col-span-4" loading={loading} />
-            <CustomerGrowth className="lg:col-span-3" loading={loading} />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+            <SalesChart className="lg:col-span-4 shadow-sm border-none rounded-xl overflow-hidden" loading={loading} />
+            <CustomerGrowth className="lg:col-span-3 shadow-sm border-none rounded-xl overflow-hidden" loading={loading} />
           </div>
           
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-4 border-none shadow-md">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Pedidos Recentes</CardTitle>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="lg:col-span-4 shadow-sm border-none rounded-xl overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-xl">Pedidos Recentes</CardTitle>
                 <Link to="/admin/pedidos">
-                  <Button variant="ghost" className="gap-1">
+                  <Button variant="ghost" className="gap-1 text-imperio-navy hover:bg-gray-100">
                     Ver Todos
                     <ArrowUpRight className="h-4 w-4" />
                   </Button>
@@ -156,7 +160,7 @@ export const AdminDashboard: React.FC = () => {
                 <RecentOrdersTable orders={recentOrders} loading={loading} />
               </CardContent>
             </Card>
-            <TopProducts className="lg:col-span-3" loading={loading} />
+            <TopProducts className="lg:col-span-3 shadow-sm border-none rounded-xl overflow-hidden" loading={loading} />
           </div>
         </div>
       </div>
