@@ -24,6 +24,7 @@ export const useHomeData = () => {
       defaultCategoriesLength: defaultCategories?.length || 0
     });
     
+    // Garantir que temos categorias para exibir (primeiro as do admin, depois as padrão)
     if (adminCategories && adminCategories.length > 0) {
       // Mapeia as categorias do admin para o formato esperado pelo componente
       const mappedCategories = adminCategories.map(cat => ({
@@ -35,14 +36,25 @@ export const useHomeData = () => {
         icon: null, // Será tratado pelo renderIcon com fallback
         link: `/categoria/${cat.slug || cat.id}`,
         color: 'bg-imperio-navy',
-        active: cat.status === 'active'
+        active: cat.status === 'active' // Garantimos que apenas categorias ativas são mostradas
       }));
       console.log("Setting mapped admin categories:", mappedCategories);
       setCategories(mappedCategories);
-    } else {
+    } else if (defaultCategories && defaultCategories.length > 0) {
       // Fallback para as categorias padrão
       console.log("Using default categories:", defaultCategories);
-      setCategories(defaultCategories);
+      
+      // Garantir que todas as categorias padrão tenham a flag 'active' definida
+      const validDefaultCategories = defaultCategories.map(cat => ({
+        ...cat,
+        active: cat.active !== undefined ? cat.active : true
+      }));
+      
+      setCategories(validDefaultCategories);
+    } else {
+      // Fallback final se nenhuma categoria estiver disponível
+      console.log("No categories available, using empty array");
+      setCategories([]);
     }
   }, [adminCategories, defaultCategories]);
 

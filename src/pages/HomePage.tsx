@@ -44,10 +44,8 @@ export const HomePage: React.FC = () => {
       {/* VIP section positioned right after the banner */}
       {homeData.showVipSection && <VipMembershipSection />}
       
-      {/* Explicitly rendering CategoryCards with forced visibility */}
-      {validCategories.length > 0 && (
-        <CategoryCards categories={validCategories} />
-      )}
+      {/* Renderizamos as categorias independentemente da quantidade, para garantir que apareçam */}
+      <CategoryCards categories={validCategories} />
       
       {/* App banner for guarantees */}
       <AppBanner />

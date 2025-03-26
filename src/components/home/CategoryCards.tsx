@@ -16,13 +16,14 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
+  // Corrigimos os variants para que não façam as categorias desaparecerem
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
       transition: { 
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: 0.1,
+        delayChildren: 0.1
       }
     }
   };
@@ -34,8 +35,9 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
       opacity: 1, 
       transition: { 
         type: 'spring', 
-        stiffness: 100,
-        damping: 12
+        stiffness: 60,
+        damping: 10,
+        duration: 0.5
       } 
     }
   };
@@ -49,8 +51,11 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     return <ShoppingBag className="h-6 w-6" />;
   };
   
-  // Adicionado um console.log para depuração
-  console.log("CategoryCards rendering with:", { activeCategories, allCategories: categories });
+  console.log("CategoryCards rendering with:", { 
+    activeCategories, 
+    allCategories: categories,
+    activeCount: activeCategories.length
+  });
   
   if (activeCategories.length === 0) {
     console.log("No active categories found");
@@ -66,7 +71,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-6 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
+          animate="visible" // Alteramos de whileInView para animate para garantir que sempre apareça
           viewport={{ once: true, amount: 0.1 }}
         >
           {activeCategories.map((category, index) => (
