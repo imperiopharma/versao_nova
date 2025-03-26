@@ -69,7 +69,7 @@ export const BrandsSection: React.FC = () => {
             // Usar a função getSafeImageUrl para obter a URL da imagem segura
             const imageUrl = getSafeImageUrl(
               brand.logoUrl || brand.logo,
-              `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+              `https://placehold.co/220x120/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
               brand.name
             );
             
@@ -77,7 +77,7 @@ export const BrandsSection: React.FC = () => {
               <motion.div key={brand.id} variants={itemVariants}>
                 <Link 
                   to={`/marca/${brand.id}`}
-                  className="border border-gray-200 rounded-lg flex items-center justify-center h-14 sm:h-16 bg-white hover:shadow-sm transition-all"
+                  className="border border-gray-200 rounded-lg flex items-center justify-center h-[60px] w-full bg-white hover:shadow-sm transition-all overflow-hidden"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
@@ -85,10 +85,10 @@ export const BrandsSection: React.FC = () => {
                   <img 
                     src={imageUrl} 
                     alt={brand.name} 
-                    className="max-h-10 sm:max-h-12 max-w-[85%] object-contain" 
+                    className="w-[220px] h-[120px] object-contain" 
                     onError={(e) => {
                       // Fallback para um placeholder se a imagem não carregar
-                      (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
+                      (e.target as HTMLImageElement).src = `https://placehold.co/220x120/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
                     }}
                   />
                 </Link>
@@ -99,9 +99,6 @@ export const BrandsSection: React.FC = () => {
       </motion.div>
     );
   };
-
-  // Debug
-  console.log('BrandsSection: Brands data:', brands);
 
   return (
     <section className="py-4 bg-gray-50">

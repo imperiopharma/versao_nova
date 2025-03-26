@@ -113,7 +113,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-full h-24 sm:h-32 object-contain p-2"
+                      className="w-full h-20 sm:h-28 object-contain p-2"
                     />
                     {discount > 0 && (
                       <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -123,7 +123,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
                   </div>
                   <div className="p-2 sm:p-3">
                     <p className="text-xs text-gray-500">{item.brand}</p>
-                    <h3 className="font-medium text-xs sm:text-sm line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">{item.name}</h3>
+                    <h3 className="font-bold text-xs sm:text-sm line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">{item.name}</h3>
                     <div className="mt-1 sm:mt-2">
                       {discount > 0 && (
                         <span className="text-xs line-through text-gray-500">

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -27,18 +28,11 @@ export const HomePage: React.FC = () => {
     homeData 
   } = useHomeData();
   
-  const sectionComponents: Record<string, React.ReactNode> = {
-    categories: homeData.showSections.categories && <CategoryCards categories={categories} />,
-    featuredProducts: homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />,
-    flashSale: homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />,
-    brands: homeData.showSections.brands && <BrandsSection />,
-    guarantees: homeData.showSections.guarantees && <GuaranteesSection />,
-    promoCards: homeData.showSections.promoCards && <PromoCardsSection cards={serviceCards} />,
-    vip: homeData.showVipSection && <VipMembershipSection />,
-    about: homeData.showSections.about && <AboutSection />,
-    location: homeData.showSections.location && <LocationSection />,
-    faq: homeData.showSections.faq && <FaqSection items={faqItems} />,
-    newsletter: homeData.showSections.newsletter && <NewsletterSection />
+  const renderGuarantees = () => {
+    if (homeData.showSections.guarantees) {
+      return <GuaranteesSection />;
+    }
+    return null;
   };
 
   return (
@@ -47,11 +41,18 @@ export const HomePage: React.FC = () => {
       
       <HeroBanner slides={heroSlides} />
       
-      {homeData.sectionsOrder.map((sectionKey, index) => (
-        <React.Fragment key={`section-${sectionKey}-${index}`}>
-          {sectionComponents[sectionKey]}
-        </React.Fragment>
-      ))}
+      {renderGuarantees()}
+      
+      {homeData.showSections.categories && <CategoryCards categories={categories} />}
+      {homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />}
+      {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
+      {homeData.showSections.brands && <BrandsSection />}
+      {homeData.showSections.promoCards && <PromoCardsSection cards={serviceCards} />}
+      {homeData.showVipSection && <VipMembershipSection />}
+      {homeData.showSections.about && <AboutSection />}
+      {homeData.showSections.location && <LocationSection />}
+      {homeData.showSections.faq && <FaqSection items={faqItems} />}
+      {homeData.showSections.newsletter && <NewsletterSection />}
       
       <VirtualAssistant />
     </Layout>

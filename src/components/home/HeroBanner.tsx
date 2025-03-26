@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeroSlide } from '@/types/hero';
 
@@ -79,21 +78,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
 
   return (
     <section 
-      className={`relative ${isMobile ? 'h-[60vh]' : 'h-[80vh]'} min-h-[300px] bg-imperio-navy overflow-hidden`}
+      className={`relative ${isMobile ? 'h-[40vh]' : 'h-[60vh]'} min-h-[250px] bg-imperio-navy overflow-hidden`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Padrão decorativo */}
-      <div className="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none"></div>
-      
-      {/* Elementos decorativos */}
-      <div className="absolute -top-20 -right-20 w-80 h-80 bg-imperio-light-navy/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-imperio-light-navy/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s', animationDuration: '8s' }}></div>
-      
-      {/* Dark overlay para melhor visibilidade */}
-      <div className="absolute inset-0 bg-gradient-to-b from-imperio-navy/70 to-imperio-navy/50 z-10"></div>
-      
       {/* Carousel Slides */}
       <div className="relative h-full">
         <AnimatePresence initial={false} custom={1}>
@@ -120,47 +109,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
         </AnimatePresence>
       </div>
       
-      {/* Conteúdo centralizado */}
-      <div className="absolute inset-0 flex items-center justify-center z-20">
-        <div className="text-center max-w-3xl px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-shadow">
-              Qualidade e Confiança para sua Saúde
-            </h1>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <p className="text-white/90 text-sm sm:text-base md:text-lg mb-6 max-w-xl mx-auto text-shadow">
-              Produtos farmacêuticos e suplementos de alta qualidade com entrega segura e rápida para todo o Brasil.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <Button 
-              className="bg-white text-imperio-navy hover:bg-white/90 font-medium"
-              onClick={() => window.location.href = '/marcas'}
-            >
-              <ShoppingBag size={18} className="mr-2" />
-              Comprar Agora
-            </Button>
-          </motion.div>
-        </div>
-      </div>
-      
       {/* Carousel Controls - Indicadores */}
-      <div className="absolute left-0 right-0 bottom-8 flex justify-center items-center gap-2 z-20">
+      <div className="absolute left-0 right-0 bottom-4 flex justify-center items-center gap-2 z-20">
         {slides.map((_, index) => (
           <button
             key={index}

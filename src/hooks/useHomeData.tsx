@@ -37,7 +37,7 @@ export const useHomeData = () => {
         location: true,
         faq: true,
         newsletter: true,
-        coupons: false // Alterado para false para não exibir cupons
+        coupons: false
       },
       // Ordem das seções na página
       sectionsOrder: [

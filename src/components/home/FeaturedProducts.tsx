@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ShoppingBag, Star, Eye, ArrowRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { formatCurrency } from '@/lib/formatters';
 
 interface Product {
   id: string;
@@ -22,7 +23,6 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
   const isMobile = useIsMobile();
-  const containerRef = useRef<HTMLDivElement>(null);
   
   return (
     <section className="py-3 sm:py-4">
@@ -47,7 +47,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
         >
           <CarouselContent className="-ml-1">
             {products.map((product) => (
-              <CarouselItem key={product.id} className="basis-1/2 md:basis-1/2 pl-1">
+              <CarouselItem key={product.id} className="basis-1/2 md:basis-1/4 lg:basis-1/5 pl-1">
                 <motion.div
                   whileHover={{ 
                     y: -2,
@@ -59,7 +59,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="w-full h-20 sm:h-28 object-contain p-2"
+                      className="w-full h-16 sm:h-24 object-contain p-2"
                     />
                     {product.discount && (
                       <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -68,9 +68,9 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
                     )}
                   </div>
                   
-                  <div className="p-2 sm:p-3">
+                  <div className="p-2">
                     <p className="text-xs text-gray-500 mb-0.5">{product.brand}</p>
-                    <h3 className="font-semibold text-imperio-navy mb-0.5 line-clamp-2 text-xs sm:text-sm min-h-[2rem]">{product.name}</h3>
+                    <h3 className="font-bold text-imperio-navy mb-0.5 line-clamp-2 text-xs sm:text-sm min-h-[2rem]">{product.name}</h3>
                     
                     <div className="flex items-center text-yellow-400 mb-1">
                       <Star size={10} fill="currentColor" />
@@ -86,15 +86,15 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
                         {product.discount ? (
                           <>
                             <p className="text-xs text-gray-500 line-through">
-                              R$ {((product.price / (1 - product.discount / 100))).toFixed(2)}
+                              {formatCurrency((product.price / (1 - product.discount / 100)))}
                             </p>
                             <p className="text-imperio-red font-bold text-xs sm:text-sm">
-                              R$ {product.price.toFixed(2)}
+                              {formatCurrency(product.price)}
                             </p>
                           </>
                         ) : (
                           <p className="text-imperio-red font-bold text-xs sm:text-sm">
-                            R$ {product.price.toFixed(2)}
+                            {formatCurrency(product.price)}
                           </p>
                         )}
                       </div>
