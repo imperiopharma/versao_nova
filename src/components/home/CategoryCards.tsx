@@ -35,7 +35,6 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   return (
     <section className="py-4">
       <div className="section-container">
-        <h2 className="text-lg sm:text-xl font-bold text-imperio-navy mb-3">Categorias</h2>
         <div className="grid grid-cols-3 gap-3 md:gap-6">
           {displayCategories.map((category, index) => (
             <motion.div
