@@ -77,7 +77,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
             >
               <Link 
                 to={category.link || `/categoria/${category.id}`} 
-                className={`rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative`}
+                className={`rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all bg-blue-100 py-8 px-3 relative hover:bg-blue-200`}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
@@ -86,9 +86,9 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                 
                 <h3 className="font-bold text-imperio-navy text-xl mb-1">{category.title || category.name}</h3>
                 
-                <p className="text-gray-600 text-sm px-4">{category.description}</p>
+                <p className="text-gray-600 text-sm px-4 mb-4">{category.description}</p>
                 
-                <div className="mt-4 bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
+                <div className="bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
                   Ver produtos
                 </div>
               </Link>
