@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -13,7 +12,6 @@ import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
 import { FaqSection } from '../components/home/FaqSection';
 import { VipMembershipSection } from '../components/home/VipMembershipSection';
-import { AvailableCoupons } from '../components/home/AvailableCoupons';
 import { PromoHeader } from '../components/home/PromoHeader';
 import { useHomeData } from '@/hooks/useHomeData';
 import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
@@ -29,11 +27,9 @@ export const HomePage: React.FC = () => {
     homeData 
   } = useHomeData();
   
-  // Mapeamento de componentes de seção para renderização dinâmica
   const sectionComponents: Record<string, React.ReactNode> = {
     categories: homeData.showSections.categories && <CategoryCards categories={categories} />,
     featuredProducts: homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />,
-    coupons: homeData.showSections.coupons && <AvailableCoupons />,
     flashSale: homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />,
     brands: homeData.showSections.brands && <BrandsSection />,
     guarantees: homeData.showSections.guarantees && <GuaranteesSection />,
@@ -51,14 +47,12 @@ export const HomePage: React.FC = () => {
       
       <HeroBanner slides={heroSlides} />
       
-      {/* Renderização dinâmica das seções baseada na ordem configurada */}
       {homeData.sectionsOrder.map((sectionKey, index) => (
         <React.Fragment key={`section-${sectionKey}-${index}`}>
           {sectionComponents[sectionKey]}
         </React.Fragment>
       ))}
       
-      {/* Assistente Virtual */}
       <VirtualAssistant />
     </Layout>
   );

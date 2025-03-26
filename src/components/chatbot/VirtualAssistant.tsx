@@ -1,36 +1,57 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, X, Bot, MessageCircle } from 'lucide-react';
+import { Send, X, Bot, MessageCircle, Mic, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useChatbotService } from '@/hooks/useChatbotService';
+import { Avatar } from './Avatar';
+import { QuickReplies } from './QuickReplies';
 
 interface Message {
   id: string;
   text: string;
   sender: 'user' | 'bot';
   timestamp: Date;
+  isTyping?: boolean;
 }
 
 export const VirtualAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const {
+    getResponse,
+    getQuickReplies,
+    speechSynthesis,
+    stopSpeech,
+    startListening,
+    stopListening,
+    transcript,
+    isListeningToSpeech
+  } = useChatbotService();
   
   // Adicionar mensagem inicial do assistente quando o chat for aberto
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([
-        {
-          id: Date.now().toString(),
-          text: 'Olá! Sou o assistente virtual da Farmácia Futura. Como posso ajudar você hoje?',
-          sender: 'bot',
-          timestamp: new Date()
-        }
-      ]);
+      const welcomeMessage: Message = {
+        id: Date.now().toString(),
+        text: 'Olá! Sou o assistente virtual da Farmácia Futura. Como posso ajudar você hoje?',
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      
+      setMessages([welcomeMessage]);
+      
+      if (!isMuted) {
+        speechSynthesis(welcomeMessage.text);
+      }
     }
-  }, [isOpen, messages.length]);
+  }, [isOpen, messages.length, isMuted, speechSynthesis]);
 
   // Rolar para o final da conversa quando novas mensagens são adicionadas
   useEffect(() => {
@@ -38,6 +59,18 @@ export const VirtualAssistant: React.FC = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+  
+  // Atualizar input quando o reconhecimento de voz retornar texto
+  useEffect(() => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, [transcript]);
+  
+  // Gerenciar estado de escuta
+  useEffect(() => {
+    setIsListening(isListeningToSpeech);
+  }, [isListeningToSpeech]);
 
   const handleSendMessage = () => {
     if (input.trim() === '') return;
@@ -53,26 +86,24 @@ export const VirtualAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     
-    // Simulação de resposta do bot (aqui você pode integrar com uma API de IA futuramente)
+    // Adicionar indicador de digitação
+    const typingIndicator: Message = {
+      id: `typing-${Date.now()}`,
+      text: '...',
+      sender: 'bot',
+      timestamp: new Date(),
+      isTyping: true
+    };
+    
+    setMessages(prev => [...prev, typingIndicator]);
+    
+    // Obter resposta do bot
     setTimeout(() => {
-      let botResponse = '';
+      // Remover indicador de digitação
+      setMessages(prev => prev.filter(msg => !msg.isTyping));
       
-      // Respostas simples baseadas em palavras-chave
-      const lowerInput = input.toLowerCase();
-      
-      if (lowerInput.includes('medicamento') || lowerInput.includes('remédio')) {
-        botResponse = 'Temos uma ampla variedade de medicamentos. Qual você está procurando? Posso verificar disponibilidade e preço para você.';
-      } else if (lowerInput.includes('entrega') || lowerInput.includes('frete')) {
-        botResponse = 'Oferecemos entrega para toda a cidade! Para compras acima de R$200, o frete é grátis. Normalmente entregamos em até 2 horas após a confirmação do pedido.';
-      } else if (lowerInput.includes('horário') || lowerInput.includes('funcionamento')) {
-        botResponse = 'Nossa farmácia funciona de segunda a sábado, das 7h às 22h. Aos domingos e feriados, das 8h às 20h.';
-      } else if (lowerInput.includes('desconto') || lowerInput.includes('promoção')) {
-        botResponse = 'Temos várias promoções ativas! Assinantes do nosso programa VIP têm 10% de desconto em todos os produtos. Além disso, temos ofertas semanais de até 30% em produtos selecionados.';
-      } else if (lowerInput.includes('obrigado') || lowerInput.includes('valeu')) {
-        botResponse = 'Por nada! Estou sempre à disposição para ajudar. Precisa de mais alguma coisa?';
-      } else {
-        botResponse = 'Entendi! Posso ajudar com informações sobre medicamentos, entregas, horários de funcionamento e promoções. O que mais você gostaria de saber?';
-      }
+      // Obter resposta do serviço
+      const botResponse = getResponse(input);
       
       const botMessage: Message = {
         id: Date.now().toString(),
@@ -82,7 +113,36 @@ export const VirtualAssistant: React.FC = () => {
       };
       
       setMessages(prev => [...prev, botMessage]);
-    }, 1000);
+      
+      // Sintetizar voz se não estiver mutado
+      if (!isMuted) {
+        speechSynthesis(botResponse);
+      }
+    }, 800);
+  };
+  
+  const handleQuickReplyClick = (text: string) => {
+    setInput(text);
+    handleSendMessage();
+  };
+  
+  const toggleSpeech = () => {
+    // Se estiver falando, pare
+    if (isSpeaking) {
+      stopSpeech();
+      setIsSpeaking(false);
+    }
+    
+    // Alternar estado de mudo
+    setIsMuted(!isMuted);
+  };
+  
+  const handleVoiceInput = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
   };
 
   return (
@@ -110,20 +170,29 @@ export const VirtualAssistant: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="fixed bottom-28 right-4 z-50 w-[calc(100%-2rem)] max-w-md sm:bottom-20 sm:right-6"
           >
-            <div className="bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col h-[450px] max-h-[80vh]">
+            <div className="bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col h-[450px] max-h-[80vh] overflow-hidden">
               {/* Cabeçalho do chat */}
               <div className="p-3 border-b flex items-center justify-between bg-imperio-navy text-white rounded-t-lg">
                 <div className="flex items-center">
                   <Bot size={20} className="mr-2" />
-                  <h3 className="font-medium">Assistente Virtual</h3>
+                  <h3 className="font-medium">Vendedor Virtual</h3>
                 </div>
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="text-white hover:text-gray-200"
-                  aria-label="Fechar chat"
-                >
-                  <X size={20} />
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={toggleSpeech}
+                    className="text-white hover:text-gray-200 p-1"
+                    aria-label={isMuted ? "Ativar voz" : "Desativar voz"}
+                  >
+                    {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                  </button>
+                  <button 
+                    onClick={() => setIsOpen(false)}
+                    className="text-white hover:text-gray-200 p-1"
+                    aria-label="Fechar chat"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
               
               {/* Corpo da conversa */}
@@ -133,20 +202,49 @@ export const VirtualAssistant: React.FC = () => {
                     key={message.id} 
                     className={`mb-3 ${message.sender === 'user' ? 'ml-auto' : 'mr-auto'} max-w-[85%]`}
                   >
-                    <div 
+                    {message.sender === 'bot' && !message.isTyping && (
+                      <div className="flex items-start mb-1">
+                        <Avatar className="w-8 h-8 mr-2" />
+                        <div></div>
+                      </div>
+                    )}
+                    
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
                       className={`rounded-lg p-3 ${
                         message.sender === 'user' 
                           ? 'bg-imperio-navy text-white ml-auto' 
-                          : 'bg-white border border-gray-200'
+                          : message.isTyping 
+                            ? 'bg-gray-200 border border-gray-300 inline-block'
+                            : 'bg-white border border-gray-200 shadow-sm'
                       }`}
                     >
-                      {message.text}
-                    </div>
+                      {message.isTyping ? (
+                        <span className="flex space-x-1">
+                          <span className="animate-bounce">.</span>
+                          <span className="animate-bounce delay-100">.</span>
+                          <span className="animate-bounce delay-200">.</span>
+                        </span>
+                      ) : (
+                        message.text
+                      )}
+                    </motion.div>
                     <p className="text-xs text-gray-500 mt-1">
                       {message.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </p>
                   </div>
                 ))}
+                
+                {/* Botões de resposta rápida após a última mensagem do bot */}
+                {messages.length > 0 && messages[messages.length - 1].sender === 'bot' && !messages[messages.length - 1].isTyping && (
+                  <QuickReplies 
+                    suggestions={getQuickReplies(messages[messages.length - 1].text)} 
+                    onSelect={handleQuickReplyClick}
+                  />
+                )}
+                
                 <div ref={messagesEndRef} />
               </div>
               
@@ -166,13 +264,22 @@ export const VirtualAssistant: React.FC = () => {
                     className="flex-grow resize-none"
                     rows={2}
                   />
-                  <Button 
-                    onClick={handleSendMessage}
-                    className="ml-2 h-auto"
-                    disabled={input.trim() === ''}
-                  >
-                    <Send size={20} />
-                  </Button>
+                  <div className="flex flex-col ml-2 gap-2">
+                    <Button 
+                      onClick={handleVoiceInput}
+                      className={`h-10 ${isListening ? 'bg-red-500 hover:bg-red-600' : ''}`}
+                      aria-label={isListening ? "Parar gravação" : "Gravar mensagem"}
+                    >
+                      <Mic size={20} />
+                    </Button>
+                    <Button 
+                      onClick={handleSendMessage}
+                      className="h-10"
+                      disabled={input.trim() === ''}
+                    >
+                      <Send size={20} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
