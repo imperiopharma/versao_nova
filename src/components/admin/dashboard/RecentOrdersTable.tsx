@@ -78,7 +78,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({ orders, lo
   }
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

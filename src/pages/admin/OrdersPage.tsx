@@ -35,7 +35,7 @@ export const OrdersPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="py-6">
+      <div className="py-6 max-w-full">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Gerenciar Pedidos</h1>
           <p className="text-muted-foreground mt-1">

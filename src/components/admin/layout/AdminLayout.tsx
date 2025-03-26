@@ -24,8 +24,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <MobileSidebar title="Admin Painel" />
       
       {/* Main content */}
-      <main className="flex-1 overflow-hidden pt-16 md:pt-0">
-        <div className="h-full w-full overflow-y-auto p-4">
+      <main className="flex-1 overflow-hidden">
+        <div className="h-full w-full p-4 overflow-y-auto">
           {children}
         </div>
       </main>

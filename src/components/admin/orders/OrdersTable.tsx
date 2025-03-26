@@ -27,42 +27,40 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
 }) => {
   return (
     <div className="rounded-xl border bg-white overflow-hidden shadow-sm">
-      <ScrollArea className="w-full max-w-full">
-        <div className="min-w-full w-max md:w-full">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="w-[100px] py-3">Pedido</TableHead>
-                <TableHead className="hidden md:table-cell w-[120px] py-3">Data</TableHead>
-                <TableHead className="w-[140px] py-3">Cliente</TableHead>
-                <TableHead className="text-right hidden md:table-cell w-[100px] py-3">Total</TableHead>
-                <TableHead className="hidden md:table-cell w-[120px] py-3">Pagamento</TableHead>
-                <TableHead className="w-[100px] py-3">Status</TableHead>
-                <TableHead className="text-center w-[60px] py-3">Ações</TableHead>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="w-[100px] py-3">Pedido</TableHead>
+              <TableHead className="w-[120px] py-3">Data</TableHead>
+              <TableHead className="w-[140px] py-3">Cliente</TableHead>
+              <TableHead className="text-right w-[100px] py-3">Total</TableHead>
+              <TableHead className="w-[120px] py-3">Pagamento</TableHead>
+              <TableHead className="w-[100px] py-3">Status</TableHead>
+              <TableHead className="text-center w-[100px] py-3">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {orders.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-24 text-center">
+                  Nenhum pedido encontrado com os filtros atuais.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
-                    Nenhum pedido encontrado com os filtros atuais.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                orders.map((order) => (
-                  <OrderTableRow
-                    key={order.id}
-                    order={order}
-                    onViewOrder={onViewOrder}
-                    onChangeOrderStatus={onChangeOrderStatus}
-                    onDeleteOrder={onDeleteOrder}
-                  />
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </ScrollArea>
+            ) : (
+              orders.map((order) => (
+                <OrderTableRow
+                  key={order.id}
+                  order={order}
+                  onViewOrder={onViewOrder}
+                  onChangeOrderStatus={onChangeOrderStatus}
+                  onDeleteOrder={onDeleteOrder}
+                />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
