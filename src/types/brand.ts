@@ -9,6 +9,7 @@ export interface Brand {
   slug?: string;
   status?: string;
   category?: BrandCategory;
+  logoUrl?: string; // Adicionando campo logoUrl para compatibilidade com o admin
 }
 
 export interface BrandCategories {

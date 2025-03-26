@@ -34,7 +34,7 @@ export const BrandItem: React.FC<BrandItemProps> = ({
       <TableCell>
         <div className="h-10 w-10 rounded-md overflow-hidden bg-gray-100">
           <img 
-            src={brand.logoUrl || 'https://placehold.co/100x100?text=Logo'} 
+            src={brand.logoUrl || brand.logo || 'https://placehold.co/100x100?text=Logo'} 
             alt={brand.name} 
             className="h-full w-full object-cover"
           />

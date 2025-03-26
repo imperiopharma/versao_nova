@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BrandCategories, Brand } from '@/types/brand';
+import { BrandCategories, Brand, BrandCategory } from '@/types/brand';
 import { mockBrands } from '@/data/mock/brands';
 import { Pill, Heart } from 'lucide-react';
 
@@ -94,7 +94,8 @@ export const useBrands = () => {
       description: brandData.description,
       slug: brandData.slug,
       status: brandData.status,
-      category: brandData.category as BrandCategory
+      category: brandData.category as BrandCategory,
+      logoUrl: brandData.logo_url
     };
   };
 
