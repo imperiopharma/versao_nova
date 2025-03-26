@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { BrandCategories, Brand, BrandCategory } from '@/types/brand';
 import { mockBrands } from '@/data/mock/brands';
 import { Pill, Heart } from 'lucide-react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const useBrands = () => {
   const [brands, setBrands] = useState<BrandCategories>({
@@ -91,15 +92,21 @@ export const useBrands = () => {
   // Função para mapear dados do Supabase para o formato da aplicação
   const mapBrandData = (brandData: any): Brand => {
     // Garantir que todas as propriedades sejam devidamente mapeadas
+    const logoUrl = brandData.logo_url || '';
+    
     return {
       id: brandData.id,
       name: brandData.name,
-      logo: brandData.logo_url || `https://via.placeholder.com/150x100/001f3f/ffffff?text=${brandData.name}`,
+      logo: getSafeImageUrl(
+        logoUrl,
+        `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brandData.name)}`,
+        brandData.name
+      ),
       description: brandData.description,
       slug: brandData.slug,
       status: brandData.status,
       category: brandData.category as BrandCategory,
-      logoUrl: brandData.logo_url // Garantir que logoUrl seja preenchido
+      logoUrl: logoUrl // Garantir que logoUrl seja preenchido
     };
   };
 

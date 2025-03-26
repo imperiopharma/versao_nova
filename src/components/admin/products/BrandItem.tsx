@@ -17,6 +17,7 @@ import {
   Image,
   MessageSquare,
 } from "lucide-react";
+import { getSafeImageUrl } from '@/lib/utils';
 
 interface BrandItemProps {
   brand: any;
@@ -40,8 +41,12 @@ export const BrandItem: React.FC<BrandItemProps> = ({
     }
   };
 
-  // Garantir que temos uma URL de imagem válida
-  const imageUrl = brand.logoUrl || brand.logo || 'https://placehold.co/100x100?text=Logo';
+  // Garantir que temos uma URL de imagem válida usando getSafeImageUrl
+  const imageUrl = getSafeImageUrl(
+    brand.logoUrl || brand.logo, 
+    `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+    brand.name
+  );
 
   return (
     <TableRow>
@@ -53,7 +58,7 @@ export const BrandItem: React.FC<BrandItemProps> = ({
             className="h-full w-full object-contain"
             onError={(e) => {
               // Fallback para um placeholder se a imagem não carregar
-              (e.target as HTMLImageElement).src = `https://placehold.co/100x100?text=${brand.name}`;
+              (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
             }}
           />
         </div>

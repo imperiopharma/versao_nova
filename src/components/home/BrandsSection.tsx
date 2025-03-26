@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useBrands } from '@/hooks/useBrands';
+import { getSafeImageUrl } from '@/lib/utils';
 
 interface Brand {
   id: string;
@@ -65,8 +66,12 @@ export const BrandsSection: React.FC = () => {
         
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {displayBrands.map((brand) => {
-            // Selecionar a fonte correta da imagem (logoUrl ou logo)
-            const imageUrl = brand.logoUrl || brand.logo;
+            // Usar a função getSafeImageUrl para obter a URL da imagem segura
+            const imageUrl = getSafeImageUrl(
+              brand.logoUrl || brand.logo,
+              `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+              brand.name
+            );
             
             return (
               <motion.div key={brand.id} variants={itemVariants}>
@@ -83,7 +88,7 @@ export const BrandsSection: React.FC = () => {
                     className="max-h-10 sm:max-h-12 max-w-[85%] object-contain" 
                     onError={(e) => {
                       // Fallback para um placeholder se a imagem não carregar
-                      (e.target as HTMLImageElement).src = `https://via.placeholder.com/150x100/001f3f/ffffff?text=${brand.name}`;
+                      (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
                     }}
                   />
                 </Link>
@@ -96,8 +101,7 @@ export const BrandsSection: React.FC = () => {
   };
 
   // Debug
-  console.log('Brands data:', brands);
-  console.log('Imported brands:', brands.imported);
+  console.log('BrandsSection: Brands data:', brands);
 
   return (
     <section className="py-4 bg-gray-50">

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useProductStore } from '@/hooks/useProductStore';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const MarketplacePage: React.FC = () => {
   const { brands } = useProductStore();
@@ -42,19 +43,30 @@ export const MarketplacePage: React.FC = () => {
           <div className="mb-12">
             <h2 className="text-xl font-medium text-imperio-navy mb-6 border-b pb-2">Marcas Importadas</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {importedBrands.map((brand) => (
-                <Link 
-                  key={brand.id} 
-                  to={`/marca/${brand.id}`}
-                  className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
-                >
-                  <img 
-                    src={brand.logoUrl} 
-                    alt={brand.name} 
-                    className="max-h-20 transition-transform group-hover:scale-105" 
-                  />
-                </Link>
-              ))}
+              {importedBrands.map((brand) => {
+                const imageUrl = getSafeImageUrl(
+                  brand.logoUrl || brand.logo,
+                  `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+                  brand.name
+                );
+                
+                return (
+                  <Link 
+                    key={brand.id} 
+                    to={`/marca/${brand.id}`}
+                    className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
+                  >
+                    <img 
+                      src={imageUrl} 
+                      alt={brand.name} 
+                      className="max-h-20 transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
+                      }}
+                    />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
@@ -63,19 +75,30 @@ export const MarketplacePage: React.FC = () => {
           <div className="mb-12">
             <h2 className="text-xl font-medium text-imperio-navy mb-6 border-b pb-2">Marcas Premium</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {premiumBrands.map((brand) => (
-                <Link 
-                  key={brand.id} 
-                  to={`/marca/${brand.id}`}
-                  className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
-                >
-                  <img 
-                    src={brand.logoUrl} 
-                    alt={brand.name} 
-                    className="max-h-20 transition-transform group-hover:scale-105" 
-                  />
-                </Link>
-              ))}
+              {premiumBrands.map((brand) => {
+                const imageUrl = getSafeImageUrl(
+                  brand.logoUrl || brand.logo,
+                  `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+                  brand.name
+                );
+                
+                return (
+                  <Link 
+                    key={brand.id} 
+                    to={`/marca/${brand.id}`}
+                    className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
+                  >
+                    <img 
+                      src={imageUrl} 
+                      alt={brand.name} 
+                      className="max-h-20 transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
+                      }}
+                    />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
@@ -84,19 +107,30 @@ export const MarketplacePage: React.FC = () => {
           <div className="mb-12">
             <h2 className="text-xl font-medium text-imperio-navy mb-6 border-b pb-2">Marcas Nacionais</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {nationalBrands.map((brand) => (
-                <Link 
-                  key={brand.id} 
-                  to={`/marca/${brand.id}`}
-                  className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
-                >
-                  <img 
-                    src={brand.logoUrl} 
-                    alt={brand.name} 
-                    className="max-h-20 transition-transform group-hover:scale-105" 
-                  />
-                </Link>
-              ))}
+              {nationalBrands.map((brand) => {
+                const imageUrl = getSafeImageUrl(
+                  brand.logoUrl || brand.logo,
+                  `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+                  brand.name
+                );
+                
+                return (
+                  <Link 
+                    key={brand.id} 
+                    to={`/marca/${brand.id}`}
+                    className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
+                  >
+                    <img 
+                      src={imageUrl} 
+                      alt={brand.name} 
+                      className="max-h-20 transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
+                      }}
+                    />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
@@ -105,19 +139,30 @@ export const MarketplacePage: React.FC = () => {
           <div>
             <h2 className="text-xl font-medium text-imperio-navy mb-6 border-b pb-2">Diversos</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {variousBrands.map((brand) => (
-                <Link 
-                  key={brand.id} 
-                  to={`/marca/${brand.id}`}
-                  className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
-                >
-                  <img 
-                    src={brand.logoUrl} 
-                    alt={brand.name} 
-                    className="max-h-20 transition-transform group-hover:scale-105" 
-                  />
-                </Link>
-              ))}
+              {variousBrands.map((brand) => {
+                const imageUrl = getSafeImageUrl(
+                  brand.logoUrl || brand.logo,
+                  `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`,
+                  brand.name
+                );
+                
+                return (
+                  <Link 
+                    key={brand.id} 
+                    to={`/marca/${brand.id}`}
+                    className="imperio-card flex items-center justify-center h-36 hover-lift group animate-fade-in"
+                  >
+                    <img 
+                      src={imageUrl} 
+                      alt={brand.name} 
+                      className="max-h-20 transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
+                      }}
+                    />
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}

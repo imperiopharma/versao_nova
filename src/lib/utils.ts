@@ -42,11 +42,21 @@ export function slugify(text: string): string {
     .trim();
 }
 
-// Função para criar URLs de imagem seguras
-export function getSafeImageUrl(url: string | undefined, fallback: string, name?: string): string {
+// Função aprimorada para criar URLs de imagem seguras
+export function getSafeImageUrl(url: string | undefined | null, fallback: string, name?: string): string {
+  // Se a URL não existir, estiver vazia ou for undefined/null
   if (!url || url.trim() === '') {
-    return name ? `${fallback}?text=${encodeURIComponent(name)}` : fallback;
+    // Criar um placeholder com o nome da marca, se disponível
+    return name 
+      ? `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(name.replace(/\s+/g, '+'))}`
+      : fallback;
   }
   
+  // Se a URL já começar com http ou https, retorná-la diretamente
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // Caso contrário, retornar a URL como está (pode ser uma URL relativa)
   return url;
 }
