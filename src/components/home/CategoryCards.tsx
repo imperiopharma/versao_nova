@@ -10,13 +10,17 @@ interface CategoryCardsProps {
   categories: Category[];
 }
 
+/**
+ * Componente que exibe cards de categorias na página inicial
+ * Utiliza motion do Framer Motion para animações
+ */
 export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   const isMobile = useIsMobile();
   
   // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
-  // Corrigimos os variants para que não façam as categorias desaparecerem
+  // Configurações de animação para o container e items
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -51,12 +55,14 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     return <ShoppingBag className="h-6 w-6" />;
   };
   
+  // Logs para debug
   console.log("CategoryCards rendering with:", { 
     activeCategories, 
     allCategories: categories,
     activeCount: activeCategories.length
   });
   
+  // Não renderizar nada se não houver categorias ativas
   if (activeCategories.length === 0) {
     console.log("No active categories found");
     return null;
@@ -65,13 +71,15 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   return (
     <section className="py-8 md:py-10 overflow-visible bg-white">
       <div className="section-container">
-        <h2 className="text-xl md:text-2xl font-bold text-imperio-navy mb-6 text-center">Nossas Categorias</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-imperio-navy mb-6 text-center">
+          Nossas Categorias
+        </h2>
         
         <motion.div 
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-6 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
-          animate="visible" // Alteramos de whileInView para animate para garantir que sempre apareça
+          animate="visible" // Usando animate ao invés de whileInView para garantir que sempre apareça
           viewport={{ once: true, amount: 0.1 }}
         >
           {activeCategories.map((category, index) => (
@@ -89,9 +97,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                   {renderIcon(category.icon, category.name)}
                 </div>
                 
-                <h3 className="font-bold text-imperio-navy text-xl mb-1">{category.title || category.name}</h3>
+                <h3 className="font-bold text-imperio-navy text-xl mb-1">
+                  {category.title || category.name}
+                </h3>
                 
-                <p className="text-gray-600 text-sm px-4 mb-4">{category.description}</p>
+                <p className="text-gray-600 text-sm px-4 mb-4">
+                  {category.description}
+                </p>
                 
                 <div className="bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
                   Ver produtos

@@ -8,7 +8,12 @@ import { useProductStore } from './useProductStore';
 import { useEffect, useState } from 'react';
 import { Category } from '@/types/category';
 
+/**
+ * Hook que agrega todos os dados necessários para a página inicial
+ * Centraliza a lógica de carregamento de dados de várias fontes
+ */
 export const useHomeData = () => {
+  // Carregamento de dados de vários hooks
   const { featuredProducts, flashSaleItems } = useProducts();
   const { categories: defaultCategories, serviceCards } = useCategories();
   const { categories: adminCategories } = useProductStore();
@@ -58,6 +63,42 @@ export const useHomeData = () => {
     }
   }, [adminCategories, defaultCategories]);
 
+  // Dados de configuração da página inicial
+  const homeConfig = {
+    showPromoHeader: false,
+    promoHeaderText: "Frete grátis em compras acima de R$ 200,00",
+    showVipSection: true,
+    showAppBanner: false,
+    // Controle de seções
+    showSections: {
+      categories: true,
+      featuredProducts: true,
+      flashSale: true,
+      brands: true,
+      guarantees: true,
+      promoCards: true,
+      about: true,
+      location: true,
+      faq: true,
+      newsletter: true,
+      coupons: false
+    },
+    // Ordem das seções na página
+    sectionsOrder: [
+      "categories",
+      "featuredProducts", 
+      "flashSale",
+      "brands",
+      "guarantees",
+      "promoCards",
+      "vip",
+      "about",
+      "location",
+      "faq",
+      "newsletter"
+    ]
+  };
+
   return {
     brands,
     featuredProducts,
@@ -66,39 +107,6 @@ export const useHomeData = () => {
     categories,
     serviceCards,
     faqItems,
-    homeData: {
-      showPromoHeader: false,
-      promoHeaderText: "Frete grátis em compras acima de R$ 200,00",
-      showVipSection: true,
-      showAppBanner: false,
-      // Controle de seções
-      showSections: {
-        categories: true,
-        featuredProducts: true,
-        flashSale: true,
-        brands: true,
-        guarantees: true,
-        promoCards: true,
-        about: true,
-        location: true,
-        faq: true,
-        newsletter: true,
-        coupons: false
-      },
-      // Ordem das seções na página
-      sectionsOrder: [
-        "categories",
-        "featuredProducts", 
-        "flashSale",
-        "brands",
-        "guarantees",
-        "promoCards",
-        "vip",
-        "about",
-        "location",
-        "faq",
-        "newsletter"
-      ]
-    }
+    homeData: homeConfig
   };
 };
