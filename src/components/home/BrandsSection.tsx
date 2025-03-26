@@ -10,6 +10,7 @@ interface Brand {
   id: string;
   name: string;
   logo: string;
+  logoUrl?: string;
 }
 
 export const BrandsSection: React.FC = () => {
@@ -37,7 +38,7 @@ export const BrandsSection: React.FC = () => {
     }
   };
 
-  // Vamos exibir apenas as marcas importadas e premium para manter a página limpa
+  // Função para renderizar o grid de marcas
   const renderBrandGrid = (brands: Brand[], title: string, limit: number = 4) => {
     const displayBrands = brands.slice(0, limit);
     
@@ -63,27 +64,40 @@ export const BrandsSection: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {displayBrands.map((brand) => (
-            <motion.div key={brand.id} variants={itemVariants}>
-              <Link 
-                to={`/marca/${brand.id}`}
-                className="border border-gray-200 rounded-lg flex items-center justify-center h-14 sm:h-16 bg-white hover:shadow-sm transition-all"
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-              >
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name} 
-                  className="max-h-8 sm:max-h-10 max-w-[80%] object-contain" 
-                />
-              </Link>
-            </motion.div>
-          ))}
+          {displayBrands.map((brand) => {
+            // Selecionar a fonte correta da imagem (logoUrl ou logo)
+            const imageUrl = brand.logoUrl || brand.logo;
+            
+            return (
+              <motion.div key={brand.id} variants={itemVariants}>
+                <Link 
+                  to={`/marca/${brand.id}`}
+                  className="border border-gray-200 rounded-lg flex items-center justify-center h-14 sm:h-16 bg-white hover:shadow-sm transition-all"
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  <img 
+                    src={imageUrl} 
+                    alt={brand.name} 
+                    className="max-h-10 sm:max-h-12 max-w-[85%] object-contain" 
+                    onError={(e) => {
+                      // Fallback para um placeholder se a imagem não carregar
+                      (e.target as HTMLImageElement).src = `https://via.placeholder.com/150x100/001f3f/ffffff?text=${brand.name}`;
+                    }}
+                  />
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
     );
   };
+
+  // Debug
+  console.log('Brands data:', brands);
+  console.log('Imported brands:', brands.imported);
 
   return (
     <section className="py-4 bg-gray-50">
@@ -99,9 +113,11 @@ export const BrandsSection: React.FC = () => {
           </Link>
         </div>
         
-        {/* Exibir apenas marcas importadas e premium */}
-        {renderBrandGrid(brands.imported, "Marcas Importadas", 4)}
-        {renderBrandGrid(brands.premium, "Marcas Premium", 4)}
+        {/* Exibir todas as categorias com marcas disponíveis */}
+        {brands.imported.length > 0 && renderBrandGrid(brands.imported, "Marcas Importadas", 4)}
+        {brands.premium.length > 0 && renderBrandGrid(brands.premium, "Marcas Premium", 4)}
+        {brands.national.length > 0 && renderBrandGrid(brands.national, "Marcas Nacionais", 4)}
+        {brands.various.length > 0 && renderBrandGrid(brands.various, "Diversos", 4)}
       </div>
     </section>
   );

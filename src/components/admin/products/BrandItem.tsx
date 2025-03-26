@@ -40,14 +40,21 @@ export const BrandItem: React.FC<BrandItemProps> = ({
     }
   };
 
+  // Garantir que temos uma URL de imagem válida
+  const imageUrl = brand.logoUrl || brand.logo || 'https://placehold.co/100x100?text=Logo';
+
   return (
     <TableRow>
       <TableCell>
-        <div className="h-10 w-10 rounded-md overflow-hidden bg-gray-100">
+        <div className="h-10 w-10 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
           <img 
-            src={brand.logoUrl || brand.logo || 'https://placehold.co/100x100?text=Logo'} 
+            src={imageUrl} 
             alt={brand.name} 
             className="h-full w-full object-contain"
+            onError={(e) => {
+              // Fallback para um placeholder se a imagem não carregar
+              (e.target as HTMLImageElement).src = `https://placehold.co/100x100?text=${brand.name}`;
+            }}
           />
         </div>
       </TableCell>

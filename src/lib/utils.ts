@@ -41,3 +41,12 @@ export function slugify(text: string): string {
     .replace(/--+/g, '-')
     .trim();
 }
+
+// Função para criar URLs de imagem seguras
+export function getSafeImageUrl(url: string | undefined, fallback: string, name?: string): string {
+  if (!url || url.trim() === '') {
+    return name ? `${fallback}?text=${encodeURIComponent(name)}` : fallback;
+  }
+  
+  return url;
+}

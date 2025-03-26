@@ -51,13 +51,16 @@ export const useBrands = () => {
             .filter(brand => brand.category === 'various' || !brand.category)
             .map(brand => mapBrandData(brand));
           
+          // Atualizar o estado com os dados do Supabase
           setBrands({
             ...brands,
-            imported: importedBrands.length > 0 ? importedBrands : mockBrands.imported,
-            premium: premiumBrands.length > 0 ? premiumBrands : mockBrands.premium,
-            national: nationalBrands.length > 0 ? nationalBrands : mockBrands.national,
-            various: variousBrands.length > 0 ? variousBrands : mockBrands.various
+            imported: importedBrands,
+            premium: premiumBrands,
+            national: nationalBrands,
+            various: variousBrands
           });
+          
+          console.log('Marcas importadas:', importedBrands);
         } else {
           console.log('Nenhuma marca encontrada no Supabase, usando dados mock');
           // Fallback para dados mockados
@@ -87,6 +90,7 @@ export const useBrands = () => {
 
   // Função para mapear dados do Supabase para o formato da aplicação
   const mapBrandData = (brandData: any): Brand => {
+    // Garantir que todas as propriedades sejam devidamente mapeadas
     return {
       id: brandData.id,
       name: brandData.name,
@@ -95,7 +99,7 @@ export const useBrands = () => {
       slug: brandData.slug,
       status: brandData.status,
       category: brandData.category as BrandCategory,
-      logoUrl: brandData.logo_url
+      logoUrl: brandData.logo_url // Garantir que logoUrl seja preenchido
     };
   };
 
