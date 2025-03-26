@@ -41,34 +41,32 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
 }) => {
   return (
     <div className="w-full">
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-white overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">SKU</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead className="text-right">Preço</TableHead>
               <TableHead className="w-[100px] text-center">Status</TableHead>
-              <TableHead className="w-[70px]"></TableHead>
+              <TableHead className="w-[80px] text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell colSpan={4} className="h-24 text-center">
                   Carregando produtos...
                 </TableCell>
               </TableRow>
             ) : filteredProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell colSpan={4} className="h-24 text-center">
                   Nenhum produto encontrado.
                 </TableCell>
               </TableRow>
             ) : (
               filteredProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.sku || 'N/D'}</TableCell>
                   <TableCell>
                     <div className="flex flex-col">
                       <span className="font-medium">{product.name || 'Sem nome'}</span>
@@ -94,27 +92,23 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({
                     </span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-end">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEditProduct(product)}>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            className="text-red-600"
-                            onClick={() => handleDeleteClick(product.id)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Excluir
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <div className="flex justify-end space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8" 
+                        onClick={() => handleEditProduct(product)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => handleDeleteClick(product.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
