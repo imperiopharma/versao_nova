@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Category } from '@/types/category';
 
@@ -58,10 +57,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                 <div className={`rounded-full ${category.color || 'bg-imperio-navy'} p-2 mb-2 text-white`}>
                   {renderIcon(category.icon)}
                 </div>
-                <div>
-                  <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
-                  <p className="text-xs text-gray-600 mt-1">{category.description}</p>
-                </div>
+                <h3 className="font-medium text-imperio-navy text-sm sm:text-base">{category.title}</h3>
               </Link>
             </motion.div>
           ))}
