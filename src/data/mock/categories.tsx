@@ -6,21 +6,21 @@ import { Category, ServiceCard } from '@/types/category';
 export const mockCategories: Category[] = [
   {
     id: '1',
-    name: 'Produtos Emagrecedores',
-    title: 'Produtos Emagrecedores',
-    description: 'Fórmulas exclusivas para perda de peso',
+    name: 'Proteínas',
+    title: 'Proteínas',
+    description: 'Suplementos proteicos para ganho de massa muscular',
     icon: () => <HeartIcon className="h-6 w-6" />,
-    link: '/categoria/emagrecedores',
+    link: '/categoria/proteinas',
     color: 'bg-red-500',
     active: true
   },
   {
     id: '2',
-    name: 'Medicamentos de Farmácia',
-    title: 'Medicamentos de Farmácia',
-    description: 'Medicamentos de alta qualidade',
+    name: 'Suplementos',
+    title: 'Suplementos',
+    description: 'Suplementos diversos para performance',
     icon: () => <PillIcon className="h-6 w-6" />,
-    link: '/categoria/medicamentos',
+    link: '/categoria/suplementos',
     color: 'bg-blue-500',
     active: true
   }
