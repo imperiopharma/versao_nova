@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { HeroBanner } from '../components/home/HeroBanner';
 import { CategoryCards } from '../components/home/CategoryCards';
@@ -29,6 +29,13 @@ export const HomePage: React.FC = () => {
   
   console.log("HomePage rendering with categories:", categories);
   
+  // Garantir que nenhuma categoria é undefined ou null
+  const validCategories = categories.filter(cat => cat !== undefined && cat !== null);
+  
+  useEffect(() => {
+    console.log("HomePage mounted with categories:", validCategories.length);
+  }, [validCategories]);
+  
   return (
     <Layout>
       {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
@@ -38,7 +45,9 @@ export const HomePage: React.FC = () => {
       {homeData.showVipSection && <VipMembershipSection />}
       
       {/* Explicitly rendering CategoryCards with forced visibility */}
-      <CategoryCards categories={categories} />
+      {validCategories.length > 0 && (
+        <CategoryCards categories={validCategories} />
+      )}
       
       {/* App banner for guarantees */}
       <AppBanner />

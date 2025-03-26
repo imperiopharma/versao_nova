@@ -19,6 +19,11 @@ export const useHomeData = () => {
 
   // Tenta usar categorias do painel admin, se disponíveis
   useEffect(() => {
+    console.log("useHomeData effect running with:", {
+      adminCategoriesLength: adminCategories?.length || 0,
+      defaultCategoriesLength: defaultCategories?.length || 0
+    });
+    
     if (adminCategories && adminCategories.length > 0) {
       // Mapeia as categorias do admin para o formato esperado pelo componente
       const mappedCategories = adminCategories.map(cat => ({
@@ -32,9 +37,11 @@ export const useHomeData = () => {
         color: 'bg-imperio-navy',
         active: cat.status === 'active'
       }));
+      console.log("Setting mapped admin categories:", mappedCategories);
       setCategories(mappedCategories);
     } else {
       // Fallback para as categorias padrão
+      console.log("Using default categories:", defaultCategories);
       setCategories(defaultCategories);
     }
   }, [adminCategories, defaultCategories]);
