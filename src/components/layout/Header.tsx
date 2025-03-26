@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'py-3 backdrop-blur-md bg-white/80 shadow-md' : 'bg-white py-5'
+        isScrolled ? 'py-3 backdrop-blur-md bg-white/95 shadow-md' : 'bg-white py-5'
       }`}
     >
       <div className="section-container">

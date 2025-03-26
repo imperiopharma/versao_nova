@@ -11,7 +11,8 @@ export const mockCategories: Category[] = [
     description: 'Produtos para emagrecimento saudável',
     icon: () => <TagIcon className="h-6 w-6" />,
     link: '/categoria/emagrecedores',
-    color: 'bg-red-500'
+    color: 'bg-red-500',
+    active: true
   },
   {
     id: '2',
@@ -20,7 +21,8 @@ export const mockCategories: Category[] = [
     description: 'Suplementos para melhorar sua performance',
     icon: () => <PillIcon className="h-6 w-6" />,
     link: '/categoria/suplementos',
-    color: 'bg-blue-500'
+    color: 'bg-blue-500',
+    active: true
   },
   {
     id: '3',
@@ -29,7 +31,8 @@ export const mockCategories: Category[] = [
     description: 'Vitaminas para sua saúde',
     icon: () => <HeartIcon className="h-6 w-6" />,
     link: '/categoria/vitaminas',
-    color: 'bg-green-500'
+    color: 'bg-green-500',
+    active: true
   },
   {
     id: '4',
@@ -38,7 +41,8 @@ export const mockCategories: Category[] = [
     description: 'Hormônios e moduladores',
     icon: () => <ActivityIcon className="h-6 w-6" />,
     link: '/categoria/hormonios',
-    color: 'bg-purple-500'
+    color: 'bg-purple-500',
+    active: true
   },
   {
     id: '5',
@@ -47,7 +51,8 @@ export const mockCategories: Category[] = [
     description: 'Relaxantes musculares e tranquilizantes',
     icon: () => <MoonIcon className="h-6 w-6" />,
     link: '/categoria/relaxantes',
-    color: 'bg-indigo-500'
+    color: 'bg-indigo-500',
+    active: false
   },
   {
     id: '6',
@@ -56,11 +61,11 @@ export const mockCategories: Category[] = [
     description: 'Produtos fitoterápicos naturais',
     icon: () => <ScrollIcon className="h-6 w-6" />,
     link: '/categoria/fitoterapicos',
-    color: 'bg-emerald-500'
+    color: 'bg-emerald-500',
+    active: false
   }
 ];
 
-// Adicionando o export que estava faltando
 export const mockServiceCards: ServiceCard[] = [
   {
     id: '1',

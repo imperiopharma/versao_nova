@@ -10,6 +10,7 @@ export type Category = {
   color?: string;
   link?: string;
   title?: string;
+  active?: boolean;
 };
 
 export type ServiceCard = {

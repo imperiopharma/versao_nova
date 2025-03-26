@@ -13,6 +13,9 @@ interface CategoryCardsProps {
 export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   const isMobile = useIsMobile();
   
+  // Filtramos apenas as categorias ativas
+  const activeCategories = categories.filter(category => category.active);
+  
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 300 } }
@@ -28,7 +31,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
       <div className="section-container">
         <h2 className="text-lg sm:text-xl font-bold text-imperio-navy mb-3">Categorias</h2>
         <div className="grid grid-cols-1 gap-2.5">
-          {categories.map((category, index) => (
+          {activeCategories.map((category, index) => (
             <motion.div
               key={category.id}
               variants={itemVariants}

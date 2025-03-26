@@ -24,7 +24,8 @@ export function useCategoriesData() {
         name: category.name,
         slug: category.slug,
         description: category.description,
-        status: category.status
+        status: category.status,
+        active: category.active
       }));
 
       setCategories(formattedCategories);
@@ -46,7 +47,8 @@ export function useCategoriesData() {
         name: categoryData.name,
         slug: categoryData.slug,
         description: categoryData.description,
-        status: categoryData.status
+        status: categoryData.status,
+        active: categoryData.active !== undefined ? categoryData.active : true
       };
 
       console.log('Enviando categoria para Supabase:', supabaseCategory);
@@ -69,7 +71,8 @@ export function useCategoriesData() {
         name: data.name,
         slug: data.slug,
         description: data.description,
-        status: data.status
+        status: data.status,
+        active: data.active
       };
 
       setCategories(prev => [...prev, formattedCategory]);
@@ -92,6 +95,7 @@ export function useCategoriesData() {
         slug: categoryData.slug,
         description: categoryData.description,
         status: categoryData.status,
+        active: categoryData.active,
         updated_at: formatDateForSupabase()
       };
 
@@ -107,6 +111,30 @@ export function useCategoriesData() {
       return category;
     } catch (error) {
       handleError(error, 'Erro ao atualizar categoria');
+      throw error;
+    }
+  };
+
+  // Atualizar o status ativo de uma categoria
+  const toggleCategoryActive = async (categoryId: string, active: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .update({ active, updated_at: formatDateForSupabase() })
+        .eq('id', categoryId);
+
+      if (error) throw error;
+
+      setCategories(prev => prev.map(c => 
+        c.id === categoryId ? { ...c, active } : c
+      ));
+      
+      showSuccessToast(
+        active ? 'Categoria ativada' : 'Categoria desativada', 
+        `A categoria foi ${active ? 'ativada' : 'desativada'} com sucesso.`
+      );
+    } catch (error) {
+      handleError(error, `Erro ao ${active ? 'ativar' : 'desativar'} categoria`);
       throw error;
     }
   };
@@ -135,6 +163,7 @@ export function useCategoriesData() {
     fetchCategories,
     addCategory,
     updateCategory,
+    toggleCategoryActive,
     deleteCategory
   };
 }
