@@ -28,20 +28,14 @@ export const HomePage: React.FC = () => {
     homeData 
   } = useHomeData();
   
-  const renderGuarantees = () => {
-    if (homeData.showSections.guarantees) {
-      return <GuaranteesSection />;
-    }
-    return null;
-  };
-
   return (
     <Layout>
       {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
       
-      <HeroBanner slides={heroSlides} />
+      {/* Posicionando a seção de garantias logo acima do banner */}
+      {homeData.showSections.guarantees && <GuaranteesSection />}
       
-      {renderGuarantees()}
+      <HeroBanner slides={heroSlides} />
       
       {homeData.showSections.categories && <CategoryCards categories={categories} />}
       {homeData.showSections.featuredProducts && <FeaturedProducts products={featuredProducts} />}
