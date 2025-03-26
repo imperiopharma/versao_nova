@@ -6,7 +6,6 @@ import { CategoryCards } from '../components/home/CategoryCards';
 import { BrandsSection } from '../components/home/BrandsSection';
 import { FlashSaleSection } from '../components/home/FlashSaleSection';
 import { GuaranteesSection } from '../components/home/GuaranteesSection';
-import { PromoCardsSection } from '../components/home/PromoCardsSection';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 import { AboutSection } from '../components/home/AboutSection';
 import { LocationSection } from '../components/home/LocationSection';
@@ -31,6 +30,9 @@ export const HomePage: React.FC = () => {
       {homeData.showPromoHeader && <PromoHeader text={homeData.promoHeaderText} />}
       <HeroBanner slides={heroSlides} />
       
+      {/* VIP section positioned right after the banner */}
+      {homeData.showVipSection && <VipMembershipSection />}
+      
       {homeData.showSections.categories && <CategoryCards categories={categories} />}
       
       {/* Posicionando a seção de garantias ENTRE categorias e produtos em destaque */}
@@ -39,7 +41,6 @@ export const HomePage: React.FC = () => {
       {homeData.showSections.flashSale && <FlashSaleSection items={flashSaleItems} />}
       {homeData.showSections.brands && <BrandsSection />}
       
-      {homeData.showVipSection && <VipMembershipSection />}
       {homeData.showSections.about && <AboutSection />}
       {homeData.showSections.location && <LocationSection />}
       {homeData.showSections.faq && <FaqSection items={faqItems} />}
