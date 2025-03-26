@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
@@ -10,7 +9,7 @@ import { ShippingMethodCard } from '../components/checkout/ShippingMethodCard';
 import { OrderItemsCard } from '../components/checkout/OrderItemsCard';
 import { InsuranceOptionCard } from '../components/checkout/InsuranceOptionCard';
 import { CheckoutNavigation } from '../components/checkout/CheckoutNavigation';
-import { CouponForm } from '../components/checkout/CouponForm';
+import { CouponForm } from '../components/checkout/coupon/CouponForm';
 
 export const CheckoutResumoPage: React.FC = () => {
   const { 
