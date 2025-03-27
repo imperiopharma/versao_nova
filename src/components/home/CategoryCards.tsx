@@ -20,26 +20,6 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
   // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
-  // Mapeamento para substituir os nomes específicos de categorias
-  const getCategoryDisplay = (category: Category) => {
-    if (category.name.toLowerCase().includes('protein')) {
-      return {
-        title: "PRODUTOS EMAGRECEDORES",
-        description: "Fórmulas exclusivas para perda de peso"
-      };
-    } else if (category.name.toLowerCase().includes('suplemento')) {
-      return {
-        title: "MEDICAMENTOS DE FARMÁCIA",
-        description: "Medicamentos de alta qualidade"
-      };
-    }
-    
-    return {
-      title: category.title || category.name,
-      description: category.description
-    };
-  };
-  
   // Configurações de animação para o container e items
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -102,39 +82,35 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
           animate="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {activeCategories.map((category, index) => {
-            const displayInfo = getCategoryDisplay(category);
-            
-            return (
-              <motion.div
-                key={category.id}
-                variants={itemVariants}
-                className="w-full"
+          {activeCategories.map((category, index) => (
+            <motion.div
+              key={category.id}
+              variants={itemVariants}
+              className="w-full"
+            >
+              <Link 
+                to={category.link || `/categoria/${category.id}`} 
+                className="block rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all hover:shadow-lg bg-blue-100 py-8 px-3 relative hover:bg-blue-200"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
-                <Link 
-                  to={category.link || `/categoria/${category.id}`} 
-                  className="block rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all hover:shadow-lg bg-blue-100 py-8 px-3 relative hover:bg-blue-200"
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                >
-                  <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
-                    {renderIcon(category.icon, category.name)}
-                  </div>
-                  
-                  <h3 className="font-bold text-imperio-navy text-xl mb-1">
-                    {displayInfo.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 text-sm px-4 mb-4">
-                    {displayInfo.description}
-                  </p>
-                  
-                  <div className="bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
-                    Ver produtos
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
+                <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
+                  {renderIcon(category.icon, category.name)}
+                </div>
+                
+                <h3 className="font-bold text-imperio-navy text-xl mb-1">
+                  {category.title || category.name}
+                </h3>
+                
+                <p className="text-gray-600 text-sm px-4 mb-4">
+                  {category.description}
+                </p>
+                
+                <div className="bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
+                  Ver produtos
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

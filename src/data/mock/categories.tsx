@@ -7,7 +7,7 @@ export const mockCategories: Category[] = [
   {
     id: '1',
     name: 'Produtos Emagrecedores',
-    title: 'Produtos Emagrecedores',
+    title: 'PRODUTOS EMAGRECEDORES',
     description: 'Fórmulas exclusivas para perda de peso',
     icon: () => <HeartIcon className="h-6 w-6" />,
     link: '/categoria/emagrecedores',
@@ -17,7 +17,7 @@ export const mockCategories: Category[] = [
   {
     id: '2',
     name: 'Medicamentos de Farmácia',
-    title: 'Medicamentos de Farmácia',
+    title: 'MEDICAMENTOS DE FARMÁCIA',
     description: 'Medicamentos de alta qualidade',
     icon: () => <PillIcon className="h-6 w-6" />,
     link: '/categoria/medicamentos',
