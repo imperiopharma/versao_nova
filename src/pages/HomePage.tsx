@@ -38,8 +38,8 @@ export const HomePage: React.FC = () => {
         <FlashSaleSection items={flashSaleItems} />
       )}
       
-      {/* Seção de marcas */}
-      {homeData.showSections.brands && <BrandsSection />}
+      {/* Seção de marcas - sempre visível */}
+      <BrandsSection />
       
       {/* Assistente virtual sempre disponível */}
       <VirtualAssistant />

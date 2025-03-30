@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useBrands } from '@/hooks/useBrands';
 import { getSafeImageUrl } from '@/lib/utils';
-import { ArrowRight } from 'lucide-react';
 
 interface Brand {
   id: string;
@@ -39,36 +38,21 @@ export const BrandsSection: React.FC = () => {
     }
   };
 
-  // Obtenha 3 marcas principais para exibir
-  const getMainBrands = () => {
-    const allBrands = [
-      ...brands.imported.slice(0, 1),
-      ...brands.premium.slice(0, 1),
-      ...brands.national.slice(0, 1)
-    ];
+  // Função para renderizar uma categoria de marcas
+  const renderBrandCategory = (title: string, brandsList: Brand[]) => {
+    if (brandsList.length === 0) return null;
     
-    return allBrands.length > 0 ? allBrands.slice(0, 3) : [];
-  };
-  
-  const mainBrands = getMainBrands();
-  
-  if (mainBrands.length === 0) return null;
-
-  return (
-    <section className="py-6 bg-white">
-      <div className="section-container">
-        <div className="mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
-        </div>
-        
+    return (
+      <div className="mb-8">
+        <h3 className="text-base font-bold text-imperio-navy mb-3 uppercase">{title}</h3>
         <motion.div 
-          className="flex flex-row justify-between items-center gap-4 mb-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {mainBrands.map((brand) => {
+          {brandsList.map((brand) => {
             // Usar a função getSafeImageUrl para obter a URL da imagem segura
             const imageUrl = getSafeImageUrl(
               brand.logoUrl || brand.logo,
@@ -77,7 +61,7 @@ export const BrandsSection: React.FC = () => {
             );
             
             return (
-              <motion.div key={brand.id} variants={itemVariants} className="flex-1">
+              <motion.div key={brand.id} variants={itemVariants}>
                 <Link 
                   to={`/marca/${brand.id}`}
                   className="border border-gray-200 rounded-lg flex items-center justify-center h-[50px] w-full bg-white hover:shadow-sm transition-all overflow-hidden"
@@ -99,16 +83,28 @@ export const BrandsSection: React.FC = () => {
             );
           })}
         </motion.div>
-        
-        <div className="flex justify-center">
-          <Link 
-            to="/marcas" 
-            className="inline-flex items-center text-imperio-navy hover:text-imperio-gold transition-colors font-medium"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            Ver todas as marcas <ArrowRight size={16} className="ml-1" />
-          </Link>
+      </div>
+    );
+  };
+
+  return (
+    <section className="py-6 bg-white">
+      <div className="section-container">
+        <div className="mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
         </div>
+        
+        {/* Marcas Importadas */}
+        {renderBrandCategory("Marcas Importadas", brands.imported)}
+        
+        {/* Marcas Premium */}
+        {renderBrandCategory("Marcas Premium", brands.premium)}
+        
+        {/* Marcas Nacionais */}
+        {renderBrandCategory("Marcas Nacionais", brands.national)}
+        
+        {/* Diversos */}
+        {renderBrandCategory("Diversos", brands.various)}
       </div>
     </section>
   );
