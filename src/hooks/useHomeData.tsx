@@ -20,25 +20,13 @@ export const useHomeData = () => {
   const { heroSlides } = useHero();
   const { brands } = useBrands();
 
-  // Tenta usar categorias do painel admin, se disponíveis
+  // Sempre usar as categorias mockadas (defaultCategories) para a página inicial
   useEffect(() => {
-    // Garantir que temos categorias para exibir (primeiro as do admin, depois as padrão)
-    if (adminCategories && adminCategories.length > 0) {
-      // Mapeia as categorias do admin para o formato esperado pelo componente
-      const mappedCategories = adminCategories.map(cat => ({
-        id: cat.id,
-        name: cat.name,
-        title: cat.name.toUpperCase(),
-        description: cat.description || '',
-        slug: cat.slug || cat.id,
-        icon: null, // Será tratado pelo renderIcon com fallback
-        link: `/categoria/${cat.slug || cat.id}`,
-        color: 'bg-imperio-navy',
-        active: cat.status === 'active' // Garantimos que apenas categorias ativas são mostradas
-      }));
-      setCategories(mappedCategories);
-    } else if (defaultCategories && defaultCategories.length > 0) {
-      // Fallback para as categorias padrão
+    console.log('Default categories:', defaultCategories);
+    console.log('Admin categories:', adminCategories);
+    
+    // Sempre usar as categorias mockadas para garantir que "PRODUTOS EMAGRECEDORES" e "MEDICAMENTOS DE FARMÁCIA" apareçam
+    if (defaultCategories && defaultCategories.length > 0) {
       // Garantir que todas as categorias padrão tenham a flag 'active' definida
       const validDefaultCategories = defaultCategories.map(cat => ({
         ...cat,
@@ -47,8 +35,25 @@ export const useHomeData = () => {
       
       setCategories(validDefaultCategories);
     } else {
-      // Fallback final se nenhuma categoria estiver disponível
-      setCategories([]);
+      // Fallback para as categorias do admin apenas se não houver categorias mockadas
+      if (adminCategories && adminCategories.length > 0) {
+        // Mapeia as categorias do admin para o formato esperado pelo componente
+        const mappedCategories = adminCategories.map(cat => ({
+          id: cat.id,
+          name: cat.name,
+          title: cat.name.toUpperCase(),
+          description: cat.description || '',
+          slug: cat.slug || cat.id,
+          icon: null, // Será tratado pelo renderIcon com fallback
+          link: `/categoria/${cat.slug || cat.id}`,
+          color: 'bg-imperio-navy',
+          active: cat.status === 'active' // Garantimos que apenas categorias ativas são mostradas
+        }));
+        setCategories(mappedCategories);
+      } else {
+        // Fallback final se nenhuma categoria estiver disponível
+        setCategories([]);
+      }
     }
   }, [adminCategories, defaultCategories]);
 
