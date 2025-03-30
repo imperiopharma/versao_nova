@@ -18,15 +18,16 @@ export const useCheckoutSubmit = () => {
   
   // Função para calcular os valores do pedido
   const calculateOrderValues = () => {
+    // Calcular o subtotal somando o preço * quantidade de cada item
     const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     
-    // Calcular desconto (se houver cupom, isso será aplicado pelo CartContext)
+    // Usar o desconto do contexto do carrinho ou zero se não existir
     const finalDiscount = discount || 0;
     
-    // Calcular frete
+    // Usar o valor de frete do contexto do carrinho ou zero se não existir
     const finalShipping = shipping || 0;
     
-    // Calcular total final
+    // Calcular o total final: subtotal + frete - desconto
     const finalTotal = subtotal + finalShipping - finalDiscount;
     
     return {
@@ -40,21 +41,28 @@ export const useCheckoutSubmit = () => {
   // Função para fazer upload do comprovante
   const uploadPaymentProof = async (orderId: string, file: File): Promise<string> => {
     try {
-      // Simulação: normalmente isso enviaria o arquivo para um servidor
-      // Nesse exemplo, só vamos fingir que o upload foi feito e retornar uma URL
-      console.log(`Fazendo upload do comprovante para o pedido ${orderId}`);
+      console.log(`Iniciando upload do comprovante para o pedido ${orderId}`);
       
-      // Em um cenário real, você faria o upload do arquivo para o servidor
-      // e receberia a URL de volta
+      // Em um cenário real, aqui seria feito o upload para um servidor
+      // Exemplo de implementação com FormData:
+      // const formData = new FormData();
+      // formData.append('file', file);
+      // formData.append('orderId', orderId);
+      // const response = await fetch('/api/upload-proof', {
+      //   method: 'POST',
+      //   body: formData
+      // });
+      // const data = await response.json();
+      // return data.fileUrl;
       
-      // URL simulada do comprovante
+      // Simulação: criar URL local do arquivo
       const proofUrl = URL.createObjectURL(file);
+      console.log('Upload simulado concluído, URL:', proofUrl);
       
-      // Retorna a URL do comprovante
       return proofUrl;
     } catch (error) {
       console.error('Erro ao fazer upload do comprovante:', error);
-      throw new Error('Não foi possível fazer o upload do comprovante');
+      throw new Error('Não foi possível fazer o upload do comprovante. Por favor, tente novamente.');
     }
   };
   
@@ -98,6 +106,8 @@ export const useCheckoutSubmit = () => {
         total: orderValues.total
       };
       
+      console.log('Dados do pedido preparados:', orderData);
+      
       // Criar pedido 
       const newOrder = await createOrder(orderData);
       
@@ -105,17 +115,34 @@ export const useCheckoutSubmit = () => {
         throw new Error('Não foi possível criar o pedido');
       }
       
+      console.log('Pedido criado com sucesso:', newOrder);
+      
       // Fazer upload do comprovante
       if (paymentProofFile) {
-        const proofUrl = await uploadPaymentProof(newOrder.id, paymentProofFile);
-        
-        // Atualizar o pedido com a URL do comprovante
-        // Em um sistema real, você atualizaria o registro no banco de dados
-        console.log(`Comprovante enviado: ${proofUrl}`);
+        try {
+          const proofUrl = await uploadPaymentProof(newOrder.id, paymentProofFile);
+          console.log('Comprovante enviado:', proofUrl);
+          
+          // Atualizar o pedido com a URL do comprovante
+          // Em um sistema real, você atualizaria o registro no banco de dados
+          // await updateOrder(newOrder.id, { paymentProofUrl: proofUrl });
+        } catch (uploadError) {
+          console.error('Erro ao enviar comprovante:', uploadError);
+          toast({
+            title: 'Aviso',
+            description: 'Pedido criado, mas houve um problema ao enviar o comprovante. Entre em contato com o suporte.',
+            variant: 'warning',
+          });
+        }
       }
       
       // Marcar pedido como concluído
       setCompletedOrder(true);
+      
+      toast({
+        title: 'Pedido realizado com sucesso!',
+        description: `Seu pedido #${newOrder.orderNumber} foi recebido e está sendo processado.`,
+      });
       
       // Resetar estados após 5 segundos
       setTimeout(() => {
