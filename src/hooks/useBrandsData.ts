@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useProductCommon } from './useProductCommon';
-import { brandService } from '@/services/apiService';
+import { brandService } from '@/services/brandService';
 import { slugify } from '@/lib/utils';
 
 export function useBrandsData() {
