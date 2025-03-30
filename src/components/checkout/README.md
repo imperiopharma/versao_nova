@@ -10,50 +10,89 @@ Esta pasta contém os componentes relacionados ao processo de checkout (finaliza
 - `PaymentOptions.tsx`: Opções de pagamento disponíveis
 - `AddressForm.tsx`: Formulário para endereço de entrega
 - `CheckoutSteps.tsx`: Indicador de progresso do checkout
+- `CartSummary.tsx`: Resumo do carrinho durante o checkout
+- `OrderItemsCard.tsx`: Lista de itens do pedido
+- `ShippingMethodForm.tsx`: Seleção de método de envio
 
-## Funcionalidades
+## Suporte a Combos no Checkout
 
-Estes componentes permitem:
-- Coleta e validação de dados do cliente
-- Seleção de endereço de entrega
-- Escolha de método de pagamento
-- Visualização do resumo do pedido
-- Confirmação e finalização da compra
+Os componentes de checkout foram adaptados para lidar corretamente com combos:
 
-## Fluxo de Checkout
+### OrderSummary.tsx
 
-O processo de checkout é dividido em três etapas principais:
-1. **Dados do Cliente**: Informações pessoais e endereço de entrega
-2. **Resumo do Pedido**: Revisão dos itens, frete e valores
-3. **Pagamento**: Seleção do método de pagamento e finalização
+- Exibe claramente quais itens são combos
+- Mostra o desconto aplicado a cada combo
+- Calcula e exibe o total de economia com combos
+- Apresenta seção "Você economizou" destacando o valor total economizado
 
-## Uso
+### CartSummary.tsx
 
-Os componentes são utilizados nas páginas de checkout:
+- Calcula corretamente o subtotal considerando os descontos de combos
+- Permite aplicação de cupons adicionais sobre combos (se permitido)
+- Exibe claramente o valor economizado com combos
+
+## Processo de Checkout com Combos
+
+1. Cliente adiciona combos ao carrinho
+2. No checkout, os combos são identificados visualmente
+3. Os descontos são claramente exibidos no resumo
+4. Cupons podem ser aplicados conforme regras específicas
+5. O resumo final mostra economia total (combos + cupons)
+6. Pedido é finalizado com todos os descontos aplicados
+
+## Exemplo de Implementação
 
 ```tsx
-import { CheckoutForm } from '@/components/checkout/CheckoutForm';
-import { OrderSummary } from '@/components/checkout/OrderSummary';
-
-// Na primeira etapa do checkout
-function CheckoutDadosPage() {
+// Trecho simplificado de OrderItemsCard.tsx
+const OrderItemsCard = () => {
+  const { items } = useCart();
+  const totalSavings = items.reduce((total, item) => {
+    // Calcular economia em combos
+    if (item.isCombo && item.originalPrice) {
+      return total + ((item.originalPrice - item.price) * item.quantity);
+    }
+    return total;
+  }, 0);
+  
   return (
-    <Layout>
-      <CheckoutSteps currentStep={1} />
-      <CheckoutForm />
-    </Layout>
+    <Card>
+      <CardHeader>
+        <CardTitle>Itens do Pedido</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {items.map(item => (
+          <div key={item.id} className="flex justify-between mb-2">
+            <div>
+              <span className="font-medium">{item.name}</span> 
+              <span className="text-muted-foreground">({item.quantity}x)</span>
+              {item.isCombo && (
+                <span className="ml-2 bg-imperio-navy text-white text-xs px-1.5 py-0.5 rounded-full">
+                  Combo
+                </span>
+              )}
+            </div>
+            <div className="text-right">
+              {item.isCombo && item.originalPrice && (
+                <span className="text-sm line-through text-muted-foreground block">
+                  {formatCurrency(item.originalPrice * item.quantity)}
+                </span>
+              )}
+              <span className="font-medium">
+                {formatCurrency(item.price * item.quantity)}
+              </span>
+            </div>
+          </div>
+        ))}
+        
+        {totalSavings > 0 && (
+          <div className="mt-4 p-2 bg-green-50 text-green-800 rounded-md">
+            <p className="font-medium">Você economizou {formatCurrency(totalSavings)}</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
-}
-
-// Na segunda etapa do checkout
-function CheckoutResumoPage() {
-  return (
-    <Layout>
-      <CheckoutSteps currentStep={2} />
-      <OrderSummary />
-    </Layout>
-  );
-}
+};
 ```
 
 ## Integração com Contextos
@@ -61,34 +100,3 @@ function CheckoutResumoPage() {
 Os componentes utilizam:
 - `CartContext`: Para acessar itens e valores do carrinho
 - `CheckoutContext`: Para gerenciar o estado entre etapas do checkout
-
-## Validação de Dados
-
-Os formulários incluem validação completa de:
-- Dados pessoais (nome, email, telefone)
-- Endereço completo
-- CEP com busca automática
-- Campos obrigatórios
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **CheckoutForm**: 
-   - Adicione ou remova campos no formulário
-   - Modifique as regras de validação
-
-2. **OrderSummary**: 
-   - Ajuste as informações exibidas no resumo
-   - Altere o cálculo de frete ou descontos
-
-3. **PaymentOptions**: 
-   - Adicione ou remova métodos de pagamento
-   - Personalize o layout e descrições
-
-## Observações Importantes
-
-- Os dados de checkout são mantidos no `CheckoutContext` durante a navegação entre etapas
-- Existe validação em cada etapa para evitar avançar com dados incompletos
-- O checkout integra-se ao backend ao finalizar para registrar o pedido
-- A navegação entre etapas é controlada, impedindo acesso direto sem completar etapas anteriores

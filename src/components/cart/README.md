@@ -9,6 +9,7 @@ Esta pasta contém os componentes relacionados ao carrinho de compras da Imperio
 - `CartSummary.tsx`: Resumo do carrinho (subtotal, frete, total)
 - `CartEmpty.tsx`: Estado vazio do carrinho
 - `CartSidebar.tsx`: Carrinho em formato de sidebar
+- `AddedToCartModal.tsx`: Modal de confirmação ao adicionar item ao carrinho
 
 ## Funcionalidades
 
@@ -20,66 +21,66 @@ Estes componentes permitem:
 - Navegação para o checkout
 - Persistência dos itens entre sessões
 
-## Uso
+## Suporte a Combos no Carrinho
 
-Estes componentes são utilizados principalmente na página de carrinho (`CartPage.tsx`) e como um sidebar que pode ser aberto de qualquer página.
+O sistema de carrinho foi adaptado para lidar corretamente com combos:
+
+### Identificação Visual de Combos
+
+- `CartItem.tsx` exibe um badge "Combo" para itens que são combos
+- Preço original (sem desconto) é exibido riscado
+- Preço com desconto é destacado
+
+### Cálculo de Valores para Combos
+
+- `CartSummary.tsx` calcula corretamente o valor total considerando os descontos dos combos
+- Exibe seção de "Economia" mostrando quanto o cliente está economizando com os combos
+
+### Limitações para Combos
+
+- Verificação de disponibilidade de estoque para combos
+- Regras específicas para alguns combos (limite por cliente, etc)
+- Compatibilidade com aplicação de cupons adicionais
+
+## Exemplo de Implementação para Combos
 
 ```tsx
-import { CartSummary } from '@/components/cart/CartSummary';
-import { CartItem } from '@/components/cart/CartItem';
-
-// Na página do carrinho
-function CartPage() {
-  const { items, totalPrice } = useCart();
+// Trecho de código simplificado do CartItem.tsx
+const CartItem = ({ item }) => {
+  const { updateQuantity, removeItem } = useCart();
+  const isCombo = item.isCombo;
   
   return (
-    <div>
-      <h1>Seu Carrinho</h1>
+    <div className="cart-item">
+      <div className="cart-item-image">
+        <img src={item.image} alt={item.name} />
+        {isCombo && (
+          <span className="combo-badge">Combo</span>
+        )}
+      </div>
       
-      {items.map(item => (
-        <CartItem key={item.id} item={item} />
-      ))}
-      
-      <CartSummary totalPrice={totalPrice} />
-      
-      <Button onClick={goToCheckout}>Finalizar Compra</Button>
+      <div className="cart-item-details">
+        <h3>{item.name}</h3>
+        <div className="price-container">
+          {isCombo && item.originalPrice && (
+            <span className="original-price">{formatCurrency(item.originalPrice)}</span>
+          )}
+          <span className="final-price">{formatCurrency(item.price)}</span>
+        </div>
+        
+        {/* Controles de quantidade */}
+        <div className="quantity-controls">
+          {/* ... */}
+        </div>
+      </div>
     </div>
   );
-}
+};
 ```
 
 ## Integração com Contexto
 
 Todos os componentes do carrinho utilizam o `CartContext` para:
-- Acessar a lista de itens
-- Obter valores calculados (total, quantidade)
+- Acessar a lista de itens (incluindo combos)
+- Obter valores calculados (total, quantidade, economia)
 - Executar ações (adicionar, remover, atualizar)
-
-## Comportamento Responsivo
-
-Os componentes se adaptam a diferentes tamanhos de tela:
-- Em desktop: Layout completo com mais informações
-- Em mobile: Layout simplificado e otimizado para toque
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **CartItem**: 
-   - Edite as informações exibidas para cada item
-   - Modifique os controles de quantidade
-
-2. **CartSummary**: 
-   - Ajuste os cálculos e regras de frete
-   - Adicione ou remova linhas de resumo (descontos, impostos, etc.)
-
-3. **CartSidebar**: 
-   - Altere o comportamento de abertura/fechamento
-   - Modifique a animação e posicionamento
-
-## Observações Importantes
-
-- O carrinho utiliza `localStorage` para persistência
-- Existe validação para evitar adicionar mais produtos do que o estoque disponível
-- Os preços sempre são recalculados ao abrir o carrinho para garantir valores atualizados
-- O componente lida automaticamente com produtos que foram removidos do catálogo

@@ -1,72 +1,100 @@
 
 # Componentes de Gerenciamento de Produtos
 
-Esta pasta contém os componentes relacionados ao gerenciamento de produtos, marcas e categorias no painel administrativo.
+Esta pasta contém os componentes relacionados ao gerenciamento de produtos, marcas, categorias e combos no painel administrativo.
 
 ## Componentes
 
 - `ProductsList.tsx`: Lista dos produtos com opções para adicionar, editar e excluir
+- `ProductDialog.tsx`: Formulário para adicionar ou editar produtos/combos
+- `ProductTableRow.tsx`: Linha de tabela para exibição resumida de produto
 - `BrandsList.tsx`: Lista das marcas com opções para adicionar, editar e excluir
 - `CategoriesList.tsx`: Lista das categorias com opções para adicionar, editar e excluir
+- `DeleteProductDialog.tsx`: Confirmação para exclusão de produtos
 
-## Funcionalidades
+## Sistema de Gerenciamento de Combos
 
-Estes componentes permitem:
-- Visualização completa de produtos, marcas e categorias
-- Adição de novos itens
-- Edição de itens existentes
-- Exclusão de itens
-- Filtragem e pesquisa
-- Upload de imagens
-- Gerenciamento de combos e kits promocionais
-- Aplicação de descontos em combos
+### Criação/Edição de Combos
 
-## Uso
+Os combos são criados/editados usando o mesmo componente `ProductDialog.tsx`, que foi adaptado para suportar configurações específicas de combos:
 
-Estes componentes são utilizados na página de gerenciamento de produtos (`ProductsPage.tsx`), organizados em abas.
+1. Campo `isCombo`: Toggle para indicar se o produto é um combo
+2. Campo `comboDiscount`: Input para o percentual de desconto (habilitado quando isCombo=true)
+3. Campo `originalPrice`: Preço original antes do desconto
+4. Campo `price`: Campo calculado automaticamente baseado no preço original e desconto
 
-## Dependências
+### Fluxo de Criação de Combos
 
-- Os componentes utilizam:
-  - `useProductStore()`: Hook centralizado para gerenciar produtos, marcas e categorias
-  - Supabase para operações de CRUD e armazenamento de imagens
-  - Componentes UI da biblioteca Shadcn
+1. Administrador acessa a seção "Produtos"
+2. Clica em "Adicionar Produto"
+3. Preenche informações básicas (nome, marca, categoria, etc.)
+4. Ativa a opção "É um Combo?"
+5. Define o percentual de desconto
+6. Informa o preço original
+7. O sistema calcula automaticamente o preço final
+8. Administrador salva o combo
 
-## Integração com Backend
+### Visualização de Combos
+
+- `ProductsTable.tsx` exibe indicador visual para combos
+- Coluna especial mostra o percentual de desconto aplicado
+- Filtro permite visualizar apenas combos
+
+## Hooks para Gerenciamento de Combos
+
+O componente utiliza o hook `useProductDialogForm.ts` que inclui lógica para:
+- Calcular automaticamente o preço com desconto
+- Validar campos específicos de combos
+- Salvar os dados corretos no Supabase
+
+## Exemplo do Formulário de Combo
+
+```tsx
+// Trecho simplificado de ProductDialog.tsx
+<FormField
+  control={form.control}
+  name="isCombo"
+  render={({ field }) => (
+    <FormItem className="flex items-center gap-2">
+      <FormLabel>É um Combo?</FormLabel>
+      <FormControl>
+        <Switch
+          checked={field.value}
+          onCheckedChange={field.onChange}
+        />
+      </FormControl>
+    </FormItem>
+  )}
+/>
+
+{isCombo && (
+  <FormField
+    control={form.control}
+    name="comboDiscount"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel>Desconto (%)</FormLabel>
+        <FormControl>
+          <Input
+            type="number"
+            {...field}
+            onChange={(e) => {
+              field.onChange(e);
+              // Recalcula o preço final com base no desconto
+              recalculatePrice(originalPrice, parseFloat(e.target.value));
+            }}
+          />
+        </FormControl>
+      </FormItem>
+    )}
+  />
+)}
+```
+
+## Integração com Supabase
 
 Todos os componentes estão integrados com o Supabase para:
-- Buscar dados atualizados
+- Buscar dados atualizados de produtos, combos, marcas e categorias
 - Persistir alterações no banco de dados
-- Fazer upload de imagens
+- Realizar upload de imagens de produtos/combos
 - Aplicar políticas de segurança (RLS)
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **ProductsList**: 
-   - Edite os campos do formulário de produto em `ProductDialog.tsx`
-   - Modifique as colunas e informações exibidas na lista
-
-2. **BrandsList**: 
-   - Ajuste os campos do formulário de marca
-   - Personalize as categorias de marcas disponíveis
-
-3. **CategoriesList**: 
-   - Altere os campos do formulário de categoria
-   - Modifique as opções de status disponíveis
-
-## Combos e Kits
-
-Os produtos podem ser configurados como combos ou kits promocionais:
-
-1. Na janela de edição de produtos, selecione o tipo "Combo/Kit"
-2. Defina o percentual de desconto aplicado ao combo
-3. Configure preços e estoque normalmente
-4. Os combos são exibidos na página de combos e em promoções especiais
-
-## Observações Importantes
-
-- Todos os componentes respeitam as políticas de Row Level Security do Supabase
-- Apenas usuários com função "admin" podem acessar estas funcionalidades
-- As alterações são refletidas em tempo real na loja

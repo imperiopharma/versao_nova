@@ -8,13 +8,35 @@ Esta pasta contém os contextos React utilizados para gerenciar estado global no
 - `CartContext.tsx`: Gerencia o estado do carrinho de compras
 - `CheckoutContext.tsx`: Gerencia o estado do processo de checkout
 
-## Funcionalidades
+## CartContext
 
-Estes contextos permitem:
-- Compartilhar estado entre componentes sem prop drilling
-- Persistir dados importantes entre navegações
-- Centralizar lógica de negócio relacionada a cada domínio
-- Fornecer funções utilitárias para manipulação de dados
+O `CartContext` fornece:
+- Lista de produtos no carrinho (incluindo combos)
+- Quantidade total de itens
+- Valor total do carrinho
+- Funções para adicionar, remover e atualizar itens
+- Persistência local (localStorage)
+
+Funções específicas para combos:
+- `addComboToCart`: Adiciona um combo ao carrinho, preservando suas propriedades especiais
+- `isComboInCart`: Verifica se um combo específico já está no carrinho
+- `getComboDiscount`: Retorna o desconto aplicado a um combo
+- `getTotalWithDiscounts`: Calcula o total considerando todos os descontos (combos e cupons)
+
+## CheckoutContext
+
+O `CheckoutContext` fornece:
+- Dados do cliente para entrega
+- Método de pagamento selecionado
+- Estado do progresso de checkout
+- Funções para avançar e retroceder etapas
+- Validação de dados de checkout
+
+Integração com combos no checkout:
+- Exibição clara de itens de combo no resumo do pedido
+- Cálculo correto dos descontos aplicados
+- Compatibilidade com cupons adicionais
+- Validações específicas para combos com disponibilidade limitada
 
 ## Uso
 
@@ -25,63 +47,25 @@ Para utilizar um contexto:
 3. Use o hook correspondente nos componentes filhos para acessar o contexto
 
 ```tsx
-// Em App.tsx ou outro componente de alto nível
-import { CartProvider } from '@/contexts/CartContext';
-
-function App() {
-  return (
-    <CartProvider>
-      {/* Componentes filhos que precisam acessar o carrinho */}
-      <Layout>
-        <Routes>
-          {/* ... */}
-        </Routes>
-      </Layout>
-    </CartProvider>
-  );
-}
-
 // Em um componente filho
 import { useCart } from '@/contexts/CartContext';
 
 function ProductCard({ product }) {
-  const { addToCart } = useCart();
+  const { addToCart, isComboInCart } = useCart();
+  
+  const isCombo = product.isCombo;
+  const inCart = isComboInCart(product.id);
   
   return (
     <div>
       <h3>{product.name}</h3>
-      <button onClick={() => addToCart(product)}>
-        Adicionar ao Carrinho
+      <button 
+        onClick={() => isCombo ? addComboToCart(product) : addToCart(product)}
+        disabled={inCart}
+      >
+        {inCart ? 'No Carrinho' : 'Adicionar ao Carrinho'}
       </button>
     </div>
   );
 }
 ```
-
-## Personalização
-
-Para personalizar ou criar novos contextos:
-
-1. Crie um novo arquivo na pasta `contexts/`
-2. Defina o tipo de dados do contexto
-3. Crie o context com `createContext`
-4. Implemente o provider como um componente React
-5. Exporte o provider e um hook personalizado para acessar o contexto
-
-## CartContext
-
-O `CartContext` fornece:
-- Lista de produtos no carrinho
-- Quantidade total de itens
-- Valor total do carrinho
-- Funções para adicionar, remover e atualizar itens
-- Persistência local (localStorage)
-
-## CheckoutContext
-
-O `CheckoutContext` fornece:
-- Dados do cliente para entrega
-- Método de pagamento selecionado
-- Estado do progresso de checkout
-- Funções para avançar e retroceder etapas
-- Validação de dados de checkout

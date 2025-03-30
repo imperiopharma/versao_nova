@@ -6,59 +6,45 @@ Esta pasta contém todas as páginas do painel administrativo da Imperio Pharma.
 ## Páginas Disponíveis
 
 - `Dashboard.tsx`: Página principal com visão geral de vendas, pedidos e desempenho
-- `ProductsPage.tsx`: Interface para gerenciamento de produtos, marcas e categorias
+- `ProductsPage.tsx`: Interface para gerenciamento de produtos, marcas, categorias e combos
 - `OrdersPage.tsx`: Gerenciamento e acompanhamento de pedidos
 - `CustomersPage.tsx`: Visualização e gerenciamento de clientes
+- `CouponsPage.tsx`: Gerenciamento de cupons promocionais
 - `FinancePage.tsx`: Relatórios financeiros, faturamento e análises
 - `SettingsPage.tsx`: Configurações da loja, informações gerais e integrações
 - `LoginPage.tsx`: Página de autenticação específica para acesso administrativo
 
-## Uso
+## Sistema de Gerenciamento de Combos
 
-Estas páginas são acessíveis apenas para usuários autenticados com privilégios administrativos, protegidas pelo componente `AdminAuthGuard`.
+### Em ProductsPage.tsx
 
-## Funcionalidades
+A página de produtos inclui funcionalidades para gerenciamento completo de combos:
 
-- **Dashboard.tsx**:
-  - Visão geral das métricas (vendas, pedidos, clientes)
-  - Gráficos de desempenho
-  - Lista de pedidos recentes
-  - Produtos mais vendidos
+1. **Criação de Combos**:
+   - Formulário adaptado para combos com campos específicos:
+     - Opção "É um combo?"
+     - Percentual de desconto
+     - Preço original (sem desconto)
+     - Preço calculado automaticamente com desconto
 
-- **ProductsPage.tsx**:
-  - Listagem, adição, edição e exclusão de produtos
-  - Gerenciamento de marcas e categorias
-  - Upload e gerenciamento de imagens
-  - Controle de estoque
+2. **Listagem de Combos**:
+   - Filtro para exibir apenas combos
+   - Indicação visual para produtos que são combos
+   - Coluna de percentual de desconto
+   - Exibição de preço original e preço com desconto
 
-- **OrdersPage.tsx**:
-  - Listagem completa de pedidos
-  - Filtros por status e período
-  - Visualização detalhada de pedidos
-  - Atualização de status de pedidos
+3. **Estatísticas de Combos**:
+   - Desempenho de vendas de combos
+   - Comparativo de conversão (combos vs produtos normais)
+   - Impacto dos combos na receita total
 
-- **CustomersPage.tsx**:
-  - Listagem de clientes registrados
-  - Gerenciamento de informações e status
-  - Visualização de histórico de pedidos
-  - Métricas por cliente
+## Fluxo de Gerenciamento
 
-- **FinancePage.tsx**:
-  - Relatórios financeiros detalhados
-  - Análise de faturamento por período
-  - Gráficos de desempenho financeiro
-  - Distribuição de vendas por categoria
-
-- **SettingsPage.tsx**:
-  - Configurações gerais da loja
-  - Templates de mensagens e emails
-  - Configurações de envio e frete
-  - Integrações com serviços externos
-
-- **LoginPage.tsx**:
-  - Formulário de login administrativo
-  - Validação de credenciais
-  - Redirecionamento após autenticação
+1. Administrador acessa `ProductsPage.tsx`
+2. Pode criar novo combo clicando em "Adicionar Produto" e marcando como combo
+3. Pode editar combos existentes, ajustando preços e percentuais de desconto
+4. Visualiza relatórios de desempenho de combos
+5. Configura regras específicas para combos em `SettingsPage.tsx`
 
 ## Integração com Backend
 
@@ -74,10 +60,3 @@ Para acessar o painel administrativo:
 1. Navegue para `/admin/login`
 2. Use credenciais administrativas (email e senha)
 3. Após login bem-sucedido, você será redirecionado para `/admin`
-
-## Observações Importantes
-
-- Todas as páginas exigem autenticação administrativa
-- As políticas RLS do Supabase garantem que apenas usuários autorizados possam acessar e modificar dados
-- As páginas são responsivas e funcionam em dispositivos móveis
-- Existe cache de dados para otimizar desempenho e reduzir requisições

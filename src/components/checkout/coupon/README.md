@@ -19,3 +19,28 @@ Estes componentes gerenciam:
 - Validação de cupons
 - Remoção de cupons aplicados
 - Feedback visual sobre a validade dos cupons
+
+## Integração com Combos
+
+O sistema de cupons é totalmente compatível com o sistema de combos:
+- Cupons podem ser aplicados em cima de combos já com desconto
+- Existem cupons exclusivos para combos específicos
+- O sistema impede a aplicação de múltiplos descontos incompatíveis
+- A lógica de validação verifica a elegibilidade do cupom com o conteúdo do carrinho
+
+## Tipos de Cupons
+
+A aplicação suporta diferentes tipos de cupons:
+- Percentual: Desconto percentual sobre o valor total
+- Valor fixo: Desconto de valor fixo
+- Frete grátis: Remove o custo de frete
+- Combo específico: Válido apenas para determinados combos
+- Primeira compra: Válido apenas para novos clientes
+
+## Gerenciamento de Cupons
+
+Cupons são gerenciados pelo painel administrativo:
+- Criação de novos cupons com regras específicas
+- Definição de períodos de validade
+- Limitação por cliente ou número de usos
+- Relatórios de uso de cupons

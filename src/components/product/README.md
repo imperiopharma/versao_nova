@@ -11,38 +11,31 @@ Esta pasta contém os componentes relacionados à exibição e interação com p
 - `ProductRating.tsx`: Componente de avaliação de produtos (estrelas)
 - `ProductGallery.tsx`: Galeria de imagens para o produto
 
-## Funcionalidades
+## Visualização de Combos
 
-Estes componentes permitem:
-- Exibição de produtos em diferentes formatos (cards, listas, detalhes)
-- Adição de produtos ao carrinho
-- Visualização de detalhes e especificações
-- Navegação entre produtos relacionados
-- Visualização de imagens em galeria
+Os componentes de produto foram adaptados para exibir corretamente os combos promocionais:
 
-## Uso
+### ProductCard para Combos
 
-```tsx
-import { ProductCard } from '@/components/product/ProductCard';
-import { ProductList } from '@/components/product/ProductList';
-import { ProductDetails } from '@/components/product/ProductDetails';
+- Exibe badge "Combo" para identificação visual
+- Mostra o percentual de desconto aplicado
+- Apresenta preço original (riscado) e preço com desconto
+- Utiliza estilo diferenciado para destacar combos na interface
 
-// Uso de um card individual
-<ProductCard product={product} />
+### ProductDetails para Combos
 
-// Uso de uma lista de produtos
-<ProductList products={products} />
-
-// Uso dos detalhes de um produto
-<ProductDetails product={product} />
-```
+- Mostra informações detalhadas sobre o combo
+- Exibe claramente o desconto aplicado
+- Apresenta informações de economia para o cliente
+- Possui chamadas para ação específicas para combos
 
 ## Integração com Carrinho
 
 Os componentes de produto integram-se com o `CartContext` para:
-- Adicionar produtos ao carrinho
-- Verificar se um produto já está no carrinho
-- Atualizar a quantidade de um produto no carrinho
+- Adicionar produtos ou combos ao carrinho
+- Verificar se um produto ou combo já está no carrinho
+- Atualizar a quantidade de um produto ou combo no carrinho
+- Exibir feedback apropriado para adição de combos
 
 ## Comportamento Responsivo
 
@@ -51,25 +44,27 @@ Todos os componentes são totalmente responsivos:
 - Detalhes reorganizam-se para exibição em dispositivos móveis
 - Galeria de imagens funciona em touch e mouse
 
-## Personalização
+## Exemplo de Uso com Combos
 
-Para personalizar estes componentes:
+```tsx
+import { ProductCard } from '@/components/product/ProductCard';
+import { useProducts } from '@/hooks/useProducts';
 
-1. **ProductCard**: 
-   - Edite o layout e informações exibidas no card
-   - Personalize o comportamento de hover e interações
-
-2. **ProductDetails**: 
-   - Modifique as seções e informações exibidas
-   - Ajuste o layout responsivo
-
-3. **ProductList**: 
-   - Altere as opções de filtragem
-   - Modifique o sistema de grade ou lista
-
-## Observações Importantes
-
-- Todos os componentes lidam adequadamente com estados de carregamento
-- Existem fallbacks para imagens não disponíveis
-- O formato de preço é consistente em todo o site
-- Produtos sem estoque mostram indicação visual clara
+const CombosSection = () => {
+  const { products } = useProducts();
+  const combos = products.filter(product => product.isCombo);
+  
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {combos.map(combo => (
+        <ProductCard 
+          key={combo.id} 
+          product={combo} 
+          // O componente detecta automaticamente que é um combo
+          // e exibe as informações apropriadas
+        />
+      ))}
+    </div>
+  );
+};
+```

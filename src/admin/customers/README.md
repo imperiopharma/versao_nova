@@ -19,24 +19,21 @@ Estes componentes permitem:
 - Visualização do histórico de pedidos por cliente
 - Análise de valor e frequência de compras
 
-## Uso
+## Histórico de Compras e Combos
 
-Estes componentes são utilizados na página de gerenciamento de clientes (`CustomersPage.tsx`).
+O componente `CustomerDetailsDialog.tsx` inclui uma seção dedicada ao histórico de compras que exibe:
+- Todos os pedidos realizados pelo cliente
+- Identificação visual para pedidos que incluem combos
+- Estatísticas sobre a frequência de compra de combos
+- Preferências do cliente (baseadas em combos adquiridos)
 
-## Dependências
+## Análise de Valor
 
-- Os componentes utilizam:
-  - Conexão direta com o Supabase para operações CRUD
-  - Componentes UI da biblioteca Shadcn
-  - Hooks especializados conforme necessário
-
-## Integração com Backend
-
-Todos os componentes estão integrados com o Supabase para:
-- Buscar dados atualizados de clientes
-- Persistir alterações no banco de dados
-- Relacionar clientes com seus pedidos
-- Aplicar políticas de segurança (RLS)
+O sistema de gerenciamento de clientes calcula e exibe métricas importantes:
+- Valor total gasto pelo cliente
+- Valor médio por pedido
+- Economia gerada por compras de combos
+- Potencial de compras futuras (baseado em histórico)
 
 ## Personalização
 
@@ -54,20 +51,10 @@ Para personalizar estes componentes:
    - Altere as informações exibidas no detalhe do cliente
    - Modifique as estatísticas e métricas apresentadas
 
-## Campos de Cliente
+## Integração com Supabase
 
-Os clientes possuem os seguintes campos principais:
-- `id`: Identificador único
-- `name`: Nome completo
-- `email`: Email de contato (usado para login quando aplicável)
-- `phone`: Telefone de contato
-- `status`: Status do cliente (active/inactive)
-- `total_spent`: Valor total gasto pelo cliente
-- `total_orders`: Número total de pedidos
-- `last_order_date`: Data do último pedido
-
-## Observações Importantes
-
-- Todos os componentes respeitam as políticas de Row Level Security do Supabase
-- Apenas usuários com função "admin" podem acessar estas funcionalidades
-- As informações sensíveis são tratadas conforme boas práticas de segurança
+Todos os componentes estão integrados com o Supabase para:
+- Buscar dados atualizados de clientes
+- Buscar histórico de pedidos e itens relacionados
+- Persistir alterações no banco de dados
+- Aplicar políticas de segurança (RLS)

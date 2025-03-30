@@ -6,80 +6,57 @@ Esta pasta contém os componentes que definem a estrutura base do painel adminis
 ## Componentes
 
 - `AdminLayout.tsx`: Layout principal do painel administrativo
-- `Sidebar.tsx`: Barra lateral de navegação
-- `TopBar.tsx`: Barra superior com pesquisa e ações rápidas
-- `MenuItems.tsx`: Definição dos itens de menu administrativo
+- `SidebarMenu.tsx`: Componente de navegação lateral
+- `MenuItem.tsx`: Item do menu lateral
+- `MobileSidebar.tsx`: Versão responsiva da barra lateral para dispositivos móveis
+- `LogoutButton.tsx`: Botão para sair do painel administrativo
 
-## Funcionalidades
+## Menu Administrativo
 
-Estes componentes estabelecem:
-- Estrutura consistente para todas as páginas administrativas
-- Navegação entre seções do painel
-- Acesso rápido a funcionalidades comuns
-- Adaptação responsiva para diferentes dispositivos
+O componente `SidebarMenu.tsx` define a navegação principal do painel, incluindo:
 
-## Uso
+- Dashboard (visão geral)
+- Pedidos (gerenciamento de vendas)
+- Produtos (produtos individuais)
+- Combos (gerenciamento específico de combos promocionais)
+- Categorias (organização de produtos)
+- Clientes (gerenciamento de clientes)
+- Cupons (descontos promocionais)
+- Financeiro (relatórios e análises)
+- Configurações (configurações do sistema)
 
-O componente `AdminLayout` deve envolver todas as páginas administrativas:
+### Gerenciamento de Combos
 
-```tsx
-import { AdminLayout } from '@/admin/layout/AdminLayout';
-
-export const AdminPage = () => {
-  return (
-    <AdminLayout>
-      {/* Conteúdo da página administrativa */}
-    </AdminLayout>
-  );
-};
-```
+O menu inclui uma seção dedicada para gerenciamento de combos, permitindo:
+- Acesso rápido à criação e edição de combos
+- Visualização de relatórios específicos de combos
+- Análise de desempenho de combos
 
 ## Estrutura do Layout
 
 O layout administrativo segue uma estrutura moderna:
 - Barra lateral fixa à esquerda (colapsável em dispositivos móveis)
-- Barra superior com informações do usuário e ações rápidas
-- Área de conteúdo principal
+- Área de conteúdo principal para exibição de componentes
 - Design responsivo que se adapta a todos os tamanhos de tela
 
-## Menu de Navegação
+## Personalização do Menu
 
-O menu lateral é definido em `MenuItems.tsx` e inclui:
-- Dashboard (visão geral)
-- Produtos, Categorias e Marcas
-- Pedidos
-- Clientes
-- Financeiro
-- Configurações
-- Logout
+Para personalizar o menu administrativo:
 
-## Personalização
+1. Edite o arquivo `menuItems.tsx` para alterar itens de menu:
+   - Adicione novos itens ou remova existentes
+   - Altere ícones, rótulos ou URLs
+   - Reorganize a ordem dos itens
 
-Para personalizar o layout administrativo:
+2. Modifique o `SidebarMenu.tsx` para alterar comportamento:
+   - Ajuste espaçamento e tamanho
+   - Modifique comportamento responsivo
+   - Adicione novos elementos visuais
 
-1. **AdminLayout**: 
-   - Edite a estrutura básica do layout
-   - Modifique o comportamento responsivo
-
-2. **Sidebar**: 
-   - Ajuste a largura e comportamento da barra lateral
-   - Personalize o logotipo e cores
-
-3. **MenuItems**: 
-   - Adicione, remova ou reorganize itens de menu
-   - Configure ícones e permissões por item
-
-## Autenticação e Segurança
+## Integração com Autenticação
 
 O layout administrativo integra-se ao sistema de autenticação:
 - Verifica se o usuário está autenticado
 - Confirma permissões administrativas
 - Redireciona para login quando necessário
 - Permite logout seguro
-
-## Observações Importantes
-
-- O layout é totalmente responsivo, adaptando-se a desktops, tablets e smartphones
-- Em dispositivos móveis, a barra lateral torna-se um menu colapsável
-- O estado de expansão da barra lateral é persistido localmente
-- Apenas usuários com função "admin" podem acessar o painel administrativo

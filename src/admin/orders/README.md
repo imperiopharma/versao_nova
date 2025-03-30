@@ -8,6 +8,11 @@ Esta pasta contém os componentes utilizados para gerenciar e monitorar pedidos 
 - `OrdersList.tsx`: Lista completa de pedidos com opções de filtragem e ações
 - `OrdersFilter.tsx`: Filtros para pedidos (status, período, cliente)
 - `OrderDetailsDialog.tsx`: Visualização detalhada de um pedido específico
+- `OrderMessage.tsx`: Componente para envio de mensagens relacionadas ao pedido
+- `OrderSummary.tsx`: Resumo do pedido com produtos e valores
+- `OrderTableRow.tsx`: Linha da tabela de pedidos com informações resumidas
+- `OrdersTable.tsx`: Tabela completa de pedidos
+- `PaymentProofView.tsx`: Visualizador de comprovantes de pagamento
 
 ## Funcionalidades
 
@@ -18,40 +23,15 @@ Estes componentes permitem:
 - Visualização detalhada de pedidos específicos
 - Atualização de status de pedidos
 - Impressão de pedidos
+- Envio de mensagens para o cliente
 
-## Uso
+## Visualização de Combos em Pedidos
 
-Estes componentes são utilizados na página de gerenciamento de pedidos (`OrdersPage.tsx`).
-
-## Dependências
-
-- Os componentes utilizam:
-  - `useOrdersData()`: Hook para buscar e gerenciar dados de pedidos
-  - Supabase para operações de CRUD
-  - Componentes UI da biblioteca Shadcn
-
-## Integração com Backend
-
-Todos os componentes estão integrados com o Supabase para:
-- Buscar pedidos e itens de pedido
-- Atualizar status de pedidos
-- Aplicar políticas de segurança (RLS)
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **OrdersList**: 
-   - Edite as colunas exibidas na lista de pedidos
-   - Modifique as ações disponíveis para cada pedido
-
-2. **OrdersFilter**: 
-   - Ajuste as opções de filtro disponíveis
-   - Personalize o layout e estilo dos filtros
-
-3. **OrderDetailsDialog**: 
-   - Altere as informações exibidas no detalhe do pedido
-   - Adicione ou remova funcionalidades (como impressão ou envio de email)
+O sistema de gerenciamento de pedidos identifica e exibe claramente os combos:
+- Combos são destacados na lista de itens do pedido
+- O desconto aplicado pelo combo é exibido no resumo do pedido
+- Os relatórios de vendas podem ser filtrados para mostrar apenas pedidos com combos
+- As estatísticas mostram a popularidade dos diferentes combos
 
 ## Status de Pedidos
 
@@ -62,9 +42,10 @@ Os pedidos podem ter os seguintes status:
 - `completed`: Pedido entregue e finalizado
 - `cancelled`: Pedido cancelado
 
-## Relatórios
+## Integração com Backend
 
-Os componentes incluem funcionalidades básicas de relatórios:
-- Total de pedidos por status
-- Valor total de pedidos por período
-- Exportação básica de dados
+Todos os componentes estão integrados com o Supabase para:
+- Buscar pedidos e itens de pedido
+- Atualizar status de pedidos
+- Enviar notificações aos clientes
+- Aplicar políticas de segurança (RLS)

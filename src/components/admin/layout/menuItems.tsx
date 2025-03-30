@@ -8,7 +8,9 @@ import {
   Banknote,
   Settings,
   LogOut,
-  Tag
+  Tag,
+  Gift,
+  Percent
 } from 'lucide-react';
 
 export type MenuItem = {
@@ -35,6 +37,16 @@ export const menuItems: MenuItem[] = [
     icon: <Package size={20} />
   },
   {
+    name: 'Combos',
+    path: '/admin/combos',
+    icon: <Gift size={20} />
+  },
+  {
+    name: 'Categorias',
+    path: '/admin/categorias',
+    icon: <Tag size={20} />
+  },
+  {
     name: 'Clientes',
     path: '/admin/clientes',
     icon: <Users size={20} />
@@ -42,7 +54,7 @@ export const menuItems: MenuItem[] = [
   {
     name: 'Cupons',
     path: '/admin/cupons',
-    icon: <Tag size={20} />
+    icon: <Percent size={20} />
   },
   {
     name: 'Financeiro',

@@ -8,7 +8,7 @@ Esta pasta contém os componentes específicos utilizados no painel de controle 
 - `DashboardStats.tsx`: Cards estatísticos com métricas principais (produtos, clientes, pedidos, receita)
 - `SalesChart.tsx`: Gráfico de vendas por período (diário, semanal, mensal)
 - `CustomerGrowth.tsx`: Gráfico de crescimento da base de clientes
-- `TopProducts.tsx`: Lista dos produtos mais vendidos
+- `TopProducts.tsx`: Lista dos produtos mais vendidos, incluindo combos
 - `RecentOrdersTable.tsx`: Tabela com os pedidos mais recentes
 
 ## Funcionalidades
@@ -18,6 +18,20 @@ Estes componentes apresentam:
 - Visualização de tendências de vendas
 - Acompanhamento de crescimento e atividade
 - Lista de pedidos recentes para acompanhamento rápido
+- Desempenho de combos promocionais
+
+## Métricas para Combos
+
+O dashboard inclui métricas específicas para a performance de combos:
+- Total de vendas de combos vs produtos individuais
+- Combos mais populares
+- Taxa de conversão de visualizações para vendas de combos
+- Percentual da receita total vinda de combos
+
+Estas métricas são visualizadas através de:
+- Cards específicos em `DashboardStats.tsx`
+- Seção dedicada no gráfico de vendas
+- Filtro para combos em `TopProducts.tsx`
 
 ## Uso
 
@@ -30,23 +44,3 @@ Estes componentes são utilizados na página principal do painel administrativo 
   - `useProductStore()`: Fornece dados de produtos
   - Recharts para gráficos
   - Shadcn/UI para componentes de interface
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **DashboardStats**: 
-   - Edite os cartões de estatísticas em `DashboardStats.tsx`
-   - Personalize as cores e ícones dos cartões
-
-2. **SalesChart**: 
-   - Modifique os parâmetros do gráfico em `SalesChart.tsx`
-   - Ajuste o período de visualização ou tipo de gráfico
-
-3. **TopProducts**: 
-   - Altere o número de produtos exibidos
-   - Personalize as informações mostradas para cada produto
-
-4. **RecentOrdersTable**: 
-   - Ajuste as colunas e informações exibidas
-   - Modifique o número de pedidos mostrados

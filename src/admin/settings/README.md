@@ -9,53 +9,65 @@ Esta pasta contém os componentes utilizados na seção de configurações do pa
 - `SettingsGeneral.tsx`: Configurações gerais da loja
 - `SettingsNotifications.tsx`: Configurações de notificações
 - `SettingsIntegrations.tsx`: Integrações com serviços externos
+- `SettingsCombos.tsx`: Configurações específicas para combos
 
-## Funcionalidades
+## Configurações de Combos
 
-Estes componentes permitem:
-- Personalização de templates de emails e mensagens
-- Configuração de informações básicas da loja
-- Gerenciamento de notificações para clientes e administradores
-- Configuração de integrações com serviços externos
+O componente `SettingsCombos.tsx` permite configurar aspectos globais do sistema de combos:
+
+### Políticas de Desconto
+
+- Percentual máximo de desconto permitido para combos
+- Regras para aplicação de cupons em cima de combos
+- Configuração de descontos escalonados (por quantidade)
+
+### Regras de Exibição
+
+- Número de combos exibidos na seção de destaque da home
+- Período de exibição de badges "Novo Combo"
+- Priorização de combos em resultados de busca
+- Configurações de destaque visual para combos
+
+### Integrações
+
+- Configuração para exportação de relatórios de desempenho de combos
+- Integração com sistemas de notificação para novos combos
+- Configurações para compartilhamento em redes sociais
 
 ## Uso
 
-Estes componentes são utilizados na página de configurações do painel administrativo (`SettingsPage.tsx`).
+Estes componentes são utilizados na página de configurações do painel administrativo (`SettingsPage.tsx`), organizados em abas.
 
 ```tsx
 import { SettingsTemplates } from '@/admin/settings/SettingsTemplates';
-import { SettingsGeneral } from '@/admin/settings/SettingsGeneral';
+import { SettingsCombos } from '@/admin/settings/SettingsCombos';
 
 function SettingsPage() {
   return (
     <AdminLayout>
-      <Tabs defaultValue="templates">
+      <Tabs defaultValue="general">
         <TabsList>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="general">Geral</TabsTrigger>
+          <TabsTrigger value="combos">Combos</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="templates">
-          <SettingsTemplates />
-        </TabsContent>
         
         <TabsContent value="general">
           <SettingsGeneral />
+        </TabsContent>
+        
+        <TabsContent value="combos">
+          <SettingsCombos />
+        </TabsContent>
+        
+        <TabsContent value="templates">
+          <SettingsTemplates />
         </TabsContent>
       </Tabs>
     </AdminLayout>
   );
 }
 ```
-
-## Templates de Mensagens
-
-O componente `SettingsTemplates` permite configurar:
-- Emails de confirmação de pedido
-- Emails de recuperação de senha
-- Mensagens de boas-vindas
-- Notificações de envio
-- Outros tipos de comunicação com o cliente
 
 ## Integração com Backend
 
@@ -65,26 +77,10 @@ Os componentes de configurações:
 - Utilizam políticas RLS para garantir acesso apenas a administradores
 - Validam dados antes de salvar
 
-## Personalização
+## Configurações de Templates para Combos
 
-Para personalizar estes componentes:
-
-1. **SettingsTemplates**: 
-   - Adicione novos tipos de template
-   - Modifique o editor de templates
-
-2. **SettingsGeneral**: 
-   - Adicione ou remova configurações gerais
-   - Personalize os formulários de configuração
-
-3. **SettingsNotifications**: 
-   - Configure novos tipos de notificação
-   - Ajuste os canais de envio disponíveis
-
-## Observações Importantes
-
-- Todas as configurações são persistidas no Supabase
-- As alterações são aplicadas imediatamente após salvar
-- Existe validação para evitar configurações inválidas
-- Apenas usuários administrativos podem acessar estas configurações
-- Modificações sensíveis (pagamentos, emails) exigem confirmação
+O componente `SettingsTemplates.tsx` inclui templates específicos para combos:
+- Email de lançamento de novo combo
+- Notificação de combo com estoque limitado
+- Lembretes sobre combos visualizados mas não comprados
+- Templates para promoções especiais de combos

@@ -27,11 +27,18 @@ Para utilizar o cliente Supabase em qualquer parte da aplicação:
 ```tsx
 import { supabase } from '@/integrations/supabase/client';
 
-// Exemplo de busca de dados
-async function fetchProducts() {
-  const { data, error } = await supabase
+// Exemplo de busca de produtos/combos
+async function fetchProducts(includeCombo = false) {
+  let query = supabase
     .from('products')
     .select('*');
+    
+  // Se quisermos apenas combos
+  if (includeCombo) {
+    query = query.eq('is_combo', true);
+  }
+  
+  const { data, error } = await query;
   
   if (error) {
     console.error('Erro ao buscar produtos:', error);
@@ -40,35 +47,42 @@ async function fetchProducts() {
   
   return data;
 }
-
-// Exemplo de autenticação
-async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth
-    .signInWithPassword({ email, password });
-    
-  if (error) throw error;
-  return data;
-}
 ```
 
-## Tabelas Disponíveis
+## Sistema de Combos no Supabase
 
-O Supabase está configurado com as seguintes tabelas principais:
-- `products`: Produtos da loja
-- `categories`: Categorias de produtos
-- `brands`: Marcas de produtos
-- `customers`: Clientes registrados
-- `orders`: Pedidos realizados
-- `order_items`: Itens de cada pedido
-- `profiles`: Perfis de usuários vinculados à autenticação
+A estrutura do banco de dados no Supabase suporta o sistema de combos através da tabela `products` com campos específicos:
+
+### Campos para Combos
+
+- `is_combo` (boolean): Indica se o produto é um combo
+- `combo_discount` (numeric): Porcentagem do desconto aplicado
+- `original_price` (numeric): Preço original antes do desconto
+- `price` (numeric): Preço final já com o desconto aplicado
+- `combo_items` (JSONB, opcional): Lista de IDs dos produtos incluídos no combo
+
+### Consultas para Combos
+
+```tsx
+// Buscar todos os combos disponíveis
+const { data: combos } = await supabase
+  .from('products')
+  .select('*')
+  .eq('is_combo', true)
+  .gt('stock', 0);
+
+// Buscar detalhes de um combo específico
+const { data: combo } = await supabase
+  .from('products')
+  .select('*')
+  .eq('id', comboId)
+  .eq('is_combo', true)
+  .single();
+```
 
 ## Row Level Security (RLS)
 
 Todas as tabelas utilizam políticas RLS para garantir segurança:
-- Dados públicos são acessíveis sem autenticação (produtos, categorias, marcas)
-- Dados sensíveis requerem autenticação e autorização
-- Usuários administradores têm acesso completo aos dados
-
-## Tipos
-
-Os tipos TypeScript para o esquema do Supabase estão em `/supabase/types.ts` e são gerados automaticamente a partir do esquema do banco de dados. Estes tipos são utilizados em toda a aplicação para garantir consistência na manipulação de dados.
+- Produtos e combos públicos são acessíveis sem autenticação
+- Operações de criação/edição de combos requerem perfil de administrador
+- Dados de vendas e relatórios são protegidos por políticas de acesso

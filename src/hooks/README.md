@@ -8,46 +8,95 @@ Esta pasta contém todos os hooks React personalizados utilizados no projeto Imp
 - `useAuth.tsx`: Gerencia autenticação e controle de acesso
 - `useBrands.tsx`: Gerencia dados de marcas
 - `useCategories.tsx`: Gerencia dados de categorias
-- `useProducts.tsx`: Gerencia dados de produtos
+- `useProducts.tsx`: Gerencia dados de produtos e combos
 - `useHomeData.tsx`: Centraliza dados para a página inicial
 - `useProductStore.tsx`: Hook completo para o gerenciamento de produtos no painel administrativo
 - `useOrdersData.ts`: Gerencia dados de pedidos
 - `useFaq.tsx`: Gerencia dados de perguntas frequentes
 - `useHero.tsx`: Gerencia dados do banner principal
 
-## Funcionalidades
+## Hooks Específicos para Combos
 
-Estes hooks:
-- Encapsulam lógica de busca e manipulação de dados
-- Gerenciam estados locais relevantes para cada domínio
-- Estabelecem conexão com o Supabase para persistência de dados
-- Fornecem funções utilitárias para manipulação de dados
-- Centralizam lógica de negócio reutilizável
+### Em useProducts.tsx
 
-## Uso
-
-Os hooks são utilizados nos componentes para acessar e manipular dados:
-
-```tsx
-import { useProducts } from '@/hooks/useProducts';
-
-const MyComponent = () => {
-  const { products, loading, error, fetchProducts } = useProducts();
+```typescript
+export const useProducts = () => {
+  // ... state e outras funções
   
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // Obter apenas os combos
+  const getCombos = useCallback(() => {
+    return products.filter(product => product.isCombo);
+  }, [products]);
   
-  if (loading) return <p>Carregando...</p>;
-  if (error) return <p>Erro: {error}</p>;
+  // Verificar se um produto é combo
+  const isCombo = useCallback((productId) => {
+    const product = products.find(p => p.id === productId);
+    return product ? !!product.isCombo : false;
+  }, [products]);
   
-  return (
-    <div>
-      {products.map(product => (
-        <div key={product.id}>{product.name}</div>
-      ))}
-    </div>
-  );
+  // Calcular desconto do combo
+  const getComboDiscount = useCallback((productId) => {
+    const product = products.find(p => p.id === productId);
+    if (!product || !product.isCombo || !product.originalPrice) return 0;
+    
+    return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  }, [products]);
+  
+  // Obter os combos em destaque para a página inicial
+  const getFeaturedCombos = useCallback((limit = 4) => {
+    return getCombos().slice(0, limit);
+  }, [getCombos]);
+  
+  return {
+    products,
+    loading,
+    error,
+    getCombos,
+    isCombo,
+    getComboDiscount,
+    getFeaturedCombos,
+    // ... outras funções
+  };
+};
+```
+
+### Em useProductStore.tsx (painel administrativo)
+
+```typescript
+export const useProductStore = () => {
+  // ... state e outras funções
+  
+  // Criar/atualizar um combo
+  const saveCombo = async (comboData) => {
+    // Garantir que é marcado como combo
+    const dataToSave = {
+      ...comboData,
+      isCombo: true,
+      // Calcular preço final com base no desconto
+      price: calculateDiscountedPrice(comboData.originalPrice, comboData.comboDiscount)
+    };
+    
+    const { data, error } = await supabase
+      .from('products')
+      .upsert(dataToSave)
+      .select();
+      
+    // ... tratamento de erro e retorno
+  };
+  
+  // Obter estatísticas de combos
+  const getComboStats = async () => {
+    const { data, error } = await supabase
+      .rpc('get_combo_performance_stats');
+      
+    // ... tratamento de resultado
+  };
+  
+  return {
+    // ... outros métodos
+    saveCombo,
+    getComboStats,
+  };
 };
 ```
 
@@ -69,9 +118,3 @@ Para personalizar ou criar novos hooks:
 3. Implemente tratamento de erros adequado
 4. Documente o hook claramente, especialmente se tiver comportamentos complexos
 5. Mantenha o estado loading para feedback ao usuário
-
-## Observações Importantes
-
-- Os hooks que acessam o Supabase respeitam as políticas de Row Level Security
-- A autenticação é gerenciada pelo hook `useAuth` e fornecida pelos contextos correspondentes
-- Os hooks de admin (`useProductStore`, `useOrdersData`, etc.) verificam permissões de administrador

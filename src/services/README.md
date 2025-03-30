@@ -15,3 +15,13 @@ async function handleData(data) {
   // Processar resposta
 }
 ```
+
+## Serviços Disponíveis
+
+- `apiService.ts`: Funções para comunicação com APIs REST
+- `storageService.ts`: Gerenciamento de arquivos e upload
+- `analyticsService.ts`: Integração com serviços de analytics
+
+## Integrações
+
+Os serviços utilizam principalmente o Supabase como backend, mas podem ser configurados para outras APIs conforme necessário.

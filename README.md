@@ -16,6 +16,7 @@ A estrutura do projeto foi organizada conforme solicitado, com pastas específic
 /
 ├── src/                            # Código-fonte principal
 │   ├── components/                 # Componentes React reutilizáveis
+│   │   ├── admin/                  # Componentes do painel administrativo
 │   │   ├── auth/                   # Componentes de autenticação
 │   │   ├── cart/                   # Componentes do carrinho
 │   │   ├── checkout/               # Componentes de checkout
@@ -23,26 +24,63 @@ A estrutura do projeto foi organizada conforme solicitado, com pastas específic
 │   │   ├── layout/                 # Componentes estruturais (header, footer)
 │   │   ├── product/                # Componentes de produto
 │   │   └── ui/                     # Componentes UI base (shadcn)
-│   ├── admin/                      # Componentes do painel administrativo
-│   │   ├── dashboard/              # Dashboard principal
-│   │   ├── products/               # Gestão de produtos
-│   │   ├── orders/                 # Gestão de pedidos
-│   │   ├── customers/              # Gestão de clientes
-│   │   ├── finance/                # Relatórios financeiros
-│   │   └── settings/               # Configurações do sistema
 │   ├── contexts/                   # Contextos para gerenciamento de estado
-│   ├── data/                       # Dados estáticos e tipos
+│   ├── data/                       # Dados estáticos e mocks
 │   ├── hooks/                      # Custom hooks React
 │   ├── integrations/               # Integrações com serviços externos (Supabase)
 │   ├── lib/                        # Utilitários e helpers
 │   ├── pages/                      # Componentes de página
-│   │   ├── admin/                  # Páginas do painel administrativo
-│   │   └── shop/                   # Páginas da loja
-│   ├── types/                      # Definições de tipos TypeScript
-│   └── App.tsx                     # Componente principal da aplicação
-├── supabase/                       # Configurações do Supabase
-└── public/                         # Arquivos estáticos
+│   ├── services/                   # Serviços de API e integrações
+│   └── types/                      # Definições de tipos TypeScript
 ```
+
+## Funcionalidades Principais
+
+### Sistema de Combos
+
+A loja conta com um sistema completo de combos promocionais:
+
+- **Criação de Combos**:
+  - Interface administrativa dedicada
+  - Configuração de percentual de desconto
+  - Definição de preços originais e com desconto
+  - Upload de imagens para combos
+
+- **Exibição de Combos**:
+  - Seção "Combos Especiais" na página inicial
+  - Página dedicada de combos
+  - Indicação visual clara de descontos
+  - Destaque para valor economizado
+
+- **Gerenciamento no Carrinho e Checkout**:
+  - Identificação visual de combos no carrinho
+  - Cálculo correto de descontos
+  - Compatibilidade com cupons adicionais
+  - Resumo claro de economia total
+
+### Painel Administrativo
+
+O sistema inclui um painel administrativo completo:
+
+- **Dashboard com métricas**:
+  - Visão geral de vendas
+  - Desempenho de combos
+  - Principais indicadores
+
+- **Gestão de Produtos e Combos**:
+  - Interface para criação e edição
+  - Categorização e organização
+  - Upload de imagens
+
+- **Gerenciamento de Pedidos**:
+  - Acompanhamento de status
+  - Histórico completo
+  - Filtragem e busca
+
+- **Relatórios Financeiros**:
+  - Análise de desempenho
+  - Relatórios por período
+  - Gráficos e visualizações
 
 ## Tecnologias Utilizadas
 
@@ -62,19 +100,6 @@ A estrutura do projeto foi organizada conforme solicitado, com pastas específic
 - Row Level Security (RLS)
 - Edge Functions
 
-## Status do Projeto
-
-O projeto está completamente funcional com todas as seguintes características:
-
-- ✅ Loja frontend completa
-- ✅ Painel administrativo
-- ✅ Autenticação de usuários
-- ✅ Conexão com banco de dados Supabase
-- ✅ Gerenciamento de produtos, categorias e marcas
-- ✅ Gerenciamento de pedidos e clientes
-- ✅ Relatórios financeiros
-- ✅ Responsividade para dispositivos móveis
-
 ## Executando o Projeto
 
 1. Instale as dependências:
@@ -82,11 +107,30 @@ O projeto está completamente funcional com todas as seguintes características:
 npm install
 ```
 
-2. Inicie o servidor de desenvolvimento:
+2. Configure as variáveis de ambiente:
+- Crie um arquivo `.env` baseado no `.env.example`
+- Adicione as credenciais do Supabase
+
+3. Inicie o servidor de desenvolvimento:
 ```bash
 npm run dev
 ```
 
-3. Abra http://localhost:5173 no navegador
+4. Acesse a aplicação:
+- Loja: http://localhost:5173
+- Painel Administrativo: http://localhost:5173/admin
 
-Para mais detalhes sobre a conexão entre frontend e backend, consulte o arquivo `CONEXAO_FRONT_BACK.md`.
+## Acesso ao Painel Administrativo
+
+Para acessar o painel administrativo:
+- URL: `/admin/login`
+- Email: admin@exemplo.com
+- Senha: admin123
+
+## Documentação Adicional
+
+Para informações detalhadas sobre a estrutura e implementação do projeto, consulte:
+
+- `PLANTA_DO_PROJETO.md`: Mapa completo da estrutura do projeto
+- `BANCO_DE_DADOS.sql`: Script SQL para criar o banco de dados
+- `CONEXAO_FRONT_BACK.md`: Detalhes sobre a conexão entre frontend e backend

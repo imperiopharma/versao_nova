@@ -10,13 +10,41 @@ Esta pasta contém componentes estruturais que definem o layout básico da aplic
 - `Footer.tsx`: Rodapé do site com links institucionais, contatos, etc.
 - `MobileNavBar.tsx`: Barra de navegação específica para dispositivos móveis
 
-## Funcionalidades
+## Header
 
-Estes componentes definem:
-- Estrutura básica consistente em todas as páginas
-- Navegação principal do site
-- Identidade visual da marca
-- Adaptação responsiva para diferentes dispositivos
+O `Header.tsx` inclui:
+- Logo da empresa
+- Menu de navegação principal
+- Busca de produtos
+- Ícone de carrinho com indicador de quantidade
+- Menu de usuário (login/cadastro/perfil)
+- Menu de categorias expansível
+
+### Menu de Combos
+
+O Header inclui um link destacado para a página de Combos Especiais, permitindo:
+- Acesso rápido às ofertas promocionais
+- Navegação direta para todos os combos disponíveis
+- Destaque visual para chamar atenção do usuário
+
+## Footer
+
+O `Footer.tsx` contém:
+- Links institucionais (Sobre Nós, Política de Privacidade)
+- Informações de contato
+- Redes sociais
+- Newsletter
+- Formas de pagamento aceitas
+- Copyright
+
+## MobileNavBar
+
+A `MobileNavBar.tsx` oferece:
+- Navegação adaptada para dispositivos móveis
+- Acesso rápido às principais seções
+- Ícone de carrinho
+- Acesso ao perfil do usuário
+- Link destacado para combos promocionais
 
 ## Uso
 
@@ -33,30 +61,3 @@ export const MinhaPage = () => {
   );
 };
 ```
-
-## Dependências
-
-- Os componentes de layout utilizam:
-  - Contexto `CartContext` para exibir quantidade de itens no carrinho
-  - Router do React Router para navegação
-  - Componentes UI da biblioteca Shadcn
-
-## Personalização
-
-Para personalizar estes componentes:
-
-1. **Layout**: 
-   - Edite `Layout.tsx` para alterar a estrutura global das páginas
-   - Pode-se adicionar mais contextos ou providers neste componente
-
-2. **Header**: 
-   - Modifique `Header.tsx` para alterar logotipo, menu principal e funcionalidades
-   - Ajuste as opções de navegação conforme necessário
-
-3. **Footer**: 
-   - Atualize `Footer.tsx` para alterar informações de contato, links e copyright
-   - Personalize a estrutura de colunas e responsividade
-
-4. **MobileNavBar**: 
-   - Edite `MobileNavBar.tsx` para ajustar o comportamento em dispositivos móveis
-   - Configure quais itens aparecem na navegação mobile
