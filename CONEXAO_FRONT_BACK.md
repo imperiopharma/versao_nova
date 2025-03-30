@@ -29,7 +29,7 @@ O projeto Imperio Pharma utiliza a seguinte arquitetura:
 1. No painel do Supabase, vá para Authentication > Settings
 2. Configure o "Site URL" para a URL do seu frontend (desenvolvimento ou produção)
 3. Em Email Auth, habilite "Enable Email Signup"
-4. Para desenvolvimento, você pode desabilitar "Confirm Email" para facilitar testes
+4. **IMPORTANTE**: Desabilite "Confirm Email" para permitir cadastro sem verificação de email
 
 ### 3. Configurar Banco de Dados
 
@@ -81,6 +81,13 @@ O Supabase utiliza políticas RLS (Row Level Security) para controlar o acesso a
 - Restringir operações de escrita apenas para usuários autenticados com função administrativa
 - Permitir que usuários vejam apenas seus próprios pedidos e dados pessoais
 
+## Autenticação
+
+O sistema foi configurado para:
+- Permitir cadastro de usuários sem verificação de email
+- Login imediato após o cadastro
+- Acesso imediato ao conteúdo protegido após autenticação
+
 ## Implantação em Produção
 
 ### 1. Implantação do Frontend
@@ -102,7 +109,7 @@ Certifique-se de configurar as variáveis de ambiente em seu servidor de produç
 ### 3. Configuração Supabase para Produção
 
 1. No painel do Supabase, atualize o "Site URL" para a URL de produção
-2. Habilite "Confirm Email" para maior segurança
+2. **Mantenha "Confirm Email" desabilitado** para permitir entrada rápida dos usuários
 3. Configure domínios permitidos em CORS se necessário
 
 ## Troubleshooting
@@ -112,6 +119,7 @@ Certifique-se de configurar as variáveis de ambiente em seu servidor de produç
 - Verifique se o "Site URL" no Supabase corresponde à URL do seu frontend
 - Verifique as configurações de CORS no Supabase
 - Certifique-se de que as chaves API estão corretas
+- Confirme que "Confirm Email" está desabilitado para permitir login imediato
 
 ### Problemas de Acesso a Dados
 

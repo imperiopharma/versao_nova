@@ -14,13 +14,12 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const nextPath = searchParams.get('next') || '/';
   
-  const { signIn, signUp, error: authError } = useAuth();
+  const { signIn, signUp, error: authError, loading } = useAuth();
   
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -58,8 +57,6 @@ export const LoginPage: React.FC = () => {
       return;
     }
     
-    setLoading(true);
-    
     try {
       if (isLogin) {
         await signIn(email, password);
@@ -71,14 +68,16 @@ export const LoginPage: React.FC = () => {
         await signUp(email, password, name);
         
         if (!authError) {
-          // Após o cadastro, mantenha na página de login, mas com a caixa de login selecionada
-          setIsLogin(true);
+          // Após o cadastro bem-sucedido, redirecione diretamente
+          // Como não há verificação de email, podemos fazer login diretamente
+          await signIn(email, password);
+          if (!authError) {
+            navigate(nextPath);
+          }
         }
       }
     } catch (error) {
       console.error('Erro de autenticação:', error);
-    } finally {
-      setLoading(false);
     }
   };
   

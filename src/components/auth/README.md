@@ -20,7 +20,7 @@ Estes componentes gerenciam:
 
 A autenticação é gerenciada pelo Supabase Auth, permitindo:
 - Login com email/senha
-- Registro de novos usuários
+- Registro de novos usuários **sem verificação de email**
 - Persistência de sessão entre recarregamentos de página
 - Proteção de rotas baseada em perfis de usuário
 
@@ -42,8 +42,7 @@ O componente `AdminAuthGuard` é crucial para o gerenciamento de recursos admini
 
 ## Configuração do Supabase Auth
 
-Para o sistema de autenticação funcionar corretamente, é necessário:
-1. Configurar corretamente o cliente Supabase (`src/integrations/supabase/client.ts`)
-2. Verificar se o Supabase Auth está configurado no console do Supabase
-3. Opcionalmente, desabilitar a verificação de email para desenvolvimento
-4. Garantir que o domínio da aplicação está configurado corretamente no Supabase
+Para o sistema de autenticação funcionar corretamente, foi configurado:
+1. Cliente Supabase (`src/integrations/supabase/client.ts`) corretamente configurado
+2. Supabase Auth configurado para **não exigir verificação de email**
+3. Suporte para login imediato após cadastro

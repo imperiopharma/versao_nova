@@ -85,13 +85,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setState(current => ({ ...current, loading: true, error: null }));
       
+      // Configurar opções para não exigir verificação de e-mail
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
           data: {
             name
-          }
+          },
+          emailRedirectTo: window.location.origin
         }
       });
       
@@ -99,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       toast({
         title: 'Cadastro realizado com sucesso',
-        description: 'Verifique seu email para confirmar seu cadastro.',
+        description: 'Sua conta foi criada. Você já pode fazer login!',
       });
       
     } catch (error: any) {

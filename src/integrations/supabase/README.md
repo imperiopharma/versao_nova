@@ -54,7 +54,7 @@ async function loginUser(email, password) {
 
 Os módulos nesta pasta oferecem:
 - Configuração centralizada para o cliente Supabase
-- Autenticação de usuários (login, cadastro, recuperação de senha)
+- Autenticação de usuários (login, cadastro) **sem necessidade de verificação de email**
 - Acesso a dados do banco de dados PostgreSQL
 - Upload e gerenciamento de arquivos
 - Tipos TypeScript para tabelas do banco de dados
@@ -71,7 +71,6 @@ O Supabase utiliza Row Level Security (RLS) para proteger os dados:
 
 O sistema de autenticação suporta:
 - Login com email/senha
-- Cadastro de novos usuários
+- Cadastro de novos usuários **sem verificação de email**
 - Recuperação de senha
-- Verificação de email (opcional)
 - Perfis de usuário personalizados
