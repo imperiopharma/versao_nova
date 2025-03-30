@@ -50,13 +50,13 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Package size={20} className="mr-2" />
-            <h2 className="text-xl font-bold">Ofertas especiais</h2>
+            <h2 className="text-xl font-bold">Combos Especiais</h2>
           </div>
           <Link 
             to="/combos" 
             className="text-xs md:text-sm flex items-center bg-white/10 hover:bg-white/20 px-2 py-1 md:px-3 md:py-1.5 rounded transition-colors"
           >
-            Ver Promoções <span className="ml-1">→</span>
+            Ver Combos <span className="ml-1">→</span>
           </Link>
         </div>
         
