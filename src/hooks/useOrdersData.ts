@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Order, OrderFilters, OrderStatus } from '@/types/orders';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import axios from 'axios';
 
 export const useOrdersData = (activeFilters?: OrderFilters) => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -9,69 +10,59 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   
+  const API_URL = '/api';
+  
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      console.log('Buscando pedidos do Supabase...');
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          customer:customers(*)
-        `)
-        .order('created_at', { ascending: false });
+      console.log('Buscando pedidos da API...');
+      const { data: response } = await axios.get(`${API_URL}/pedidos`);
       
-      if (error) {
-        console.error('Erro ao buscar pedidos:', error);
-        throw error;
-      }
-      
-      if (!data || data.length === 0) {
+      if (!response.data || response.data.length === 0) {
         console.log('Nenhum pedido encontrado');
         setOrders([]);
         setLoading(false);
         return [];
       }
       
+      const ordersData = response.data;
+      
+      // Buscar os itens para cada pedido
       const ordersWithItems = await Promise.all(
-        data.map(async (order) => {
-          const { data: itemsData, error: itemsError } = await supabase
-            .from('order_items')
-            .select(`
-              *,
-              product:products(*)
-            `)
-            .eq('order_id', order.id);
-          
-          if (itemsError) {
-            console.error('Erro ao buscar itens do pedido:', itemsError);
+        ordersData.map(async (order: any) => {
+          try {
+            const { data: itemsResponse } = await axios.get(`${API_URL}/pedidos/${order.id}/itens`);
+            const itemsData = itemsResponse.data || [];
+            
             return {
-              ...mapOrderFromSupabase(order),
+              ...mapOrderFromAPI(order),
+              items: mapOrderItemsFromAPI(itemsData)
+            };
+          } catch (err) {
+            console.error('Erro ao buscar itens do pedido:', err);
+            return {
+              ...mapOrderFromAPI(order),
               items: []
             };
           }
-          
-          return {
-            ...mapOrderFromSupabase(order),
-            items: itemsData ? mapOrderItemsFromSupabase(itemsData) : []
-          };
         })
       );
       
       console.log(`${ordersWithItems.length} pedidos encontrados`);
       setOrders(ordersWithItems);
+      setLoading(false);
       return ordersWithItems;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
+      console.error('Erro ao buscar pedidos:', err);
       toast({
         title: 'Erro',
         description: 'Não foi possível carregar os pedidos',
         variant: 'destructive'
       });
-      return [];
-    } finally {
       setLoading(false);
+      return [];
     }
   };
   
@@ -80,78 +71,76 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       setLoading(true);
       console.log('Criando novo pedido:', orderData);
       
+      // Primeiro, verificar se o cliente existe ou criar um novo
       let customerId = null;
       
       if (orderData.customer) {
-        const { data: customerData, error: customerError } = await supabase
-          .from('customers')
-          .select('id')
-          .eq('email', orderData.customer.email)
-          .maybeSingle();
-        
-        if (customerError) throw customerError;
-        
-        if (customerData) {
-          customerId = customerData.id;
-        } else {
-          const { data: newCustomer, error: newCustomerError } = await supabase
-            .from('customers')
-            .insert({
+        try {
+          // Verificar se o cliente existe
+          const { data: customerResponse } = await axios.get(`${API_URL}/clientes`, {
+            params: { email: orderData.customer.email }
+          });
+          
+          if (customerResponse.data && customerResponse.data.length > 0) {
+            customerId = customerResponse.data[0].id;
+          } else {
+            // Criar novo cliente
+            const { data: newCustomerResponse } = await axios.post(`${API_URL}/clientes`, {
               name: orderData.customer.name,
               email: orderData.customer.email,
-              phone: orderData.customer.phone || null
-            })
-            .select('id')
-            .single();
-          
-          if (newCustomerError) throw newCustomerError;
-          customerId = newCustomer.id;
+              phone: orderData.customer.phone || ''
+            });
+            
+            if (newCustomerResponse.data && newCustomerResponse.data.id) {
+              customerId = newCustomerResponse.data.id;
+            }
+          }
+        } catch (err) {
+          console.error('Erro ao processar cliente:', err);
+          throw new Error('Não foi possível processar os dados do cliente');
         }
       }
       
-      const orderNumber = `PED${Date.now().toString().slice(-6)}`;
+      // Criar pedido
+      const orderPayload = {
+        customer_id: customerId,
+        status: orderData.status || 'pending',
+        payment_method: orderData.paymentMethod || 'PIX',
+        subtotal: orderData.subtotal || 0,
+        shipping: orderData.shipping || 0,
+        discount: orderData.discount || 0,
+        total: orderData.total || 0
+      };
       
-      const { data: newOrder, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          order_number: orderNumber,
-          customer_id: customerId,
-          status: orderData.status || 'pending',
-          payment_method: orderData.paymentMethod || 'PIX',
-          subtotal: orderData.subtotal || 0,
-          shipping: orderData.shipping || 0,
-          discount: orderData.discount || 0,
-          total: orderData.total || 0
-        })
-        .select('*')
-        .single();
+      const { data: orderResponse } = await axios.post(`${API_URL}/pedidos`, orderPayload);
       
-      if (orderError) throw orderError;
+      if (!orderResponse.data || !orderResponse.data.id) {
+        throw new Error('Erro ao criar pedido');
+      }
       
+      const newOrderId = orderResponse.data.id;
+      
+      // Adicionar itens do pedido
       if (orderData.items && orderData.items.length > 0) {
-        const orderItems = orderData.items.map(item => ({
-          order_id: newOrder.id,
-          product_id: typeof item.id === 'string' ? item.id : null,
-          quantity: item.quantity,
-          price: item.price,
-          total: item.price * item.quantity
-        }));
-        
-        const { error: itemsError } = await supabase
-          .from('order_items')
-          .insert(orderItems);
-        
-        if (itemsError) throw itemsError;
+        for (const item of orderData.items) {
+          await axios.post(`${API_URL}/pedidos/${newOrderId}/itens`, {
+            product_id: typeof item.id === 'string' ? item.id : null,
+            quantity: item.quantity,
+            price: item.price,
+            total: item.price * item.quantity
+          });
+        }
       }
       
       toast({
         title: 'Pedido criado',
-        description: `Pedido ${orderNumber} criado com sucesso!`
+        description: `Pedido #${newOrderId} criado com sucesso!`
       });
       
       await fetchOrders();
+      setLoading(false);
       
-      return newOrder;
+      return orderResponse.data;
     } catch (err) {
       console.error('Erro ao criar pedido:', err);
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
@@ -161,9 +150,8 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         description: 'Não foi possível criar o pedido',
         variant: 'destructive'
       });
-      return null;
-    } finally {
       setLoading(false);
+      return null;
     }
   };
   
@@ -172,30 +160,29 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       setLoading(true);
       console.log(`Atualizando status do pedido ${orderId} para ${newStatus}`);
       
-      const { error } = await supabase
-        .from('orders')
-        .update({ 
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', orderId);
-      
-      if (error) throw error;
-      
-      setOrders(prev => 
-        prev.map(order => 
-          order.id === orderId 
-            ? { ...order, status: newStatus } 
-            : order
-        )
-      );
-      
-      toast({
-        title: 'Status atualizado',
-        description: `O pedido foi atualizado para ${newStatus}.`
+      const { data: response } = await axios.put(`${API_URL}/pedidos/${orderId}`, {
+        status: newStatus
       });
       
-      return true;
+      if (response.success) {
+        setOrders(prev => 
+          prev.map(order => 
+            order.id === orderId 
+              ? { ...order, status: newStatus } 
+              : order
+          )
+        );
+        
+        toast({
+          title: 'Status atualizado',
+          description: `O pedido foi atualizado para ${newStatus}.`
+        });
+        
+        setLoading(false);
+        return true;
+      } else {
+        throw new Error(response.error || 'Erro ao atualizar status');
+      }
     } catch (err) {
       console.error('Erro ao atualizar status:', err);
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
@@ -205,9 +192,8 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         description: 'Não foi possível atualizar o status do pedido',
         variant: 'destructive'
       });
-      return false;
-    } finally {
       setLoading(false);
+      return false;
     }
   };
   
@@ -216,28 +202,25 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
       setLoading(true);
       console.log(`Excluindo pedido ${orderId}`);
       
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .delete()
-        .eq('order_id', orderId);
+      // Primeiro excluir os itens do pedido
+      await axios.delete(`${API_URL}/pedidos/${orderId}/itens`);
       
-      if (itemsError) throw itemsError;
+      // Depois excluir o pedido
+      const { data: response } = await axios.delete(`${API_URL}/pedidos/${orderId}`);
       
-      const { error } = await supabase
-        .from('orders')
-        .delete()
-        .eq('id', orderId);
-      
-      if (error) throw error;
-      
-      setOrders(prev => prev.filter(order => order.id !== orderId));
-      
-      toast({
-        title: 'Pedido excluído',
-        description: 'O pedido foi excluído com sucesso.'
-      });
-      
-      return true;
+      if (response.success) {
+        setOrders(prev => prev.filter(order => order.id !== orderId));
+        
+        toast({
+          title: 'Pedido excluído',
+          description: 'O pedido foi excluído com sucesso.'
+        });
+        
+        setLoading(false);
+        return true;
+      } else {
+        throw new Error(response.error || 'Erro ao excluir pedido');
+      }
     } catch (err) {
       console.error('Erro ao excluir pedido:', err);
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
@@ -247,37 +230,36 @@ export const useOrdersData = (activeFilters?: OrderFilters) => {
         description: 'Não foi possível excluir o pedido',
         variant: 'destructive'
       });
-      return false;
-    } finally {
       setLoading(false);
+      return false;
     }
   };
   
-  const mapOrderFromSupabase = (order: any): Order => ({
+  const mapOrderFromAPI = (order: any): Order => ({
     id: order.id,
     orderNumber: order.order_number,
     date: order.created_at,
     customer: {
-      name: order.customer?.name || 'Cliente desconhecido',
-      email: order.customer?.email || '',
-      phone: order.customer?.phone || '',
+      name: order.customer_name || 'Cliente desconhecido',
+      email: order.customer_email || '',
+      phone: order.customer_phone || '',
     },
     items: [],
-    subtotal: order.subtotal || 0,
-    shipping: order.shipping || 0,
-    discount: order.discount || 0,
-    total: order.total || 0,
+    subtotal: parseFloat(order.subtotal) || 0,
+    shipping: parseFloat(order.shipping) || 0,
+    discount: parseFloat(order.discount) || 0,
+    total: parseFloat(order.total) || 0,
     paymentMethod: order.payment_method || 'PIX',
     status: order.status as OrderStatus,
   });
   
-  const mapOrderItemsFromSupabase = (items: any[]) => {
+  const mapOrderItemsFromAPI = (items: any[]) => {
     return items.map(item => ({
       id: item.id,
-      name: item.product?.name || 'Produto indisponível',
-      price: item.price || 0,
-      quantity: item.quantity || 1,
-      total: item.total || 0,
+      name: item.product_name || 'Produto indisponível',
+      price: parseFloat(item.price) || 0,
+      quantity: parseInt(item.quantity) || 1,
+      total: parseFloat(item.total) || 0,
       productId: item.product_id,
     }));
   };

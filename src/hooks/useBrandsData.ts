@@ -1,51 +1,53 @@
 
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useProductCommon } from './useProductCommon';
-import { Brand, BrandCategory } from '@/types/brand';
+import { brandService } from '@/services/apiService';
 import { slugify } from '@/lib/utils';
 
 export function useBrandsData() {
   const [brands, setBrands] = useState<any[]>([]);
-  const { handleError, formatDateForSupabase, showSuccessToast } = useProductCommon();
+  const { handleError, showSuccessToast } = useProductCommon();
+  const [loading, setLoading] = useState(false);
 
-  // Buscar marcas do Supabase
+  // Buscar marcas da API
   const fetchBrands = async () => {
+    setLoading(true);
     try {
-      console.log('Buscando marcas do Supabase...');
-      const { data: brandsData, error: brandsError } = await supabase
-        .from('brands')
-        .select('*')
-        .order('name');
+      console.log('Buscando marcas da API...');
+      const brandsData = await brandService.getAll();
 
-      if (brandsError) {
-        throw brandsError;
+      if (brandsData && brandsData.length > 0) {
+        // Formatar dados das marcas
+        const formattedBrands = brandsData.map(brand => ({
+          id: brand.id,
+          name: brand.name,
+          slug: brand.slug,
+          description: brand.description || '',
+          status: brand.status || 'active',
+          logoUrl: brand.logo_url || '',
+          category: brand.category || ''
+        }));
+
+        console.log(`Encontradas ${formattedBrands.length} marcas na API`);
+        setBrands(formattedBrands);
+        setLoading(false);
+        return formattedBrands;
       }
-
-      // Formatar dados das marcas
-      const formattedBrands = brandsData.map(brand => ({
-        id: brand.id,
-        name: brand.name,
-        slug: brand.slug,
-        description: brand.description,
-        status: brand.status,
-        logoUrl: brand.logo_url,
-        category: brand.category
-      }));
-
-      console.log(`Encontradas ${formattedBrands.length} marcas no Supabase`);
-      setBrands(formattedBrands);
-      return formattedBrands;
+      
+      setLoading(false);
+      return [];
     } catch (error) {
       handleError(error, 'Erro ao buscar marcas');
+      setLoading(false);
       return [];
     }
   };
 
-  // Adicionar uma marca ao Supabase
+  // Adicionar uma marca via API
   const addBrand = async (brand: any) => {
+    setLoading(true);
     try {
-      // Verificar se o nome e slug existem
+      // Verificar se o nome existe
       if (!brand.name) {
         throw new Error('Nome da marca é obrigatório');
       }
@@ -53,104 +55,110 @@ export function useBrandsData() {
       // Gerar slug automaticamente se não existir
       const slug = brand.slug || slugify(brand.name);
       
-      // Remover propriedades incompatíveis com o esquema do Supabase
-      const { id, logoUrl, ...brandData } = brand;
-      
-      // Converter nomes de propriedades para o formato do Supabase
-      const supabbaseBrand = {
-        name: brandData.name,
+      // Preparar dados para API
+      const brandData = {
+        name: brand.name,
         slug: slug,
-        description: brandData.description,
-        category: brandData.category,
-        logo_url: logoUrl,
-        status: brandData.status
+        description: brand.description || '',
+        logo_url: brand.logoUrl || '',
+        category: brand.category || '',
+        status: brand.status || 'active'
       };
 
-      console.log('Enviando para Supabase:', supabbaseBrand);
+      console.log('Enviando marca para API:', brandData);
 
-      const { data, error } = await supabase
-        .from('brands')
-        .insert(supabbaseBrand)
-        .select()
-        .single();
+      const newBrand = await brandService.create(brandData);
 
-      if (error) {
-        console.error('Erro Supabase:', error);
-        throw error;
+      if (newBrand) {
+        const formattedBrand = {
+          id: newBrand.id,
+          name: newBrand.name,
+          slug: newBrand.slug,
+          description: newBrand.description || '',
+          category: newBrand.category || '',
+          logoUrl: newBrand.logo_url || '',
+          status: newBrand.status || 'active'
+        };
+
+        setBrands(prev => [...prev, formattedBrand]);
+        showSuccessToast('Marca adicionada', 'A marca foi adicionada com sucesso.');
+        setLoading(false);
+        return formattedBrand;
       }
-
-      console.log('Resposta Supabase:', data);
-
-      const formattedBrand = {
-        id: data.id,
-        name: data.name,
-        slug: data.slug,
-        description: data.description,
-        category: data.category,
-        logoUrl: data.logo_url,
-        status: data.status
-      };
-
-      setBrands(prev => [...prev, formattedBrand]);
-      showSuccessToast('Marca adicionada', 'A marca foi adicionada com sucesso.');
-      return formattedBrand;
+      
+      setLoading(false);
+      return null;
     } catch (error) {
       handleError(error, 'Erro ao adicionar marca');
+      setLoading(false);
       throw error;
     }
   };
 
-  // Atualizar uma marca no Supabase
+  // Atualizar uma marca via API
   const updateBrand = async (brand: any) => {
+    setLoading(true);
     try {
-      const { id, logoUrl, ...brandData } = brand;
+      const { id } = brand;
       
       // Verificar se o ID existe
       if (!id) {
         throw new Error('ID da marca é necessário para atualização');
       }
       
-      // Converter nomes de propriedades para o formato do Supabase
-      const supabbaseBrand = {
-        name: brandData.name,
-        slug: brandData.slug,
-        description: brandData.description,
-        category: brandData.category,
-        logo_url: logoUrl,
-        status: brandData.status,
-        updated_at: formatDateForSupabase()
+      // Preparar dados para API
+      const brandData = {
+        name: brand.name,
+        slug: brand.slug,
+        description: brand.description || '',
+        logo_url: brand.logoUrl || '',
+        category: brand.category || '',
+        status: brand.status || 'active'
       };
 
-      const { error } = await supabase
-        .from('brands')
-        .update(supabbaseBrand)
-        .eq('id', id);
+      const updatedBrand = await brandService.update(id, brandData);
 
-      if (error) throw error;
-
-      setBrands(prev => prev.map(b => b.id === id ? { ...brand } : b));
-      showSuccessToast('Marca atualizada', 'A marca foi atualizada com sucesso.');
-      return brand;
+      if (updatedBrand) {
+        // Atualizar a marca na lista local
+        setBrands(prev => prev.map(b => b.id === id ? { 
+          ...brand,
+          id: updatedBrand.id || id,
+          name: updatedBrand.name || brand.name,
+          slug: updatedBrand.slug || brand.slug,
+          description: updatedBrand.description || brand.description,
+          category: updatedBrand.category || brand.category,
+          logoUrl: updatedBrand.logo_url || brand.logoUrl,
+          status: updatedBrand.status || brand.status
+        } : b));
+        
+        showSuccessToast('Marca atualizada', 'A marca foi atualizada com sucesso.');
+        setLoading(false);
+        return updatedBrand;
+      }
+      
+      setLoading(false);
+      return null;
     } catch (error) {
       handleError(error, 'Erro ao atualizar marca');
+      setLoading(false);
       throw error;
     }
   };
 
-  // Excluir uma marca do Supabase
+  // Excluir uma marca via API
   const deleteBrand = async (brandId: string) => {
+    setLoading(true);
     try {
-      const { error } = await supabase
-        .from('brands')
-        .delete()
-        .eq('id', brandId);
+      await brandService.delete(brandId);
 
-      if (error) throw error;
-
+      // Remover a marca da lista local
       setBrands(prev => prev.filter(b => b.id !== brandId));
       showSuccessToast("Marca excluída", "A marca foi excluída com sucesso.");
+      setLoading(false);
+      return true;
     } catch (error) {
       handleError(error, 'Erro ao excluir marca');
+      setLoading(false);
       throw error;
     }
   };
@@ -161,6 +169,7 @@ export function useBrandsData() {
     fetchBrands,
     addBrand,
     updateBrand,
-    deleteBrand
+    deleteBrand,
+    loading
   };
 }
