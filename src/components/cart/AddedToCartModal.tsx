@@ -1,12 +1,13 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { ShoppingBag, X, CheckCircle, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { formatCurrency } from '@/lib/formatters';
 
 interface AddedToCartModalProps {
   productName: string;
-  productImage?: string;
+  productImage: string;
   total: number;
   itemCount: number;
   onClose: () => void;
@@ -19,63 +20,76 @@ export const AddedToCartModal: React.FC<AddedToCartModalProps> = ({
   itemCount,
   onClose
 }) => {
+  // Fechar automaticamente após 5 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [onClose]);
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div 
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      ></div>
+      <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
       
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md z-10 relative overflow-hidden animate-scale-in">
-        <div className="flex justify-between items-center border-b p-4">
-          <h3 className="text-lg font-medium text-imperio-navy">Produto Adicionado!</h3>
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md relative z-10 overflow-hidden animate-scale-in">
+        <div className="bg-imperio-navy text-white py-3 px-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <CheckCircle size={18} className="mr-2" />
+            <h3 className="font-medium">Produto adicionado ao carrinho</h3>
+          </div>
           <button 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-white/80 hover:text-white transition-colors"
+            aria-label="Fechar"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
         
         <div className="p-4">
-          <div className="flex items-center gap-4 mb-4">
-            {productImage && (
+          <div className="flex items-center mb-4">
+            <div className="w-16 h-16 bg-gray-50 rounded border overflow-hidden flex-shrink-0">
               <img 
                 src={productImage} 
-                alt={productName}
-                className="w-16 h-16 object-cover rounded"
+                alt={productName} 
+                className="w-full h-full object-contain"
               />
-            )}
-            <div>
-              <p className="font-medium text-gray-800">{productName}</p>
+            </div>
+            
+            <div className="ml-3">
+              <p className="font-medium">{productName}</p>
+              <p className="text-sm text-imperio-navy">Adicionado com sucesso!</p>
             </div>
           </div>
           
-          <div className="font-semibold text-imperio-navy text-xl text-center mb-4">
-            Total do Carrinho: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-            <div className="text-sm text-gray-600 font-normal">
-              {itemCount} {itemCount === 1 ? 'item' : 'itens'} no carrinho
+          <div className="bg-gray-50 rounded-md p-3 mb-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm text-gray-500">Seu carrinho</p>
+                <p className="font-medium">{itemCount} {itemCount === 1 ? 'item' : 'itens'}</p>
+              </div>
+              <p className="font-bold text-imperio-navy">{formatCurrency(total)}</p>
             </div>
           </div>
           
-          <div className="space-y-3">
-            <Button 
+          <div className="flex gap-3">
+            <Button
               variant="outline"
-              className="w-full"
               onClick={onClose}
+              className="flex-1"
             >
               Continuar Comprando
             </Button>
             
-            <Button 
-              className="w-full bg-imperio-navy hover:bg-imperio-light-navy"
+            <Button
               asChild
+              className="flex-1 bg-imperio-navy hover:bg-imperio-light-navy"
             >
-              <Link 
-                to="/carrinho"
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              >
-                Ir para o Carrinho
+              <Link to="/carrinho" className="flex items-center justify-center">
+                <ShoppingBag size={16} className="mr-2" />
+                Ver Carrinho
               </Link>
             </Button>
           </div>
