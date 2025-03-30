@@ -8,7 +8,6 @@ Esta pasta contém todos os componentes React da aplicação, organizados por fu
 - `/admin`: Componentes usados na interface de administração
 - `/auth`: Componentes relacionados a autenticação e autorização
 - `/cart`: Componentes para gerenciamento do carrinho
-- `/chatbot`: Assistente virtual e componentes relacionados
 - `/checkout`: Formulários e componentes de checkout
 - `/home`: Seções e blocos para a página inicial
 - `/layout`: Componentes de estrutura (Header, Footer, Layout)

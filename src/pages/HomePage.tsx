@@ -5,7 +5,6 @@ import { HeroBanner } from '@/components/home/HeroBanner';
 import { CategoryCards } from '@/components/home/CategoryCards';
 import { BrandsSection } from '@/components/home/BrandsSection';
 import { FlashSaleSection } from '@/components/home/FlashSaleSection';
-import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
 import { useHomeData } from '@/hooks/useHomeData';
 
 /**
@@ -36,9 +35,6 @@ export const HomePage: React.FC = () => {
       
       {/* Seção de marcas - sempre visível */}
       <BrandsSection brands={brands} />
-      
-      {/* Assistente virtual sempre disponível */}
-      <VirtualAssistant />
     </Layout>
   );
 };
