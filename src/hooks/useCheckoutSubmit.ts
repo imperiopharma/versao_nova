@@ -131,7 +131,7 @@ export const useCheckoutSubmit = () => {
           toast({
             title: 'Aviso',
             description: 'Pedido criado, mas houve um problema ao enviar o comprovante. Entre em contato com o suporte.',
-            variant: 'warning',
+            variant: 'destructive', // Corrigido: alterado de 'warning' para 'destructive'
           });
         }
       }
@@ -141,7 +141,7 @@ export const useCheckoutSubmit = () => {
       
       toast({
         title: 'Pedido realizado com sucesso!',
-        description: `Seu pedido #${newOrder.orderNumber} foi recebido e está sendo processado.`,
+        description: `Seu pedido #${newOrder.order_number} foi recebido e está sendo processado.`, // Corrigido: alterado de orderNumber para order_number
       });
       
       // Resetar estados após 5 segundos
