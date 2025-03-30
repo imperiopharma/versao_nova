@@ -1,14 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product } from '@/types/product';
+import { FlashSaleItem } from '@/types/product';
 import { ShoppingCart, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-
-export interface FlashSaleItem extends Product {
-  discountPercentage?: number;
-}
 
 interface FlashSaleSectionProps {
   items: FlashSaleItem[];
@@ -69,7 +65,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
               >
                 <div className="relative">
                   <img 
-                    src={item.imageUrl || 'https://via.placeholder.com/300x300'} 
+                    src={item.image || 'https://via.placeholder.com/300x300'} 
                     alt={item.name} 
                     className="w-full h-40 object-cover"
                   />

@@ -47,7 +47,9 @@ export const mockFlashSaleItems: FlashSaleItem[] = [
     brand: 'Império Pharma',
     price: 199.90,
     originalPrice: 299.90,
-    image: 'https://via.placeholder.com/300x300/e53e3e/ffffff?text=Kit+Emagrecedor'
+    image: 'https://via.placeholder.com/300x300/e53e3e/ffffff?text=Kit+Emagrecedor',
+    category: 'combos',
+    discountPercentage: 33
   },
   {
     id: 'combo2',
@@ -55,6 +57,8 @@ export const mockFlashSaleItems: FlashSaleItem[] = [
     brand: 'Império Pharma',
     price: 149.90,
     originalPrice: 199.90,
-    image: 'https://via.placeholder.com/300x300/38a169/ffffff?text=Kit+Imunidade'
+    image: 'https://via.placeholder.com/300x300/38a169/ffffff?text=Kit+Imunidade',
+    category: 'combos',
+    discountPercentage: 25
   }
 ];

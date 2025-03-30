@@ -33,4 +33,6 @@ export interface FlashSaleItem {
   sellingPrice?: number;
   costPrice?: number;
   image: string;
+  discountPercentage?: number;
+  category?: string; // Adicionado para compatibilidade
 }
