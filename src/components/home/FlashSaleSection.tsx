@@ -1,120 +1,121 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Product } from '@/types/product';
+import { ShoppingCart, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { FlashSaleItem } from '@/types/product';
-import { formatCurrency } from '@/lib/formatters';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from "@/components/ui/button";
+
+export interface FlashSaleItem extends Product {
+  discountPercentage?: number;
+}
 
 interface FlashSaleSectionProps {
   items: FlashSaleItem[];
 }
 
 export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => {
-  const isMobile = useIsMobile();
-  
-  // Animações
-  const containerVariants = {
+  // Animation configs
+  const sectionVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.1
+        delayChildren: 0.2
       }
     }
   };
-
+  
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
-      y: 0,
       opacity: 1,
+      y: 0,
       transition: {
-        type: 'spring',
-        stiffness: 50,
-        damping: 8
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   };
 
-  // Se não houver itens, não renderiza a seção
-  if (!items || items.length === 0) {
-    return null;
-  }
-
+  if (!items || items.length === 0) return null;
+  
   return (
-    <section className="py-10 bg-gray-50">
+    <section className="bg-gray-50 py-12 md:py-16">
       <div className="section-container">
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-imperio-navy">COMBOS</h2>
-          <p className="text-gray-600 mt-2">Combinações especiais com preços imperdíveis</p>
-        </div>
-        
         <motion.div 
-          className="grid grid-cols-2 gap-4 md:gap-6"
-          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
+          variants={sectionVariants}
+          className="flex flex-col items-center"
         >
-          {items.map((item) => (
-            <motion.div 
-              key={item.id}
-              variants={itemVariants}
-              className="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
-            >
-              <div className="relative">
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-full h-32 sm:h-48 object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co/600x400/e2e8f0/64748b?text=Combo";
-                  }} 
-                />
-                
-                {/* Badge de desconto */}
-                {item.discountPercentage > 0 && (
-                  <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    -{item.discountPercentage}%
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-3 flex-grow flex flex-col">
-                <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2">{item.name}</h3>
-                
-                <div className="mt-auto pt-2">
-                  {item.originalPrice > 0 && (
-                    <span className="text-gray-500 line-through text-sm">
-                      {formatCurrency(item.originalPrice)}
-                    </span>
+          <motion.div variants={itemVariants} className="text-center mb-10">
+            <h2 className="text-2xl font-bold mb-2 text-imperio-navy tracking-tight">COMBOS</h2>
+            <p className="text-imperio-light-navy/80 max-w-2xl mx-auto">
+              Economize com nossas ofertas exclusivas de combos cuidadosamente selecionados.
+            </p>
+          </motion.div>
+          
+          <motion.div 
+            variants={itemVariants}
+            className="grid grid-cols-2 gap-4 w-full"
+          >
+            {items.map((item) => (
+              <div 
+                key={item.id} 
+                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col"
+              >
+                <div className="relative">
+                  <img 
+                    src={item.imageUrl || 'https://via.placeholder.com/300x300'} 
+                    alt={item.name} 
+                    className="w-full h-40 object-cover"
+                  />
+                  
+                  {item.discountPercentage && item.discountPercentage > 0 && (
+                    <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
+                      {item.discountPercentage}% OFF
+                    </div>
                   )}
-                  <div className="font-bold text-imperio-navy">
-                    {formatCurrency(item.price)}
+                </div>
+                
+                <div className="p-3 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-medium text-sm text-imperio-navy truncate">{item.name}</h3>
+                    <div className="flex items-baseline mt-1 space-x-2">
+                      <span className="text-sm font-bold text-imperio-navy">
+                        R$ {Number(item.price).toFixed(2)}
+                      </span>
+                      {item.discountPercentage && item.discountPercentage > 0 && (
+                        <span className="text-xs text-gray-500 line-through">
+                          R$ {(Number(item.price) / (1 - item.discountPercentage / 100)).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  
+                  <button 
+                    className="mt-3 py-1.5 px-3 bg-imperio-navy text-white rounded-lg text-xs flex items-center justify-center hover:bg-imperio-light-navy transition-colors duration-300"
+                  >
+                    <ShoppingCart size={14} className="mr-1" />
+                    Adicionar
+                  </button>
                 </div>
               </div>
-              
-              <Link 
-                to={`/produto/${item.id}`}
-                className="bg-imperio-navy text-white text-center py-2 block hover:bg-imperio-light-navy transition-colors"
-              >
-                Ver detalhes
-              </Link>
-            </motion.div>
-          ))}
+            ))}
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="mt-10">
+            <Link to="/combos">
+              <Button variant="outline" className="group">
+                Ver todos os combos
+                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </motion.div>
         </motion.div>
-        
-        <div className="mt-8 text-center">
-          <Link 
-            to="/combos"
-            className="inline-block py-2 px-6 rounded-full border border-imperio-navy text-imperio-navy font-medium hover:bg-imperio-navy hover:text-white transition-colors"
-          >
-            Ver todos os combos
-          </Link>
-        </div>
       </div>
     </section>
   );

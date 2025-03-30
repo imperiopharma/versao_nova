@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -73,7 +74,7 @@ export default {
 					navy: '#0a1929',
 					red: '#e53e3e',
 					'light-navy': '#1e3a5c',
-					'extra-light-navy': '#e6f0f9',
+					'extra-light-navy': '#e6f0f9', // Adicionada a cor que estava faltando
 					'dark-navy': '#051220',
 					gray: '#f7f8f9',
 					gold: '#c9a44b',
