@@ -50,6 +50,7 @@ export type Database = {
           active: boolean | null
           created_at: string | null
           description: string | null
+          icon_name: string | null
           id: string
           name: string
           slug: string
@@ -60,6 +61,7 @@ export type Database = {
           active?: boolean | null
           created_at?: string | null
           description?: string | null
+          icon_name?: string | null
           id?: string
           name: string
           slug: string
@@ -70,6 +72,7 @@ export type Database = {
           active?: boolean | null
           created_at?: string | null
           description?: string | null
+          icon_name?: string | null
           id?: string
           name?: string
           slug?: string
