@@ -42,10 +42,9 @@ Os pedidos podem ter os seguintes status:
 - `completed`: Pedido entregue e finalizado
 - `cancelled`: Pedido cancelado
 
-## Integração com Backend
+## Integração com Serviços
 
-Todos os componentes estão integrados com o Supabase para:
-- Buscar pedidos e itens de pedido
-- Atualizar status de pedidos
-- Enviar notificações aos clientes
-- Aplicar políticas de segurança (RLS)
+Todos os componentes estão integrados com serviços da API:
+- `orderService` para gerenciamento de pedidos
+- `productService` para informações de produtos
+- `customerService` para dados de clientes

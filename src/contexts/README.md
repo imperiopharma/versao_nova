@@ -69,3 +69,9 @@ function ProductCard({ product }) {
   );
 }
 ```
+
+## Integração com Serviços
+
+Os contextos se integram com os serviços da aplicação:
+- CartContext utiliza o `productService` para verificar disponibilidade
+- CheckoutContext utiliza o `orderService` para finalizar pedidos

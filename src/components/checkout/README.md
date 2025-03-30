@@ -95,8 +95,9 @@ const OrderItemsCard = () => {
 };
 ```
 
-## Integração com Contextos
+## Integração com Serviços
 
 Os componentes utilizam:
-- `CartContext`: Para acessar itens e valores do carrinho
-- `CheckoutContext`: Para gerenciar o estado entre etapas do checkout
+- `orderService` para finalização de pedidos
+- `shippingService` para cálculo de frete
+- `customerService` para dados de cliente

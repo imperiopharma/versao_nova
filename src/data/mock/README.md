@@ -34,12 +34,12 @@ Os dados mock de produtos já incluem exemplos de combos promocionais:
 ## Uso em Desenvolvimento
 
 Estes dados são utilizados principalmente durante as fases de desenvolvimento:
-- Quando o backend ainda não está completamente implementado
+- Quando a API ainda não está completamente implementada
 - Para trabalhar offline
 - Para demonstração da interface
 - Para testes de usabilidade
 
-Em ambiente de produção, estes dados são substituídos por chamadas reais à API Supabase.
+Em ambiente de produção, estes dados são substituídos por chamadas reais à API.
 
 ## Estrutura dos Dados
 

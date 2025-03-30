@@ -7,6 +7,7 @@ Esta pasta contém funções utilitárias e bibliotecas auxiliares usadas em tod
 
 - `formatters.ts`: Funções para formatação de valores (dinheiro, datas, etc.)
 - `utils.ts`: Funções utilitárias gerais
+- `validators.ts`: Funções para validação de dados
 
 ## Formatadores
 
@@ -26,6 +27,7 @@ O arquivo `utils.ts` inclui funções específicas para manipulação de combos:
 - `calculateSavings(originalPrice: number, finalPrice: number)`: Calcula o valor economizado
 - `calculateDiscountPercentage(originalPrice: number, finalPrice: number)`: Calcula o percentual de desconto
 - `isCombo(product: Product)`: Verifica se um produto é um combo
+- `slugify(text: string)`: Converte texto para formato de slug (para URLs)
 
 Exemplo de uso:
 
@@ -42,11 +44,19 @@ console.log(`De ${formatCurrency(originalPrice)} por ${formatCurrency(finalPrice
 // Saída: "De R$ 100,00 por R$ 70,00"
 ```
 
-## Utilitários Gerais
+## Validadores
+
+O arquivo `validators.ts` contém funções para validação de dados:
+
+- `isValidEmail(email: string)`: Verifica se um email é válido
+- `isValidPhone(phone: string)`: Verifica se um número de telefone é válido
+- `isValidCPF(cpf: string)`: Verifica se um CPF é válido
+- `isValidCEP(cep: string)`: Verifica se um CEP é válido
+
+## Outros Utilitários
 
 Outras funções utilitárias disponíveis:
 
-- `slugify(text: string)`: Converte texto para formato de slug (para URLs)
 - `truncateText(text: string, length: number)`: Trunca texto para exibição
 - `getSafeImageUrl(url: string, fallback: string)`: Garante URL de imagem válida com fallback
 - `debounce(func: Function, wait: number)`: Implementa debounce para funções

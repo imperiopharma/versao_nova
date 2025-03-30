@@ -6,11 +6,11 @@ Esta pasta contém todos os hooks React personalizados utilizados no projeto Imp
 ## Hooks Principais
 
 - `useAuth.tsx`: Gerencia autenticação e controle de acesso
-- `useBrands.tsx`: Gerencia dados de marcas
-- `useCategories.tsx`: Gerencia dados de categorias
+- `useBrandsData.ts`: Gerencia dados de marcas
+- `useCategoriesData.ts`: Gerencia dados de categorias
+- `useProductCommon.ts`: Utilitários comuns para produtos
 - `useProducts.tsx`: Gerencia dados de produtos e combos
 - `useHomeData.tsx`: Centraliza dados para a página inicial
-- `useProductStore.tsx`: Hook completo para o gerenciamento de produtos no painel administrativo
 - `useOrdersData.ts`: Gerencia dados de pedidos
 - `useFaq.tsx`: Gerencia dados de perguntas frequentes
 - `useHero.tsx`: Gerencia dados do banner principal
@@ -60,61 +60,55 @@ export const useProducts = () => {
 };
 ```
 
-### Em useProductStore.tsx (painel administrativo)
+## Hooks de Dados
 
-```typescript
-export const useProductStore = () => {
-  // ... state e outras funções
+Hooks que gerenciam comunicação com API e estado:
+
+- `useBrandsData.ts`: Comunicação com brandService
+- `useCategoriesData.ts`: Comunicação com categoryService
+- `useOrdersData.ts`: Comunicação com orderService
+- `useCustomersData.ts`: Comunicação com customerService
+
+## Integração com Serviços
+
+Os hooks que se comunicam com os serviços da API seguem um padrão consistente:
+- Estado para dados (`brands`, `categories`, etc.)
+- Estado para controle de carregamento (`loading`)
+- Funções para buscar dados (`fetchBrands`, `fetchCategories`, etc.)
+- Funções para adicionar, atualizar e excluir dados
+- Tratamento de erros uniforme
+
+## Uso
+
+```tsx
+import { useBrandsData } from '@/hooks/useBrandsData';
+
+function BrandsComponent() {
+  const { brands, loading, fetchBrands, addBrand, updateBrand, deleteBrand } = useBrandsData();
   
-  // Criar/atualizar um combo
-  const saveCombo = async (comboData) => {
-    // Garantir que é marcado como combo
-    const dataToSave = {
-      ...comboData,
-      isCombo: true,
-      // Calcular preço final com base no desconto
-      price: calculateDiscountedPrice(comboData.originalPrice, comboData.comboDiscount)
-    };
-    
-    const { data, error } = await supabase
-      .from('products')
-      .upsert(dataToSave)
-      .select();
-      
-    // ... tratamento de erro e retorno
-  };
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
   
-  // Obter estatísticas de combos
-  const getComboStats = async () => {
-    const { data, error } = await supabase
-      .rpc('get_combo_performance_stats');
-      
-    // ... tratamento de resultado
-  };
+  if (loading) return <p>Carregando...</p>;
   
-  return {
-    // ... outros métodos
-    saveCombo,
-    getComboStats,
-  };
-};
+  return (
+    <div>
+      {brands.map(brand => (
+        <div key={brand.id}>
+          <h3>{brand.name}</h3>
+          <button onClick={() => updateBrand({ ...brand, name: 'Novo Nome' })}>
+            Editar
+          </button>
+          <button onClick={() => deleteBrand(brand.id)}>
+            Excluir
+          </button>
+        </div>
+      ))}
+      <button onClick={() => addBrand({ name: 'Nova Marca', slug: 'nova-marca' })}>
+        Adicionar Marca
+      </button>
+    </div>
+  );
+}
 ```
-
-## Integração com Backend
-
-Os hooks que se comunicam com o backend (Supabase) seguem um padrão consistente:
-- Funções para buscar dados (`fetch...`)
-- Funções para adicionar dados (`add...`)
-- Funções para atualizar dados (`update...`)
-- Funções para excluir dados (`delete...`)
-- Estados para controlar carregamento e erros
-
-## Personalização
-
-Para personalizar ou criar novos hooks:
-
-1. Siga o padrão dos hooks existentes
-2. Mantenha a separação de responsabilidades (um hook por domínio)
-3. Implemente tratamento de erros adequado
-4. Documente o hook claramente, especialmente se tiver comportamentos complexos
-5. Mantenha o estado loading para feedback ao usuário

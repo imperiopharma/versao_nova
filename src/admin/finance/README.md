@@ -46,10 +46,9 @@ Os relatórios financeiros podem ser filtrados por:
 - Categoria de produto
 - Canal de venda
 
-## Integração com Backend
+## Integração com Serviços
 
-Os componentes financeiros:
-- Buscam dados do Supabase para análises
-- Calculam métricas em tempo real baseadas em pedidos
-- Utilizam políticas RLS para garantir acesso apenas a administradores
-- Atualizam automaticamente quando novos dados estão disponíveis
+Os componentes financeiros obtêm dados através de:
+- `orderService` para dados de pedidos
+- `productService` para informações de produtos
+- `financeService` para análises específicas

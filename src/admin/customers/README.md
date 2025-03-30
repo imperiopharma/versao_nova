@@ -35,26 +35,9 @@ O sistema de gerenciamento de clientes calcula e exibe métricas importantes:
 - Economia gerada por compras de combos
 - Potencial de compras futuras (baseado em histórico)
 
-## Personalização
+## Integração com Serviços
 
-Para personalizar estes componentes:
-
-1. **CustomersList**: 
-   - Edite as colunas exibidas na lista de clientes
-   - Modifique os filtros disponíveis (ativos, inativos, todos)
-
-2. **CustomerDialog**: 
-   - Ajuste os campos do formulário de cliente
-   - Personalize as validações de dados
-
-3. **CustomerDetailsDialog**: 
-   - Altere as informações exibidas no detalhe do cliente
-   - Modifique as estatísticas e métricas apresentadas
-
-## Integração com Supabase
-
-Todos os componentes estão integrados com o Supabase para:
-- Buscar dados atualizados de clientes
-- Buscar histórico de pedidos e itens relacionados
-- Persistir alterações no banco de dados
-- Aplicar políticas de segurança (RLS)
+Todos os componentes estão integrados com:
+- `customerService` para dados de clientes
+- `orderService` para histórico de pedidos
+- `productService` para informações de produtos adquiridos

@@ -40,61 +40,9 @@ Os combos são criados/editados usando o mesmo componente `ProductDialog.tsx`, q
 - Coluna especial mostra o percentual de desconto aplicado
 - Filtro permite visualizar apenas combos
 
-## Hooks para Gerenciamento de Combos
+## Integração com Serviços
 
-O componente utiliza o hook `useProductDialogForm.ts` que inclui lógica para:
-- Calcular automaticamente o preço com desconto
-- Validar campos específicos de combos
-- Salvar os dados corretos no Supabase
-
-## Exemplo do Formulário de Combo
-
-```tsx
-// Trecho simplificado de ProductDialog.tsx
-<FormField
-  control={form.control}
-  name="isCombo"
-  render={({ field }) => (
-    <FormItem className="flex items-center gap-2">
-      <FormLabel>É um Combo?</FormLabel>
-      <FormControl>
-        <Switch
-          checked={field.value}
-          onCheckedChange={field.onChange}
-        />
-      </FormControl>
-    </FormItem>
-  )}
-/>
-
-{isCombo && (
-  <FormField
-    control={form.control}
-    name="comboDiscount"
-    render={({ field }) => (
-      <FormItem>
-        <FormLabel>Desconto (%)</FormLabel>
-        <FormControl>
-          <Input
-            type="number"
-            {...field}
-            onChange={(e) => {
-              field.onChange(e);
-              // Recalcula o preço final com base no desconto
-              recalculatePrice(originalPrice, parseFloat(e.target.value));
-            }}
-          />
-        </FormControl>
-      </FormItem>
-    )}
-  />
-)}
-```
-
-## Integração com Supabase
-
-Todos os componentes estão integrados com o Supabase para:
-- Buscar dados atualizados de produtos, combos, marcas e categorias
-- Persistir alterações no banco de dados
-- Realizar upload de imagens de produtos/combos
-- Aplicar políticas de segurança (RLS)
+Todos os componentes estão integrados com:
+- `productService` para gerenciamento de produtos
+- `categoryService` para gerenciamento de categorias
+- `brandService` para gerenciamento de marcas

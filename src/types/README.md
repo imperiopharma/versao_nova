@@ -54,7 +54,7 @@ const updateOrderStatus = (order: Order, newStatus: OrderStatus) => {
 
 ## Correspondência com Backend
 
-Os tipos definidos aqui correspondem às estruturas de dados no backend (Supabase). Ao alterar as tabelas ou colunas no banco de dados, atualize também os tipos correspondentes nesta pasta.
+Os tipos definidos aqui correspondem às estruturas de dados da API. Ao alterar os endpoints ou resposta da API, atualize também os tipos correspondentes nesta pasta.
 
 ## Personalização
 

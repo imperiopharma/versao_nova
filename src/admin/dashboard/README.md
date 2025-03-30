@@ -37,10 +37,9 @@ Estas métricas são visualizadas através de:
 
 Estes componentes são utilizados na página principal do painel administrativo (`Dashboard.tsx`).
 
-## Dependências
+## Integração com Serviços
 
-- Os componentes utilizam dados fornecidos pelo Supabase através de hooks especializados:
-  - `useOrdersData()`: Fornece dados de pedidos
-  - `useProductStore()`: Fornece dados de produtos
-  - Recharts para gráficos
-  - Shadcn/UI para componentes de interface
+Os componentes utilizam os seguintes serviços para obter dados:
+- `productService` para dados de produtos
+- `orderService` para dados de pedidos
+- `customerService` para dados de clientes

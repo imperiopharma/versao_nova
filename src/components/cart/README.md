@@ -36,12 +36,6 @@ O sistema de carrinho foi adaptado para lidar corretamente com combos:
 - `CartSummary.tsx` calcula corretamente o valor total considerando os descontos dos combos
 - Exibe seção de "Economia" mostrando quanto o cliente está economizando com os combos
 
-### Limitações para Combos
-
-- Verificação de disponibilidade de estoque para combos
-- Regras específicas para alguns combos (limite por cliente, etc)
-- Compatibilidade com aplicação de cupons adicionais
-
 ## Exemplo de Implementação para Combos
 
 ```tsx
@@ -84,3 +78,9 @@ Todos os componentes do carrinho utilizam o `CartContext` para:
 - Acessar a lista de itens (incluindo combos)
 - Obter valores calculados (total, quantidade, economia)
 - Executar ações (adicionar, remover, atualizar)
+
+## Integração com Serviços
+
+Os componentes do carrinho utilizam:
+- `productService` para verificar disponibilidade e informações atualizadas
+- `shippingService` para cálculo de frete

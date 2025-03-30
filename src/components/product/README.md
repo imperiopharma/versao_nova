@@ -44,27 +44,9 @@ Todos os componentes são totalmente responsivos:
 - Detalhes reorganizam-se para exibição em dispositivos móveis
 - Galeria de imagens funciona em touch e mouse
 
-## Exemplo de Uso com Combos
+## Integração com Serviços
 
-```tsx
-import { ProductCard } from '@/components/product/ProductCard';
-import { useProducts } from '@/hooks/useProducts';
-
-const CombosSection = () => {
-  const { products } = useProducts();
-  const combos = products.filter(product => product.isCombo);
-  
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {combos.map(combo => (
-        <ProductCard 
-          key={combo.id} 
-          product={combo} 
-          // O componente detecta automaticamente que é um combo
-          // e exibe as informações apropriadas
-        />
-      ))}
-    </div>
-  );
-};
-```
+Os componentes utilizam:
+- `productService` para obter dados de produtos
+- `brandService` para informações de marcas
+- `categoryService` para dados de categorias

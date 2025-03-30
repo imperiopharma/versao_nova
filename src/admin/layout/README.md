@@ -39,20 +39,6 @@ O layout administrativo segue uma estrutura moderna:
 - Área de conteúdo principal para exibição de componentes
 - Design responsivo que se adapta a todos os tamanhos de tela
 
-## Personalização do Menu
-
-Para personalizar o menu administrativo:
-
-1. Edite o arquivo `menuItems.tsx` para alterar itens de menu:
-   - Adicione novos itens ou remova existentes
-   - Altere ícones, rótulos ou URLs
-   - Reorganize a ordem dos itens
-
-2. Modifique o `SidebarMenu.tsx` para alterar comportamento:
-   - Ajuste espaçamento e tamanho
-   - Modifique comportamento responsivo
-   - Adicione novos elementos visuais
-
 ## Integração com Autenticação
 
 O layout administrativo integra-se ao sistema de autenticação:

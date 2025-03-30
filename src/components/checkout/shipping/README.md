@@ -1,5 +1,5 @@
 
-# Shipping Method Components
+# Componentes de Métodos de Envio
 
 Esta pasta contém componentes relacionados aos métodos de envio na Farmácia Imperio.
 
@@ -29,16 +29,16 @@ Estes componentes são parte crucial do processo de checkout:
 - Afetam o valor total do pedido, incluindo combos
 - Fornecem feedback visual sobre tempos de entrega
 
-## Cálculo de Frete para Combos
-
-O sistema de cálculo de frete reconhece combos de produtos:
-- Combos são tratados como um único item para cálculo de peso
-- O valor do frete pode ser reduzido para pedidos contendo combos
-- Promoções especiais de frete grátis podem ser aplicadas a combos
-
 ## Avisos Específicos por Método
 
 Cada método de envio pode apresentar avisos específicos:
 - PAC: Informações sobre prazos estendidos
 - SEDEX: Avisos sobre áreas de cobertura
 - Transportadoras: Restrições e requisitos especiais
+
+## Integração com Serviços
+
+Utiliza serviços da API para:
+- Calcular valores de frete
+- Verificar disponibilidade por região
+- Obter prazos de entrega

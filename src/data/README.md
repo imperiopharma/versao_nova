@@ -68,13 +68,6 @@ Estes dados são utilizados durante o desenvolvimento para:
 - Trabalhar offline
 - Acelerar o processo de desenvolvimento com dados consistentes
 
-## Personalização de Mocks para Combos
+## Integração com Serviços
 
-Para adicionar novos combos aos dados mock:
-1. Edite o arquivo `products.ts`
-2. Siga o formato existente para combos
-3. Certifique-se de incluir:
-   - Propriedade `isCombo: true`
-   - `originalPrice` (preço antes do desconto)
-   - `price` (preço com desconto aplicado)
-4. Adicione o combo tanto à lista geral `mockProducts` quanto à lista específica `mockFlashSaleItems` se desejar que ele apareça na seção de destaque
+Em ambiente de desenvolvimento, os serviços da API podem ser configurados para usar estes dados mock em vez de fazer requisições reais.

@@ -46,17 +46,11 @@ A página de produtos inclui funcionalidades para gerenciamento completo de comb
 4. Visualiza relatórios de desempenho de combos
 5. Configura regras específicas para combos em `SettingsPage.tsx`
 
-## Integração com Backend
+## Integração com Serviços
 
-Todas as páginas administrativas estão integradas com o Supabase para:
-- Buscar dados atualizados
-- Persistir alterações
-- Aplicar políticas de segurança (RLS)
-- Respeitar permissões de usuário
-
-## Acesso
-
-Para acessar o painel administrativo:
-1. Navegue para `/admin/login`
-2. Use credenciais administrativas (email e senha)
-3. Após login bem-sucedido, você será redirecionado para `/admin`
+Todas as páginas administrativas estão integradas com os serviços da API:
+- `productService` para gerenciamento de produtos e combos
+- `categoryService` para categorias
+- `brandService` para marcas
+- `orderService` para pedidos
+- `customerService` para clientes

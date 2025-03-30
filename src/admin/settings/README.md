@@ -28,12 +28,6 @@ O componente `SettingsCombos.tsx` permite configurar aspectos globais do sistema
 - Priorização de combos em resultados de busca
 - Configurações de destaque visual para combos
 
-### Integrações
-
-- Configuração para exportação de relatórios de desempenho de combos
-- Integração com sistemas de notificação para novos combos
-- Configurações para compartilhamento em redes sociais
-
 ## Uso
 
 Estes componentes são utilizados na página de configurações do painel administrativo (`SettingsPage.tsx`), organizados em abas.
@@ -69,18 +63,9 @@ function SettingsPage() {
 }
 ```
 
-## Integração com Backend
+## Integração com Serviços
 
 Os componentes de configurações:
-- Salvam configurações no Supabase
+- Salvam configurações através do `settingsService`
 - Aplicam mudanças em tempo real
-- Utilizam políticas RLS para garantir acesso apenas a administradores
 - Validam dados antes de salvar
-
-## Configurações de Templates para Combos
-
-O componente `SettingsTemplates.tsx` inclui templates específicos para combos:
-- Email de lançamento de novo combo
-- Notificação de combo com estoque limitado
-- Lembretes sobre combos visualizados mas não comprados
-- Templates para promoções especiais de combos

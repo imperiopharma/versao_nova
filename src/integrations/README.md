@@ -5,84 +5,47 @@ Esta pasta contém o código para integrações com serviços externos utilizado
 
 ## Estrutura
 
-- `/supabase`: Integração com o Supabase para backend-as-a-service
+Esta pasta está organizada para facilitar a integração com diferentes serviços externos:
 
-## Supabase
+- `/api`: Configurações e utilitários para comunicação com APIs externas
+- `/payment`: Integrações com gateways de pagamento
+- `/shipping`: Integrações com serviços de cálculo de frete e rastreamento
+- `/analytics`: Integrações com serviços de análise e métricas
 
-A integração com o Supabase fornece:
-- Cliente configurado para comunicação com o projeto Supabase
-- Tipos TypeScript gerados a partir do esquema do banco de dados
-- Funções utilitárias para operações comuns
+## Configuração
 
-### Configuração
+As configurações para cada serviço são gerenciadas através de variáveis de ambiente:
 
-O cliente Supabase está configurado em `/supabase/client.ts` e utiliza as variáveis de ambiente:
-- `VITE_SUPABASE_URL`: URL do projeto Supabase
-- `VITE_SUPABASE_ANON_KEY`: Chave anônima/pública para autenticação inicial
+- `VITE_API_URL`: URL base da API principal
+- `VITE_PAYMENT_API_KEY`: Chave para serviço de pagamento
+- `VITE_SHIPPING_API_KEY`: Chave para serviço de frete
 
-### Uso
+## Serviços de API
 
-Para utilizar o cliente Supabase em qualquer parte da aplicação:
+A integração com APIs é fundamental para o funcionamento da aplicação:
 
-```tsx
-import { supabase } from '@/integrations/supabase/client';
+- Comunicação com backend para dados de produtos, pedidos, etc.
+- Autenticação e autorização
+- Envio e recebimento de dados em formato JSON
+- Tratamento de erros e retentativas
+- Cache de respostas para otimização
 
-// Exemplo de busca de produtos/combos
-async function fetchProducts(includeCombo = false) {
-  let query = supabase
-    .from('products')
-    .select('*');
-    
-  // Se quisermos apenas combos
-  if (includeCombo) {
-    query = query.eq('is_combo', true);
-  }
-  
-  const { data, error } = await query;
-  
-  if (error) {
-    console.error('Erro ao buscar produtos:', error);
-    return [];
-  }
-  
-  return data;
-}
-```
+## Integração com Serviços de Pagamento
 
-## Sistema de Combos no Supabase
+Preparado para integrar com gateways de pagamento:
 
-A estrutura do banco de dados no Supabase suporta o sistema de combos através da tabela `products` com campos específicos:
+- Integração com APIs de pagamento
+- Processamento de pagamentos com cartão
+- Geração de boletos e links de pagamento
+- Confirmação e cancelamento de transações
+- Tratamento de webhooks de pagamento
 
-### Campos para Combos
+## Integração com Serviços de Frete
 
-- `is_combo` (boolean): Indica se o produto é um combo
-- `combo_discount` (numeric): Porcentagem do desconto aplicado
-- `original_price` (numeric): Preço original antes do desconto
-- `price` (numeric): Preço final já com o desconto aplicado
-- `combo_items` (JSONB, opcional): Lista de IDs dos produtos incluídos no combo
+Preparado para integrar com serviços de envio:
 
-### Consultas para Combos
-
-```tsx
-// Buscar todos os combos disponíveis
-const { data: combos } = await supabase
-  .from('products')
-  .select('*')
-  .eq('is_combo', true)
-  .gt('stock', 0);
-
-// Buscar detalhes de um combo específico
-const { data: combo } = await supabase
-  .from('products')
-  .select('*')
-  .eq('id', comboId)
-  .eq('is_combo', true)
-  .single();
-```
-
-## Row Level Security (RLS)
-
-Todas as tabelas utilizam políticas RLS para garantir segurança:
-- Produtos e combos públicos são acessíveis sem autenticação
-- Operações de criação/edição de combos requerem perfil de administrador
-- Dados de vendas e relatórios são protegidos por políticas de acesso
+- Cálculo de frete baseado em CEP
+- Geração de etiquetas de envio
+- Rastreamento de pedidos
+- Estimativa de prazos de entrega
+- Gestão de transportadoras

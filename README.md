@@ -3,14 +3,14 @@
 
 ## Visão Geral
 
-Este é o projeto completo da loja virtual Imperio Pharma, construído com React, TypeScript, Tailwind CSS e Supabase. O projeto está dividido em duas partes principais:
+Este é o projeto completo da loja virtual Imperio Pharma, construído com React, TypeScript, Tailwind CSS e APIs RESTful. O projeto está dividido em duas partes principais:
 
-1. **Frontend (Loja)**: Interface de usuário com React e componentes Shadcn/UI
-2. **Backend (Painel Administrativo e API)**: Utilizamos Supabase como serviço de backend (BaaS)
+1. **Frontend (Loja)**: Interface de usuário com React, TypeScript e componentes Shadcn/UI
+2. **Backend (API)**: Serviços RESTful para gerenciamento de dados
 
 ## Estrutura do Projeto
 
-A estrutura do projeto foi organizada conforme solicitado, com pastas específicas para cada parte funcional da loja e do painel administrativo. Cada componente está em sua própria pasta com arquivos de um único tipo por pasta.
+A estrutura do projeto foi organizada de forma modular, com pastas específicas para cada parte funcional da loja e do painel administrativo.
 
 ```
 /
@@ -27,10 +27,16 @@ A estrutura do projeto foi organizada conforme solicitado, com pastas específic
 │   ├── contexts/                   # Contextos para gerenciamento de estado
 │   ├── data/                       # Dados estáticos e mocks
 │   ├── hooks/                      # Custom hooks React
-│   ├── integrations/               # Integrações com serviços externos (Supabase)
+│   ├── integrations/               # Integrações com serviços externos
 │   ├── lib/                        # Utilitários e helpers
 │   ├── pages/                      # Componentes de página
 │   ├── services/                   # Serviços de API e integrações
+│   │   ├── apiClient.ts            # Cliente axios configurado
+│   │   ├── productService.ts       # Serviço para produtos
+│   │   ├── categoryService.ts      # Serviço para categorias
+│   │   ├── brandService.ts         # Serviço para marcas
+│   │   ├── customerService.ts      # Serviço para clientes
+│   │   └── apiService.ts           # Centralização dos serviços
 │   └── types/                      # Definições de tipos TypeScript
 ```
 
@@ -89,48 +95,102 @@ O sistema inclui um painel administrativo completo:
 - TypeScript
 - Tailwind CSS
 - Shadcn/UI (componentes)
-- Framer Motion (animações)
+- Axios (comunicação com API)
 - React Router (roteamento)
 - Tanstack React Query (gerenciamento de dados)
 
-### Backend (Supabase)
-- Banco de dados PostgreSQL
-- Autenticação e Autorização
-- Storage para arquivos
-- Row Level Security (RLS)
-- Edge Functions
+### Backend
+- API RESTful
+- PHP (backend)
+- MySQL (banco de dados)
 
-## Executando o Projeto
+## Instalação e Configuração
 
-1. Instale as dependências:
+### Requisitos
+- Node.js 18+ e npm/yarn
+- PHP 8.0+ e Composer
+- MySQL 8.0+
+
+### Configuração do Frontend
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/imperio-pharma/frontend.git
+cd frontend
+```
+
+2. Instale as dependências:
 ```bash
 npm install
 ```
 
-2. Configure as variáveis de ambiente:
-- Crie um arquivo `.env` baseado no `.env.example`
-- Adicione as credenciais do Supabase
+3. Configure as variáveis de ambiente:
+- Crie um arquivo `.env.local` baseado no `.env.example`
+- Defina a URL da API em `VITE_API_URL`
 
-3. Inicie o servidor de desenvolvimento:
+4. Inicie o servidor de desenvolvimento:
 ```bash
 npm run dev
 ```
 
-4. Acesse a aplicação:
+### Configuração do Backend
+
+1. Clone o repositório do backend:
+```bash
+git clone https://github.com/imperio-pharma/api.git
+cd api
+```
+
+2. Instale as dependências:
+```bash
+composer install
+```
+
+3. Configure o banco de dados:
+- Crie um banco de dados MySQL
+- Configure as credenciais no arquivo `src/services/config.php`
+
+4. Inicie o servidor PHP:
+```bash
+php -S localhost:8000
+```
+
+## Acesso à Aplicação
+
 - Loja: http://localhost:5173
 - Painel Administrativo: http://localhost:5173/admin
 
-## Acesso ao Painel Administrativo
+## Estrutura de Serviços
 
-Para acessar o painel administrativo:
-- URL: `/admin/login`
-- Email: admin@exemplo.com
-- Senha: admin123
+Os serviços de API foram organizados de forma modular:
+
+- `apiClient.ts`: Cliente centralizado para requisições
+- `productService.ts`: Serviço para produtos
+- `categoryService.ts`: Serviço para categorias
+- `brandService.ts`: Serviço para marcas
+- `customerService.ts`: Serviço para clientes
+
+Exemplo de uso dos serviços:
+
+```typescript
+// Importar serviço específico
+import { productService } from '@/services/productService';
+
+// Buscar produtos
+const fetchProducts = async () => {
+  try {
+    const products = await productService.getAll();
+    console.log(products);
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error);
+  }
+};
+```
 
 ## Documentação Adicional
 
-Para informações detalhadas sobre a estrutura e implementação do projeto, consulte:
+Para informações detalhadas sobre a estrutura e implementação do projeto, consulte a documentação em cada pasta:
 
-- `PLANTA_DO_PROJETO.md`: Mapa completo da estrutura do projeto
-- `BANCO_DE_DADOS.sql`: Script SQL para criar o banco de dados
-- `CONEXAO_FRONT_BACK.md`: Detalhes sobre a conexão entre frontend e backend
+- `src/services/README.md`: Documentação dos serviços de API
+- `src/hooks/README.md`: Documentação dos hooks personalizados
+- `src/components/README.md`: Documentação dos componentes

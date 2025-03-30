@@ -37,10 +37,9 @@ A aplicação suporta diferentes tipos de cupons:
 - Combo específico: Válido apenas para determinados combos
 - Primeira compra: Válido apenas para novos clientes
 
-## Gerenciamento de Cupons
+## Serviços de Cupons
 
-Cupons são gerenciados pelo painel administrativo:
-- Criação de novos cupons com regras específicas
-- Definição de períodos de validade
-- Limitação por cliente ou número de usos
-- Relatórios de uso de cupons
+Os componentes se integram com serviços da API:
+- Validação de cupom pelo `couponService`
+- Aplicação de descontos no carrinho
+- Verificação de limites e restrições

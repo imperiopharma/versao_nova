@@ -42,21 +42,33 @@ A `CombosPage.tsx` é dedicada à exibição de todos os combos promocionais:
 - `admin/CouponsPage.tsx`: Gerenciamento de cupons promocionais
 - `admin/LoginPage.tsx`: Página de login administrativa
 
-## Gerenciamento de Combos
+## Integração com Serviços
 
-O sistema permite gerenciar combos através da página `admin/ProductsPage.tsx`:
-- Interface para criação de novos combos
-- Campos específicos para configuração de combos:
-  - Percentual de desconto
-  - Preço original (antes do desconto)
-  - Opção para marcar produto como combo
-- Listagem de combos existentes com ações para editar/excluir
-- Métricas de desempenho para cada combo
+Todas as páginas utilizam os serviços correspondentes:
+- Páginas de produtos utilizam `productService`
+- Páginas de categorias utilizam `categoryService`
+- Páginas de marcas utilizam `brandService`
+- Páginas de pedidos utilizam `orderService`
+- Páginas de clientes utilizam `customerService`
 
-## Responsividade
+## Uso do Router
 
-Todas as páginas são responsivas e se adaptam a diferentes tamanhos de tela, utilizando:
-- Classes responsivas do Tailwind CSS
-- Componentes adaptáveis
-- Layouts flexíveis
-- Versões específicas para mobile quando necessário
+As páginas são mapeadas para rotas utilizando o React Router:
+
+```tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HomePage } from '@/pages/HomePage';
+import { ProductDetailsPage } from '@/pages/ProductDetailsPage';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/produto/:id" element={<ProductDetailsPage />} />
+        {/* Outras rotas... */}
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
