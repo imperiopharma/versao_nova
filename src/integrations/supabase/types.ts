@@ -270,8 +270,10 @@ export type Database = {
           cost_price: number | null
           created_at: string | null
           description: string | null
+          discount_percentage: number | null
           id: string
           image: string | null
+          is_combo: boolean | null
           name: string
           original_price: number | null
           price: number
@@ -288,8 +290,10 @@ export type Database = {
           cost_price?: number | null
           created_at?: string | null
           description?: string | null
+          discount_percentage?: number | null
           id?: string
           image?: string | null
+          is_combo?: boolean | null
           name: string
           original_price?: number | null
           price?: number
@@ -306,8 +310,10 @@ export type Database = {
           cost_price?: number | null
           created_at?: string | null
           description?: string | null
+          discount_percentage?: number | null
           id?: string
           image?: string | null
+          is_combo?: boolean | null
           name?: string
           original_price?: number | null
           price?: number

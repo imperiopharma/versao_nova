@@ -6,7 +6,7 @@ import { ImageUploadField, SelectField, TextField, TextareaField } from '../comm
 export const BasicInfoTab: React.FC<{
   formData: any;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleSelectChange: (name: string, value: string) => void;
+  handleSelectChange: (name: string, value: string | boolean) => void;
   brands: any[];
   categories: any[];
 }> = ({ formData, handleInputChange, handleSelectChange, brands, categories }) => {
