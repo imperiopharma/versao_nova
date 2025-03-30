@@ -33,7 +33,11 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                 {/* Renderiza o ícone se existir */}
                 {category.icon && (
                   <div className="text-imperio-navy mb-3">
-                    {typeof category.icon === 'function' ? React.createElement(category.icon) : category.icon}
+                    {React.isValidElement(category.icon) 
+                      ? category.icon 
+                      : typeof category.icon === 'function' 
+                        ? React.createElement(category.icon) 
+                        : null}
                   </div>
                 )}
                 
