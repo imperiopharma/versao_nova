@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Category } from '@/types/category';
 import { ShoppingBag } from 'lucide-react';
 
@@ -10,14 +9,7 @@ interface CategoryCardsProps {
   categories: Category[];
 }
 
-/**
- * Componente que exibe cards de categorias na página inicial
- * Utiliza motion do Framer Motion para animações
- */
 export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
-  const isMobile = useIsMobile();
-  
-  // Filtramos apenas as categorias ativas usando o campo active
   const activeCategories = categories.filter(category => category.active);
   
   // Configurações de animação para o container e items
@@ -55,28 +47,16 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     return <ShoppingBag className="h-6 w-6" />;
   };
   
-  // Logs para debug
-  console.log("CategoryCards rendering with:", { 
-    activeCategories, 
-    allCategories: categories,
-    activeCount: activeCategories.length
-  });
-  
   // Não renderizar nada se não houver categorias ativas
   if (activeCategories.length === 0) {
-    console.log("No active categories found");
     return null;
   }
   
   return (
-    <section className="py-8 md:py-10 overflow-visible bg-white">
+    <section className="py-8 bg-white">
       <div className="section-container">
-        <h2 className="text-xl md:text-2xl font-bold text-imperio-navy mb-6 text-center">
-          Nossas Categorias
-        </h2>
-        
         <motion.div 
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-6 max-w-7xl mx-auto"
+          className="grid grid-cols-2 gap-4 sm:gap-6 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -93,17 +73,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
                 className="block rounded-xl overflow-hidden shadow-md flex flex-col items-center justify-center w-full h-full text-center transition-all hover:shadow-lg bg-blue-100 py-8 px-3 relative hover:bg-blue-200"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
-                <div className={`rounded-full ${category.color || 'bg-blue-500'} p-4 mb-3 text-white shadow-md`}>
+                <div className={`rounded-full ${category.color || 'bg-imperio-navy'} p-4 mb-3 text-white shadow-md`}>
                   {renderIcon(category.icon, category.name)}
                 </div>
                 
-                <h3 className="font-bold text-imperio-navy text-xl mb-1">
+                <h3 className="font-bold text-imperio-navy text-xl mb-4">
                   {category.title || category.name}
                 </h3>
-                
-                <p className="text-gray-600 text-sm px-4 mb-4">
-                  {category.description}
-                </p>
                 
                 <div className="bg-white py-2 px-4 rounded-full text-imperio-navy text-sm font-medium hover:bg-imperio-navy hover:text-white transition-colors">
                   Ver produtos

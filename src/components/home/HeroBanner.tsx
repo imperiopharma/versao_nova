@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeroSlide } from '@/types/hero';
+import { Link } from 'react-router-dom';
 
 export interface HeroBannerProps {
   slides: HeroSlide[];
@@ -76,9 +77,38 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
     }),
   };
 
+  const textVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        duration: 0.5,
+        delay: 0.2
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        duration: 0.5,
+        delay: 0.4
+      }
+    },
+    hover: {
+      scale: 1.05,
+      backgroundColor: "#c9a44b",
+      transition: { duration: 0.2 }
+    }
+  };
+
   return (
     <section 
-      className={`relative ${isMobile ? 'h-[40vh]' : 'h-[60vh]'} min-h-[250px] bg-imperio-navy overflow-hidden`}
+      className={`relative ${isMobile ? 'h-[45vh]' : 'h-[70vh]'} min-h-[250px] bg-imperio-navy overflow-hidden`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -103,6 +133,49 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
                     backgroundImage: `url(${isMobile ? slide.mobileImage : slide.desktopImage})` 
                   }}
                 ></div>
+                
+                {/* Content overlay */}
+                <div className="absolute inset-0 bg-imperio-navy/40 flex items-center justify-center">
+                  <div className="text-center text-white max-w-lg px-4">
+                    {slide.title && (
+                      <motion.h2 
+                        className="text-3xl md:text-5xl font-bold mb-2"
+                        variants={textVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
+                        {slide.title}
+                      </motion.h2>
+                    )}
+                    
+                    {slide.subtitle && (
+                      <motion.p 
+                        className="text-lg md:text-xl mb-6 opacity-90"
+                        variants={textVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
+                        {slide.subtitle}
+                      </motion.p>
+                    )}
+                    
+                    {slide.buttonText && slide.buttonLink && (
+                      <motion.div
+                        variants={buttonVariants}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                      >
+                        <Link 
+                          to={slide.buttonLink} 
+                          className="inline-block bg-imperio-navy text-white px-6 py-3 rounded-full font-medium hover:bg-imperio-gold transition-colors shadow-lg"
+                        >
+                          {slide.buttonText}
+                        </Link>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
               </motion.div>
             )
           ))}
@@ -116,7 +189,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
             key={index}
             onClick={() => setActiveSlide(index)}
             className={`w-2 h-2 rounded-full transition-all ${
-              activeSlide === index ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/60'
+              activeSlide === index ? 'bg-imperio-gold w-8' : 'bg-white/40 hover:bg-white/60'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

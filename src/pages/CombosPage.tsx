@@ -49,7 +49,7 @@ export const CombosPage: React.FC = () => {
     <Layout>
       <div className="section-container py-6">
         <div className="flex items-center mb-6">
-          <Tag className="text-imperio-red mr-2" size={20} />
+          <Tag className="text-imperio-gold mr-2" size={20} />
           <h1 className="text-2xl font-bold text-imperio-navy">Todos os Combos</h1>
         </div>
 
@@ -59,7 +59,7 @@ export const CombosPage: React.FC = () => {
           </div>
         ) : (
           <motion.div 
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -86,7 +86,7 @@ export const CombosPage: React.FC = () => {
                       <img 
                         src={item.image} 
                         alt={item.name} 
-                        className="w-full h-32 sm:h-40 object-contain p-2"
+                        className="w-full h-28 sm:h-32 object-contain p-2"
                       />
                       {discount > 0 && (
                         <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -94,9 +94,9 @@ export const CombosPage: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <div className="p-3 sm:p-4">
+                    <div className="p-3">
                       <p className="text-xs text-gray-500">{item.brand}</p>
-                      <h3 className="font-bold text-sm sm:text-base line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem]">{item.name}</h3>
+                      <h3 className="font-bold text-sm line-clamp-2 min-h-[2.5rem]">{item.name}</h3>
                       <div className="mt-2">
                         {discount > 0 && (
                           <span className="text-xs line-through text-gray-500 block">

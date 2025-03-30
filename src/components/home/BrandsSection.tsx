@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useBrands } from '@/hooks/useBrands';
 import { getSafeImageUrl } from '@/lib/utils';
+import { ArrowRight } from 'lucide-react';
 
 interface Brand {
   id: string;
@@ -38,26 +39,36 @@ export const BrandsSection: React.FC = () => {
     }
   };
 
-  // Função para renderizar o grid de marcas
-  const renderBrandGrid = (brands: Brand[], title: string, limit: number = 4) => {
-    const displayBrands = brands.slice(0, limit);
+  // Obtenha 3 marcas principais para exibir
+  const getMainBrands = () => {
+    const allBrands = [
+      ...brands.imported.slice(0, 1),
+      ...brands.premium.slice(0, 1),
+      ...brands.national.slice(0, 1)
+    ];
     
-    if (displayBrands.length === 0) return null;
-    
-    return (
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        className="mb-5"
-      >
-        <div className="mb-2">
-          <h3 className="text-sm font-medium text-imperio-navy">{title}</h3>
+    return allBrands.length > 0 ? allBrands.slice(0, 3) : [];
+  };
+  
+  const mainBrands = getMainBrands();
+  
+  if (mainBrands.length === 0) return null;
+
+  return (
+    <section className="py-6 bg-white">
+      <div className="section-container">
+        <div className="mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {displayBrands.map((brand) => {
+        <motion.div 
+          className="flex flex-row justify-between items-center gap-4 mb-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          {mainBrands.map((brand) => {
             // Usar a função getSafeImageUrl para obter a URL da imagem segura
             const imageUrl = getSafeImageUrl(
               brand.logoUrl || brand.logo,
@@ -66,10 +77,10 @@ export const BrandsSection: React.FC = () => {
             );
             
             return (
-              <motion.div key={brand.id} variants={itemVariants}>
+              <motion.div key={brand.id} variants={itemVariants} className="flex-1">
                 <Link 
                   to={`/marca/${brand.id}`}
-                  className="border border-gray-200 rounded-lg flex items-center justify-center h-[60px] w-full bg-white hover:shadow-sm transition-all overflow-hidden"
+                  className="border border-gray-200 rounded-lg flex items-center justify-center h-[50px] w-full bg-white hover:shadow-sm transition-all overflow-hidden"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
@@ -77,7 +88,7 @@ export const BrandsSection: React.FC = () => {
                   <img 
                     src={imageUrl} 
                     alt={brand.name} 
-                    className="w-[220px] h-[120px] object-contain" 
+                    className="max-h-[40px] object-contain" 
                     onError={(e) => {
                       // Fallback para um placeholder se a imagem não carregar
                       (e.target as HTMLImageElement).src = `https://placehold.co/220x120/001f3f/ffffff?text=${encodeURIComponent(brand.name)}`;
@@ -87,23 +98,17 @@ export const BrandsSection: React.FC = () => {
               </motion.div>
             );
           })}
-        </div>
-      </motion.div>
-    );
-  };
-
-  return (
-    <section className="py-4 bg-gray-50">
-      <div className="section-container">
-        <div className="mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">Nossas Marcas</h2>
-        </div>
+        </motion.div>
         
-        {/* Exibir todas as categorias com marcas disponíveis */}
-        {brands.imported.length > 0 && renderBrandGrid(brands.imported, "Marcas Importadas", 4)}
-        {brands.premium.length > 0 && renderBrandGrid(brands.premium, "Marcas Premium", 4)}
-        {brands.national.length > 0 && renderBrandGrid(brands.national, "Marcas Nacionais", 4)}
-        {brands.various.length > 0 && renderBrandGrid(brands.various, "Diversos", 4)}
+        <div className="flex justify-center">
+          <Link 
+            to="/marcas" 
+            className="inline-flex items-center text-imperio-navy hover:text-imperio-gold transition-colors font-medium"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Ver todas as marcas <ArrowRight size={16} className="ml-1" />
+          </Link>
+        </div>
       </div>
     </section>
   );

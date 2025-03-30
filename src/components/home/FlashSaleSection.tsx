@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Tag } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from "@/components/ui/button";
 
 interface FlashSaleItem {
@@ -23,8 +22,6 @@ interface FlashSaleSectionProps {
 }
 
 export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => {
-  const isMobile = useIsMobile();
-  
   // Limitamos a 4 itens para manter a página limpa
   const displayItems = items.slice(0, 4);
   
@@ -69,15 +66,15 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
   };
 
   return (
-    <section className="py-4">
+    <section className="py-8 bg-gray-50">
       <div className="section-container">
-        <div className="flex items-center mb-3">
-          <Tag className="text-imperio-red mr-2" size={16} />
+        <div className="flex items-center mb-5">
+          <Tag className="text-imperio-gold mr-2" size={16} />
           <h2 className="text-lg sm:text-xl font-bold text-imperio-navy">COMBOS</h2>
         </div>
         
         <motion.div 
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+          className="grid grid-cols-2 gap-4"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -105,7 +102,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-full h-20 sm:h-28 object-contain p-2"
+                      className="w-full h-24 sm:h-32 object-contain p-2"
                     />
                     {discount > 0 && (
                       <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -137,7 +134,7 @@ export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => 
         <div className="flex justify-center mt-6">
           <Link to="/combos">
             <Button 
-              className="bg-imperio-red text-white hover:bg-imperio-red/90 font-medium px-6 py-2.5 text-sm shadow-md hover:shadow-lg transition-all"
+              className="bg-imperio-navy text-white hover:bg-imperio-gold font-medium px-6 py-2.5 text-sm shadow-md hover:shadow-lg transition-all"
             >
               Ver todos combos
               <ArrowRight size={16} className="ml-1.5" />
