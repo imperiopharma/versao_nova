@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useProducts } from './products/useProducts';
 import { useProductToast } from './products/useProductToast';
-import { productService, categoryService, brandService } from '@/services/apiService';
+import { productService } from '@/services/productService';
 
 export function useProductsData() {
   const {
