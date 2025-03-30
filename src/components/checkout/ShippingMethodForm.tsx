@@ -5,7 +5,8 @@ import { ShippingParticles } from './shipping/ShippingParticles';
 import { ShippingMethodSelector } from './shipping/ShippingMethodSelector';
 import { ShippingMethodDetails } from './shipping/ShippingMethodDetails';
 import { ShippingMethodWarning } from './shipping/ShippingMethodWarning';
-import { calculateShipping, mapStoreMethodToApiMethod, mapApiMethodToStoreMethod } from '@/services/shippingService';
+import { calculateShipping, mapStoreMethodToApiMethod } from '@/services/shippingService';
+import { useCart } from '@/contexts/CartContext';
 
 interface ShippingMethodFormProps {
   setShippingMethod: (method: string | null) => void;
@@ -16,7 +17,8 @@ export const ShippingMethodForm: React.FC<ShippingMethodFormProps> = ({
   setShippingMethod,
   formErrors,
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const { shippingMethod: cartShippingMethod, setShippingMethod: setCartShippingMethod } = useCart();
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(cartShippingMethod);
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [calculatingShipping, setCalculatingShipping] = useState(false);
   
@@ -62,6 +64,7 @@ export const ShippingMethodForm: React.FC<ShippingMethodFormProps> = ({
   const handleMethodChange = (value: string) => {
     setSelectedMethod(value);
     setShippingMethod(value);
+    setCartShippingMethod(value); // Atualizar também no contexto do carrinho
   };
   
   return (
