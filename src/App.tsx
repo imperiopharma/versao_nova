@@ -1,100 +1,66 @@
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./contexts/CartContext";
-import { CheckoutProvider } from "./contexts/CheckoutContext";
-import { AdminLogout } from "./components/auth/AdminLogout";
-import { AuthProvider } from "./contexts/AuthContext";
-
-// Public pages
-import { HomePage } from "./pages/HomePage";
-import { BrandProductsPage } from "./pages/BrandProductsPage";
-import { CategoryProductsPage } from "./pages/CategoryProductsPage";
-import { CartPage } from "./pages/CartPage";
-import { LoginPage } from "./pages/LoginPage";
-import { CheckoutDadosPage } from "./pages/CheckoutDadosPage";
-import { CheckoutResumoPage } from "./pages/CheckoutResumoPage";
-import { CheckoutPagamentoPage } from "./pages/CheckoutPagamentoPage";
-import { MarketplacePage } from "./pages/MarketplacePage";
-import { FreightInfoPage } from "./pages/FreightInfoPage";
-import NotFound from "./pages/NotFound";
-import { ProductDetailsPage } from "./pages/ProductDetailsPage";
-import CombosPage from "./pages/CombosPage";
-
-// Admin pages
-import { AdminLoginPage } from "./pages/admin/LoginPage";
-import { AdminDashboard } from "./pages/admin/Dashboard";
-import { OrdersPage } from "./pages/admin/OrdersPage";
-import { ProductsPage } from "./pages/admin/ProductsPage";
-import { CustomersPage } from "./pages/admin/CustomersPage";
-import { FinancePage } from "./pages/admin/FinancePage";
-import { SettingsPage } from './pages/admin/SettingsPage';
-import { CouponsPage } from './pages/admin/CouponsPage';
-
-// Private route components
-import { AdminAuthGuard } from "./components/auth/AdminAuthGuard";
+import { ThemeProvider } from '@/components/theme-provider';
+import { CartProvider } from '@/contexts/CartContext';
+import { CheckoutProvider } from '@/contexts/CheckoutContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/HomePage';
+import ProductPage from './pages/ProductPage';
+import CategoryPage from './pages/CategoryPage';
+import BrandsPage from './pages/BrandsPage';
+import CartPage from './pages/CartPage';
+import CheckoutDadosPage from './pages/CheckoutDadosPage';
+import CheckoutResumoPage from './pages/CheckoutResumoPage';
+import CheckoutPagamentoPage from './pages/CheckoutPagamentoPage';
+import AdminLoginPage from './pages/admin/AdminLoginPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminOrdersPage from './pages/admin/OrdersPage';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import AdminBrandsPage from './pages/admin/AdminBrandsPage';
+import { AdminAuthGuard } from './components/auth/AdminAuthGuard';
+import { CalculadoraFretePage } from '@/pages/CalculadoraFretePage';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <CartProvider>
-          <CheckoutProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/marca/:brandId" element={<BrandProductsPage />} />
-                <Route path="/categoria/:categoryId" element={<CategoryProductsPage />} />
-                <Route path="/marcas" element={<MarketplacePage />} />
-                <Route path="/fretes" element={<FreightInfoPage />} />
-                <Route path="/carrinho" element={<CartPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
-                <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
-                <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
-                <Route path="/produto/:productId" element={<ProductDetailsPage />} />
-                <Route path="/combos" element={<CombosPage />} />
-                
-                {/* Admin login route - public access */}
-                <Route path="/admin/login" element={<AdminLoginPage />} />
-                
-                {/* Protected admin routes */}
-                <Route element={<AdminAuthGuard />}>
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/vendas" element={<AdminDashboard />} />
-                  <Route path="/admin/pedidos" element={<OrdersPage />} />
-                  <Route path="/admin/produtos" element={<ProductsPage />} />
-                  <Route path="/admin/categorias" element={<AdminDashboard />} />
-                  <Route path="/admin/marcas" element={<AdminDashboard />} />
-                  <Route path="/admin/estoque" element={<AdminDashboard />} />
-                  <Route path="/admin/clientes" element={<CustomersPage />} />
-                  <Route path="/admin/cupons" element={<CouponsPage />} />
-                  <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
-                  <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
-                  <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
-                  <Route path="/admin/configuracoes" element={<SettingsPage />} />
-                </Route>
-                
-                {/* Admin logout route */}
-                <Route path="/admin/logout" element={<AdminLogout />} />
-                
-                {/* 404 route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </CheckoutProvider>
-        </CartProvider>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <ThemeProvider defaultTheme="light" storageKey="imperio-theme">
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <CartProvider>
+            <CheckoutProvider>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/produto/:slug" element={<ProductPage />} />
+                  <Route path="/categoria/:slug" element={<CategoryPage />} />
+                  <Route path="/marcas" element={<BrandsPage />} />
+                  <Route path="/carrinho" element={<CartPage />} />
+                  <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
+                  <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
+                  <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
+                  <Route path="/admin/login" element={<AdminLoginPage />} />
+                  <Route path="/admin" element={<AdminAuthGuard><AdminDashboardPage /></AdminAuthGuard>} />
+                  <Route path="/admin/produtos" element={<AdminAuthGuard><AdminProductsPage /></AdminAuthGuard>} />
+                  <Route path="/admin/pedidos" element={<AdminAuthGuard><AdminOrdersPage /></AdminAuthGuard>} />
+                  <Route path="/admin/categorias" element={<AdminAuthGuard><AdminCategoriesPage /></AdminAuthGuard>} />
+                  <Route path="/admin/marcas" element={<AdminAuthGuard><AdminBrandsPage /></AdminAuthGuard>} />
+                  <Route path="/calculadora-frete" element={<CalculadoraFretePage />} />
+                </Routes>
+                <Toaster />
+              </Router>
+            </CheckoutProvider>
+          </CartProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+}
 
 export default App;

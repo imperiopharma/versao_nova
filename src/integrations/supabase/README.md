@@ -58,6 +58,7 @@ Os módulos nesta pasta oferecem:
 - Acesso a dados do banco de dados PostgreSQL
 - Upload e gerenciamento de arquivos
 - Tipos TypeScript para tabelas do banco de dados
+- Sistema de cálculo de frete baseado em localização
 
 ## Segurança
 
@@ -74,3 +75,11 @@ O sistema de autenticação suporta:
 - Cadastro de novos usuários **sem verificação de email**
 - Recuperação de senha
 - Perfis de usuário personalizados
+
+## Sistema de Frete
+
+O sistema de cálculo de frete integra-se ao Supabase para:
+- Armazenar configurações de frete por estado e método
+- Permitir consultas de valores de frete
+- Integrar com o checkout para cálculo automático
+- Disponibilizar uma calculadora pública de fretes

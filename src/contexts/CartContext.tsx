@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { calculateShipping, mapStoreMethodToApiMethod } from '@/services/shippingService';
 
 export type CartItem = {
   id: string;
@@ -296,24 +296,34 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return total;
   };
   
-  // Update shipping cost when shipping method changes
+  // Atualizar custo de frete quando o método de frete muda
   useEffect(() => {
     if (!shippingMethod) {
       setShippingCost(0);
+      setShipping(0);
       return;
     }
     
-    // Simple shipping cost calculation (would be replaced with a proper API call)
+    // Obter o estado do cliente
     const state = localStorage.getItem('shipmentState') || 'SP';
     
-    if (state === 'SP' || state === 'RJ') {
-      if (shippingMethod === 'sedex') setShippingCost(20);
-      else if (shippingMethod === 'pac') setShippingCost(15);
-      else if (shippingMethod === 'transportadora') setShippingCost(40);
+    // Converter o método da loja para o formato da API
+    const apiMethod = mapStoreMethodToApiMethod(shippingMethod);
+    
+    if (apiMethod) {
+      // Calcular o frete usando o serviço de frete
+      const cost = calculateShipping(apiMethod, state);
+      
+      if (cost !== null) {
+        setShippingCost(cost);
+        setShipping(cost);
+      } else {
+        setShippingCost(0);
+        setShipping(0);
+      }
     } else {
-      if (shippingMethod === 'sedex') setShippingCost(30);
-      else if (shippingMethod === 'pac') setShippingCost(20);
-      else if (shippingMethod === 'transportadora') setShippingCost(40);
+      setShippingCost(0);
+      setShipping(0);
     }
   }, [shippingMethod]);
 

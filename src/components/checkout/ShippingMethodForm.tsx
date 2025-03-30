@@ -5,6 +5,7 @@ import { ShippingParticles } from './shipping/ShippingParticles';
 import { ShippingMethodSelector } from './shipping/ShippingMethodSelector';
 import { ShippingMethodDetails } from './shipping/ShippingMethodDetails';
 import { ShippingMethodWarning } from './shipping/ShippingMethodWarning';
+import { calculateShipping, mapStoreMethodToApiMethod, mapApiMethodToStoreMethod } from '@/services/shippingService';
 
 interface ShippingMethodFormProps {
   setShippingMethod: (method: string | null) => void;
@@ -19,7 +20,7 @@ export const ShippingMethodForm: React.FC<ShippingMethodFormProps> = ({
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [calculatingShipping, setCalculatingShipping] = useState(false);
   
-  // Cálculo simulado de frete com base no método selecionado
+  // Cálculo de frete baseado no método selecionado e estado do cliente
   useEffect(() => {
     if (!selectedMethod) {
       setShippingCost(0);
@@ -28,23 +29,35 @@ export const ShippingMethodForm: React.FC<ShippingMethodFormProps> = ({
     
     setCalculatingShipping(true);
     
-    // Simulação de cálculo de frete
+    // Simulação de tempo de cálculo (para melhor UX)
     setTimeout(() => {
+      // Obter o estado do localStorage
       const state = localStorage.getItem('shipmentState') || 'SP';
       
-      if (state === 'SP' || state === 'RJ') {
-        if (selectedMethod === 'sedex') setShippingCost(20);
-        else if (selectedMethod === 'pac') setShippingCost(15);
-        else if (selectedMethod === 'transportadora') setShippingCost(40);
+      // Converter o método da loja para o formato da API
+      const apiMethod = mapStoreMethodToApiMethod(selectedMethod);
+      
+      if (apiMethod) {
+        // Calcular o frete
+        const cost = calculateShipping(apiMethod, state);
+        setShippingCost(cost || 0);
       } else {
-        if (selectedMethod === 'sedex') setShippingCost(30);
-        else if (selectedMethod === 'pac') setShippingCost(20);
-        else if (selectedMethod === 'transportadora') setShippingCost(40);
+        setShippingCost(0);
       }
       
       setCalculatingShipping(false);
     }, 500);
   }, [selectedMethod]);
+  
+  // Atualizar o método de frete no contexto pai
+  useEffect(() => {
+    if (!selectedMethod) {
+      return;
+    }
+    
+    // Salvar o custo do frete no localStorage para recuperação posterior
+    localStorage.setItem('shippingCost', shippingCost.toString());
+  }, [shippingCost, selectedMethod]);
   
   const handleMethodChange = (value: string) => {
     setSelectedMethod(value);

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Truck, Timer, BadgeCheck } from 'lucide-react';
+import { getDeliveryEstimate, mapStoreMethodToApiMethod } from '@/services/shippingService';
 
 interface ShippingMethodDetailsProps {
   selectedMethod: string;
@@ -13,13 +14,10 @@ export const ShippingMethodDetails: React.FC<ShippingMethodDetailsProps> = ({
   shippingCost,
   calculatingShipping
 }) => {
-  const getDeliveryEstimate = (method: string) => {
-    switch (method) {
-      case 'sedex': return '1-2 dias úteis';
-      case 'pac': return '3-7 dias úteis';
-      case 'transportadora': return '3-5 dias úteis';
-      default: return '';
-    }
+  const getEstimatedDelivery = (method: string) => {
+    const apiMethod = mapStoreMethodToApiMethod(method);
+    if (!apiMethod) return '';
+    return getDeliveryEstimate(apiMethod);
   };
 
   return (
@@ -56,7 +54,7 @@ export const ShippingMethodDetails: React.FC<ShippingMethodDetailsProps> = ({
               <span className="text-imperio-navy/80">Prazo estimado:</span>
             </div>
             <span className="font-medium text-imperio-navy">
-              {getDeliveryEstimate(selectedMethod)}
+              {getEstimatedDelivery(selectedMethod)}
             </span>
           </div>
           
