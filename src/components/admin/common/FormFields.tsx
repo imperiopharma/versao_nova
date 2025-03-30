@@ -124,7 +124,8 @@ export const ImageUploadField: React.FC<{
   label: string;
   imageUrl?: string;
   imageName?: string;
-}> = ({ label, imageUrl, imageName }) => {
+  onChange?: (imageUrl: string) => void;
+}> = ({ label, imageUrl, imageName, onChange }) => {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
@@ -136,7 +137,7 @@ export const ImageUploadField: React.FC<{
               alt={imageName || "Image preview"}
               className="h-20 w-20 object-contain mb-2" 
             />
-            <Button variant="outline" size="sm" type="button">
+            <Button variant="outline" size="sm" type="button" onClick={() => onChange && onChange('')}>
               Alterar Imagem
             </Button>
           </div>
@@ -161,7 +162,7 @@ export const ImageUploadField: React.FC<{
             <p className="text-xs text-gray-500 mb-2">
               PNG, JPG ou WEBP (Máximo 2MB)
             </p>
-            <Button variant="outline" size="sm" type="button">
+            <Button variant="outline" size="sm" type="button" onClick={() => onChange && onChange('')}>
               Fazer Upload
             </Button>
           </>
