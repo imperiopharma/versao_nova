@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useProductCommon } from './useProductCommon';
-import { categoryService } from '@/services/apiService';
+import { categoryService } from '@/services/categoryService';
 import { slugify } from '@/lib/utils';
 
 export function useCategoriesData() {
