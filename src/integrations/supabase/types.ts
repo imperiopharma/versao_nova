@@ -81,6 +81,54 @@ export type Database = {
         }
         Relationships: []
       }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          max_uses: number | null
+          min_value: number | null
+          starts_at: string | null
+          type: string
+          updated_at: string | null
+          used_count: number | null
+          value: number
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          min_value?: number | null
+          starts_at?: string | null
+          type: string
+          updated_at?: string | null
+          used_count?: number | null
+          value: number
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          min_value?: number | null
+          starts_at?: string | null
+          type?: string
+          updated_at?: string | null
+          used_count?: number | null
+          value?: number
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string | null

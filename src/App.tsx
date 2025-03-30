@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,65 +30,69 @@ import { ProductsPage } from "./pages/admin/ProductsPage";
 import { CustomersPage } from "./pages/admin/CustomersPage";
 import { FinancePage } from "./pages/admin/FinancePage";
 import { SettingsPage } from './pages/admin/SettingsPage';
+import { CouponsPage } from './pages/admin/CouponsPage';
 
 // Private route components
 import { AdminAuthGuard } from "./components/auth/AdminAuthGuard";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CartProvider>
-        <CheckoutProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/marca/:brandId" element={<BrandProductsPage />} />
-              <Route path="/categoria/:categoryId" element={<CategoryProductsPage />} />
-              <Route path="/marcas" element={<MarketplacePage />} />
-              <Route path="/fretes" element={<FreightInfoPage />} />
-              <Route path="/carrinho" element={<CartPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
-              <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
-              <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
-              <Route path="/produto/:productId" element={<ProductDetailsPage />} />
-              <Route path="/combos" element={<CombosPage />} />
-              
-              {/* Admin login route - public access */}
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              
-              {/* Protected admin routes */}
-              <Route element={<AdminAuthGuard />}>
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/vendas" element={<AdminDashboard />} />
-                <Route path="/admin/pedidos" element={<OrdersPage />} />
-                <Route path="/admin/produtos" element={<ProductsPage />} />
-                <Route path="/admin/categorias" element={<AdminDashboard />} />
-                <Route path="/admin/marcas" element={<AdminDashboard />} />
-                <Route path="/admin/estoque" element={<AdminDashboard />} />
-                <Route path="/admin/clientes" element={<CustomersPage />} />
-                <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
-                <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
-                <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
-                <Route path="/admin/configuracoes" element={<SettingsPage />} />
-              </Route>
-              
-              {/* Admin logout route */}
-              <Route path="/admin/logout" element={<AdminLogout />} />
-              
-              {/* 404 route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </CheckoutProvider>
-      </CartProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <CartProvider>
+          <CheckoutProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/marca/:brandId" element={<BrandProductsPage />} />
+                <Route path="/categoria/:categoryId" element={<CategoryProductsPage />} />
+                <Route path="/marcas" element={<MarketplacePage />} />
+                <Route path="/fretes" element={<FreightInfoPage />} />
+                <Route path="/carrinho" element={<CartPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/checkout/dados" element={<CheckoutDadosPage />} />
+                <Route path="/checkout/resumo" element={<CheckoutResumoPage />} />
+                <Route path="/checkout/pagamento" element={<CheckoutPagamentoPage />} />
+                <Route path="/produto/:productId" element={<ProductDetailsPage />} />
+                <Route path="/combos" element={<CombosPage />} />
+                
+                {/* Admin login route - public access */}
+                <Route path="/admin/login" element={<AdminLoginPage />} />
+                
+                {/* Protected admin routes */}
+                <Route element={<AdminAuthGuard />}>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/vendas" element={<AdminDashboard />} />
+                  <Route path="/admin/pedidos" element={<OrdersPage />} />
+                  <Route path="/admin/produtos" element={<ProductsPage />} />
+                  <Route path="/admin/categorias" element={<AdminDashboard />} />
+                  <Route path="/admin/marcas" element={<AdminDashboard />} />
+                  <Route path="/admin/estoque" element={<AdminDashboard />} />
+                  <Route path="/admin/clientes" element={<CustomersPage />} />
+                  <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
+                  <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
+                  <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
+                  <Route path="/admin/configuracoes" element={<SettingsPage />} />
+                  <Route path="/admin/cupons" element={<CouponsPage />} />
+                </Route>
+                
+                {/* Admin logout route */}
+                <Route path="/admin/logout" element={<AdminLogout />} />
+                
+                {/* 404 route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </CheckoutProvider>
+        </CartProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
