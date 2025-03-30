@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProductToast } from './useProductToast';
@@ -24,6 +23,8 @@ const productUtils = {
       sellingPrice: product.selling_price,
       promoPrice: product.promo_price,
       stock: product.stock,
+      isCombo: product.is_combo,
+      discountPercentage: product.discount_percentage,
     };
   },
 
@@ -35,7 +36,9 @@ const productUtils = {
       originalPrice, 
       costPrice, 
       sellingPrice, 
-      promoPrice, 
+      promoPrice,
+      isCombo,
+      discountPercentage,
       ...productData 
     } = product;
     
@@ -56,7 +59,9 @@ const productUtils = {
       promo_price: Number(promoPrice) || 0,
       stock: Number(productData.stock) || 0,
       status: productData.status || 'active',
-      image: productData.image || 'https://via.placeholder.com/300x300?text=Produto'
+      image: productData.image || 'https://via.placeholder.com/300x300?text=Produto',
+      is_combo: !!isCombo,
+      discount_percentage: Number(discountPercentage) || 0
     };
   }
 };

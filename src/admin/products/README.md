@@ -18,6 +18,8 @@ Estes componentes permitem:
 - Exclusão de itens
 - Filtragem e pesquisa
 - Upload de imagens
+- Gerenciamento de combos e kits promocionais
+- Aplicação de descontos em combos
 
 ## Uso
 
@@ -53,6 +55,15 @@ Para personalizar estes componentes:
 3. **CategoriesList**: 
    - Altere os campos do formulário de categoria
    - Modifique as opções de status disponíveis
+
+## Combos e Kits
+
+Os produtos podem ser configurados como combos ou kits promocionais:
+
+1. Na janela de edição de produtos, selecione o tipo "Combo/Kit"
+2. Defina o percentual de desconto aplicado ao combo
+3. Configure preços e estoque normalmente
+4. Os combos são exibidos na página de combos e em promoções especiais
 
 ## Observações Importantes
 

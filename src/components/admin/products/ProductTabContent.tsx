@@ -75,6 +75,30 @@ export const BasicInfoTab: React.FC<{
         />
       </div>
       
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SelectField
+          label="Tipo de Produto"
+          value={formData.isCombo ? 'combo' : 'regular'}
+          onValueChange={(value) => handleSelectChange('isCombo', value === 'combo')}
+          options={[
+            { value: "regular", label: 'Produto Regular' },
+            { value: "combo", label: 'Combo/Kit' }
+          ]}
+        />
+        
+        {formData.isCombo && (
+          <TextField
+            id="discountPercentage"
+            label="Desconto do Combo (%)"
+            value={formData.discountPercentage || '0'}
+            onChange={handleInputChange}
+            type="number"
+            placeholder="0"
+            description="Desconto aplicado ao combo"
+          />
+        )}
+      </div>
+      
       <TextareaField
         id="description"
         label="Descrição"

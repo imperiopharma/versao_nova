@@ -15,6 +15,8 @@ export interface Product {
   costPrice?: number;
   sellingPrice?: number;
   promoPrice?: number;
+  isCombo?: boolean;
+  discountPercentage?: number;
 }
 
 export interface ProductInputData extends Product {
@@ -22,6 +24,8 @@ export interface ProductInputData extends Product {
   costPrice?: number;
   sellingPrice?: number;
   promoPrice?: number;
+  isCombo?: boolean;
+  discountPercentage?: number;
 }
 
 export interface FlashSaleItem {
@@ -35,4 +39,5 @@ export interface FlashSaleItem {
   image: string;
   discountPercentage?: number;
   category?: string; // Adicionado para compatibilidade
+  isCombo?: boolean;
 }

@@ -64,7 +64,10 @@ export const ProductDialog: React.FC<ProductDialogProps> = ({
         sellingPrice: parseFloat(formData.sellingPrice) || 0,
         costPrice: parseFloat(formData.costPrice) || 0,
         promoPrice: parseFloat(formData.promoPrice) || 0,
-        stock: parseInt(formData.stock, 10) || 1
+        stock: parseInt(formData.stock, 10) || 1,
+        // Campos de combo
+        isCombo: !!formData.isCombo,
+        discountPercentage: parseInt(formData.discountPercentage, 10) || 0
       };
 
       console.log('Salvando produto:', productToSave);

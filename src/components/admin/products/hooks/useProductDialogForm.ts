@@ -14,6 +14,8 @@ interface ProductFormData {
   promoPrice: string;
   stock: string;
   image: string;
+  isCombo: boolean;
+  discountPercentage: string;
   [key: string]: any;
 }
 
@@ -39,7 +41,9 @@ export const useProductDialogForm = ({ product, products, toast }: UseProductDia
     sellingPrice: '',
     promoPrice: '',
     stock: '1',
-    image: 'https://via.placeholder.com/300x300?text=Produto'
+    image: 'https://via.placeholder.com/300x300?text=Produto',
+    isCombo: false,
+    discountPercentage: '0'
   });
 
   // Popular o formulário quando um produto é passado para edição
@@ -57,7 +61,9 @@ export const useProductDialogForm = ({ product, products, toast }: UseProductDia
         sellingPrice: product.sellingPrice?.toString() || '',
         promoPrice: product.promoPrice?.toString() || '',
         stock: product.stock?.toString() || '1',
-        image: product.image || 'https://via.placeholder.com/300x300?text=Produto'
+        image: product.image || 'https://via.placeholder.com/300x300?text=Produto',
+        isCombo: product.isCombo || false,
+        discountPercentage: product.discountPercentage?.toString() || '0'
       });
     } else {
       // Gera um SKU sequencial baseado no número de produtos
@@ -77,7 +83,9 @@ export const useProductDialogForm = ({ product, products, toast }: UseProductDia
         sellingPrice: '',
         promoPrice: '',
         stock: '1',
-        image: 'https://via.placeholder.com/300x300?text=Produto'
+        image: 'https://via.placeholder.com/300x300?text=Produto',
+        isCombo: false,
+        discountPercentage: '0'
       }));
     }
   }, [isEditing, product, products.length]);
@@ -92,8 +100,8 @@ export const useProductDialogForm = ({ product, products, toast }: UseProductDia
     }));
   };
 
-  const handleSelectChange = (name: string, value: string) => {
-    console.log(`Select ${name} alterado para: ${value}`);
+  const handleSelectChange = (name: string, value: string | boolean) => {
+    console.log(`Select ${name} alterado para:`, value);
     
     setFormData(prev => ({
       ...prev,
