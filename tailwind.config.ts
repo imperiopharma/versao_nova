@@ -74,7 +74,7 @@ export default {
 					navy: '#0a1929',
 					red: '#e53e3e',
 					'light-navy': '#1e3a5c',
-					'extra-light-navy': '#e6f0f9', // Este é o valor que estava faltando
+					'extra-light-navy': '#e6f0f9', // Definindo a cor corretamente
 					'dark-navy': '#051220',
 					gray: '#f7f8f9',
 					gold: '#c9a44b',
@@ -141,6 +141,10 @@ export default {
 				'rotate-loader': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' },
+				},
+				'shimmer': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' },
 				}
 			},
 			animation: {
@@ -156,6 +160,7 @@ export default {
 				'scale-out': 'scale-out 0.3s ease-out',
 				'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
 				'rotate-loader': 'rotate-loader 1.5s linear infinite',
+				'shimmer': 'shimmer 2s infinite',
 			},
 			backdropFilter: {
 				'none': 'none',

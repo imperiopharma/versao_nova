@@ -23,7 +23,10 @@ module.exports = {
           navy: "#0a1929",
           "dark-navy": "#051220",
           "light-navy": "#1e3a5c",
+          "extra-light-navy": "#e6f0f9", // Adicionando a cor que estava faltando
           gold: "#c9a44b",
+          red: "#e53e3e",
+          gray: "#f7f8f9",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,10 +76,20 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "shimmer": "shimmer 2s infinite",
+      },
+      boxShadow: {
+        'subtle': '0 2px 10px rgba(0, 0, 0, 0.05)',
+        'elevation': '0 2px 15px rgba(0, 0, 0, 0.08)',
+        'prominent': '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
       },
     },
   },
