@@ -19,14 +19,14 @@ import { CategoryProductsPage } from './pages/CategoryProductsPage';
 import { BrandProductsPage } from './pages/BrandProductsPage';
 import { LoginPage } from './pages/LoginPage';
 import { AdminLoginPage } from './pages/admin/LoginPage';
-import { Dashboard } from './pages/admin/Dashboard';
+import Dashboard from './pages/admin/Dashboard'; // Corrigido para importação padrão
 import { ProductsPage } from './pages/admin/ProductsPage';
 import { OrdersPage } from './pages/admin/OrdersPage';
 import { CustomersPage } from './pages/admin/CustomersPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
 import { CouponsPage } from './pages/admin/CouponsPage';
 import { FinancePage } from './pages/admin/FinancePage';
-import { NotFound } from './pages/NotFound';
+import NotFound from './pages/NotFound'; // Corrigido para importação padrão
 import { FreightInfoPage } from './pages/FreightInfoPage';
 import { CalculadoraFretePage } from './pages/CalculadoraFretePage';
 import { CombosPage } from './pages/CombosPage';
