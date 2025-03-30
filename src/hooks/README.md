@@ -1,114 +1,80 @@
 
 # Hooks Personalizados
 
-Esta pasta contém todos os hooks React personalizados utilizados no projeto Imperio Pharma.
+Esta pasta contém hooks customizados React para gerenciar estado, lógica de negócios e integração com o Supabase.
 
-## Hooks Principais
+## Hooks Disponíveis
 
-- `useAuth.tsx`: Gerencia autenticação e controle de acesso
-- `useBrandsData.ts`: Gerencia dados de marcas
-- `useCategoriesData.ts`: Gerencia dados de categorias
-- `useProductCommon.ts`: Utilitários comuns para produtos
-- `useProducts.tsx`: Gerencia dados de produtos e combos
-- `useHomeData.tsx`: Centraliza dados para a página inicial
-- `useOrdersData.ts`: Gerencia dados de pedidos
-- `useFaq.tsx`: Gerencia dados de perguntas frequentes
-- `useHero.tsx`: Gerencia dados do banner principal
+### Hooks de Autenticação
+- `useAuth.tsx`: Gerencia autenticação com o Supabase, login, cadastro e logout
 
-## Hooks Específicos para Combos
+### Hooks de Dados
+- `useBrandsData.ts`: Gerencia dados de marcas do Supabase
+- `useCategoriesData.ts`: Gerencia dados de categorias do Supabase
+- `useProductsData.ts`: Gerencia dados de produtos do Supabase
+- `useOrdersData.ts`: Gerencia dados de pedidos do Supabase
 
-### Em useProducts.tsx
+### Hooks de UI
+- `use-mobile.tsx`: Detecta se a visualização atual é em dispositivo móvel
+- `use-toast.ts`: Gerencia notificações toast na UI
 
-```typescript
-export const useProducts = () => {
-  // ... state e outras funções
-  
-  // Obter apenas os combos
-  const getCombos = useCallback(() => {
-    return products.filter(product => product.isCombo);
-  }, [products]);
-  
-  // Verificar se um produto é combo
-  const isCombo = useCallback((productId) => {
-    const product = products.find(p => p.id === productId);
-    return product ? !!product.isCombo : false;
-  }, [products]);
-  
-  // Calcular desconto do combo
-  const getComboDiscount = useCallback((productId) => {
-    const product = products.find(p => p.id === productId);
-    if (!product || !product.isCombo || !product.originalPrice) return 0;
-    
-    return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-  }, [products]);
-  
-  // Obter os combos em destaque para a página inicial
-  const getFeaturedCombos = useCallback((limit = 4) => {
-    return getCombos().slice(0, limit);
-  }, [getCombos]);
-  
-  return {
-    products,
-    loading,
-    error,
-    getCombos,
-    isCombo,
-    getComboDiscount,
-    getFeaturedCombos,
-    // ... outras funções
-  };
-};
-```
+### Hooks de Negócios
+- `useProducts.tsx`: Gerencia a lógica de negócios relacionada a produtos
+- `useCheckoutForm.tsx`: Gerencia formulários de checkout
+- `useCheckoutSubmit.ts`: Gerencia submissão de checkout
+- `useProductToast.ts`: Gerencia notificações relacionadas a produtos
 
-## Hooks de Dados
+## Como Usar
 
-Hooks que gerenciam comunicação com API e estado:
-
-- `useBrandsData.ts`: Comunicação com brandService
-- `useCategoriesData.ts`: Comunicação com categoryService
-- `useOrdersData.ts`: Comunicação com orderService
-- `useCustomersData.ts`: Comunicação com customerService
-
-## Integração com Serviços
-
-Os hooks que se comunicam com os serviços da API seguem um padrão consistente:
-- Estado para dados (`brands`, `categories`, etc.)
-- Estado para controle de carregamento (`loading`)
-- Funções para buscar dados (`fetchBrands`, `fetchCategories`, etc.)
-- Funções para adicionar, atualizar e excluir dados
-- Tratamento de erros uniforme
-
-## Uso
-
+### Exemplo de Autenticação
 ```tsx
-import { useBrandsData } from '@/hooks/useBrandsData';
+import { useAuth } from '@/contexts/AuthContext';
 
-function BrandsComponent() {
-  const { brands, loading, fetchBrands, addBrand, updateBrand, deleteBrand } = useBrandsData();
+const MyComponent = () => {
+  const { user, signIn, signOut, loading } = useAuth();
   
-  useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
-  
-  if (loading) return <p>Carregando...</p>;
+  const handleLogin = async () => {
+    await signIn('user@example.com', 'password');
+  };
   
   return (
     <div>
-      {brands.map(brand => (
-        <div key={brand.id}>
-          <h3>{brand.name}</h3>
-          <button onClick={() => updateBrand({ ...brand, name: 'Novo Nome' })}>
-            Editar
-          </button>
-          <button onClick={() => deleteBrand(brand.id)}>
-            Excluir
-          </button>
-        </div>
-      ))}
-      <button onClick={() => addBrand({ name: 'Nova Marca', slug: 'nova-marca' })}>
-        Adicionar Marca
-      </button>
+      {user ? (
+        <button onClick={signOut}>Sair</button>
+      ) : (
+        <button onClick={handleLogin} disabled={loading}>
+          Entrar
+        </button>
+      )}
     </div>
   );
-}
+};
 ```
+
+### Exemplo de Dados
+```tsx
+import { useProductsData } from '@/hooks/useProductsData';
+
+const ProductsList = () => {
+  const { products, loading, error } = useProductsData();
+  
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
+  
+  return (
+    <div>
+      {products.map(product => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+};
+```
+
+## Integração com Supabase
+
+Muitos dos hooks nesta pasta interagem com o Supabase para:
+- Buscar e modificar dados
+- Gerenciar autenticação de usuários
+- Realizar operações CRUD nas tabelas do banco de dados
+- Implementar regras de negócio que dependem de dados do backend

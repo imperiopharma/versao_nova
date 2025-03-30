@@ -1,12 +1,8 @@
 
+import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-
-interface AuthCredentials {
-  email: string;
-  password: string;
-}
 
 interface UseAuthOptions {
   isAdmin?: boolean;
@@ -21,14 +17,11 @@ interface UseAuthOptions {
 export const useAuth = ({
   isAdmin = false,
   redirectPath = '/',
-  storageKey = 'isLoggedIn',
   validCredentials
 }: UseAuthOptions = {}) => {
+  const auth = useAuthContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -40,67 +33,57 @@ export const useAuth = ({
     setPassword(e.target.value);
   };
   
-  const validateCredentials = async (credentials: AuthCredentials): Promise<boolean> => {
-    // Simular uma verificação de credenciais
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    if (validCredentials) {
-      return credentials.email === validCredentials.email && 
-             credentials.password === validCredentials.password;
-    }
-    
-    // Para login não administrativo, usamos credenciais de teste genéricas
-    return credentials.email === 'usuario@exemplo.com' && credentials.password === 'senha123';
-  };
-  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     
-    if (!email.trim() || !password.trim()) {
-      setError('Preencha todos os campos');
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      const isValid = await validateCredentials({ email, password });
-      
-      if (isValid) {
-        // Login bem-sucedido
-        localStorage.setItem(storageKey, 'true');
+    // Para login administrativo usando validCredentials (modo de desenvolvimento)
+    if (isAdmin && validCredentials) {
+      if (email === validCredentials.email && password === validCredentials.password) {
+        localStorage.setItem('adminLoggedIn', 'true');
         
         toast({
-          title: isAdmin ? 'Login administrativo realizado com sucesso!' : 'Login realizado com sucesso!',
-          description: isAdmin ? 'Bem-vindo ao painel de administração.' : 'Bem-vindo de volta.',
+          title: 'Login administrativo realizado com sucesso!',
+          description: 'Bem-vindo ao painel de administração.',
           duration: 3000,
         });
         
         navigate(redirectPath);
+        return;
       } else {
-        setError('Email ou senha incorretos');
+        auth.resetError();
+        toast({
+          title: 'Erro de login',
+          description: 'Email ou senha incorretos',
+          variant: 'destructive',
+        });
+        return;
       }
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      setError('Erro ao processar sua solicitação');
-    } finally {
-      setLoading(false);
+    }
+    
+    // Login normal usando Supabase
+    await auth.signIn(email, password);
+    
+    if (!auth.error) {
+      navigate(redirectPath);
     }
   };
   
   return {
     email,
     password,
-    loading,
-    error,
+    loading: auth.loading,
+    error: auth.error,
     setEmail,
     setPassword,
-    setError,
-    setLoading,
+    setError: (error: string) => {
+      // Este método é mantido para compatibilidade com código existente
+    },
+    setLoading: (loading: boolean) => {
+      // Este método é mantido para compatibilidade com código existente
+    },
     toast,
     handleEmailChange,
     handlePasswordChange,
-    handleLogin
+    handleLogin,
   };
 };

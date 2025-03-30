@@ -1,103 +1,60 @@
 
 # Componentes de Checkout
 
-Esta pasta contém os componentes relacionados ao processo de checkout (finalização de compra) da Imperio Pharma.
+Esta pasta contém componentes relacionados ao processo de checkout na Farmácia Imperio, integrados com o Supabase para persistência de dados.
 
 ## Componentes
 
-- `CheckoutForm.tsx`: Formulário para coleta de dados do cliente
-- `OrderSummary.tsx`: Resumo do pedido durante o checkout
-- `PaymentOptions.tsx`: Opções de pagamento disponíveis
-- `AddressForm.tsx`: Formulário para endereço de entrega
-- `CheckoutSteps.tsx`: Indicador de progresso do checkout
+- `AddressForm.tsx`: Formulário de endereço do cliente
 - `CartSummary.tsx`: Resumo do carrinho durante o checkout
-- `OrderItemsCard.tsx`: Lista de itens do pedido
-- `ShippingMethodForm.tsx`: Seleção de método de envio
+- `CheckoutNavigation.tsx`: Navegação entre etapas do checkout
+- `CheckoutPageHeader.tsx`: Cabeçalho das páginas de checkout
+- `CheckoutSteps.tsx`: Indicador visual das etapas do checkout
+- `CouponForm.tsx`: Formulário para aplicação de cupons de desconto
+- `CustomerInfoForm.tsx`: Formulário de informações do cliente
+- `FormInput.tsx`: Input estilizado para formulários de checkout
+- `FormInputMask.tsx`: Input com máscara para dados formatados
+- `HowFoundUsForm.tsx`: Formulário sobre como o cliente conheceu a loja
+- `OrderItemsCard.tsx`: Card com itens do pedido
+- `SecurityBadge.tsx`: Badge de segurança do checkout
+- `ShippingAddressCard.tsx`: Card com endereço de entrega
+- `ShippingMethodCard.tsx`: Card com método de envio selecionado
+- `ShippingMethodForm.tsx`: Formulário para seleção de método de envio
 
-## Suporte a Combos no Checkout
+## Integração com Supabase
 
-Os componentes de checkout foram adaptados para lidar corretamente com combos:
+Estes componentes se integram com o Supabase para:
+- Salvar pedidos no banco de dados
+- Verificar e aplicar cupons de desconto
+- Validar informações de clientes
+- Persistir endereços para uso futuro
+- Processar pagamentos de forma segura
 
-### OrderSummary.tsx
+## Fluxo de Checkout
 
-- Exibe claramente quais itens são combos
-- Mostra o desconto aplicado a cada combo
-- Calcula e exibe o total de economia com combos
-- Apresenta seção "Você economizou" destacando o valor total economizado
+O processo de checkout é dividido em etapas:
+1. **Dados**: Coleta de informações pessoais e endereço
+2. **Resumo**: Visualização do resumo do pedido e aplicação de cupons
+3. **Pagamento**: Seleção e processamento de pagamento
 
-### CartSummary.tsx
+Os dados são enviados para o Supabase após a confirmação do pedido, criando registros nas tabelas:
+- `orders`: Informações gerais do pedido
+- `order_items`: Itens individuais do pedido
+- `customers`: Dados do cliente (se novo cliente)
 
-- Calcula corretamente o subtotal considerando os descontos de combos
-- Permite aplicação de cupons adicionais sobre combos (se permitido)
-- Exibe claramente o valor economizado com combos
+## Uso do CheckoutContext
 
-## Processo de Checkout com Combos
+O `CheckoutContext` gerencia o estado global do checkout, permitindo que os componentes:
+- Acessem informações do cliente
+- Vejam itens do carrinho
+- Apliquem e validem cupons
+- Calculem valores de frete e descontos
+- Finalizem o pedido enviando dados para o Supabase
 
-1. Cliente adiciona combos ao carrinho
-2. No checkout, os combos são identificados visualmente
-3. Os descontos são claramente exibidos no resumo
-4. Cupons podem ser aplicados conforme regras específicas
-5. O resumo final mostra economia total (combos + cupons)
-6. Pedido é finalizado com todos os descontos aplicados
+## Segurança
 
-## Exemplo de Implementação
-
-```tsx
-// Trecho simplificado de OrderItemsCard.tsx
-const OrderItemsCard = () => {
-  const { items } = useCart();
-  const totalSavings = items.reduce((total, item) => {
-    // Calcular economia em combos
-    if (item.isCombo && item.originalPrice) {
-      return total + ((item.originalPrice - item.price) * item.quantity);
-    }
-    return total;
-  }, 0);
-  
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Itens do Pedido</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {items.map(item => (
-          <div key={item.id} className="flex justify-between mb-2">
-            <div>
-              <span className="font-medium">{item.name}</span> 
-              <span className="text-muted-foreground">({item.quantity}x)</span>
-              {item.isCombo && (
-                <span className="ml-2 bg-imperio-navy text-white text-xs px-1.5 py-0.5 rounded-full">
-                  Combo
-                </span>
-              )}
-            </div>
-            <div className="text-right">
-              {item.isCombo && item.originalPrice && (
-                <span className="text-sm line-through text-muted-foreground block">
-                  {formatCurrency(item.originalPrice * item.quantity)}
-                </span>
-              )}
-              <span className="font-medium">
-                {formatCurrency(item.price * item.quantity)}
-              </span>
-            </div>
-          </div>
-        ))}
-        
-        {totalSavings > 0 && (
-          <div className="mt-4 p-2 bg-green-50 text-green-800 rounded-md">
-            <p className="font-medium">Você economizou {formatCurrency(totalSavings)}</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-```
-
-## Integração com Serviços
-
-Os componentes utilizam:
-- `orderService` para finalização de pedidos
-- `shippingService` para cálculo de frete
-- `customerService` para dados de cliente
+Todas as interações com o backend Supabase são protegidas por:
+- Validação de dados no frontend e backend
+- Políticas de segurança no banco de dados (RLS)
+- Transações atômicas para garantir integridade dos dados
+- Autenticação para operações que requerem privilégios

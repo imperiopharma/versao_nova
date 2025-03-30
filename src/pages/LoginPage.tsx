@@ -5,32 +5,22 @@ import { Layout } from '../components/layout/Layout';
 import { ChevronLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const nextPath = searchParams.get('next') || '/';
   
-  const { 
-    email, 
-    password, 
-    loading, 
-    error, 
-    setError,
-    setLoading,
-    toast,
-    handleEmailChange, 
-    handlePasswordChange, 
-    handleLogin 
-  } = useAuth({
-    redirectPath: nextPath
-  });
+  const { signIn, signUp, error: authError } = useAuth();
   
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -68,51 +58,25 @@ export const LoginPage: React.FC = () => {
       return;
     }
     
-    if (isLogin) {
-      handleLogin(e);
-    } else {
-      // Lógica de cadastro
-      setLoading(true);
-      
-      try {
-        // Simulação de cadastro
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        localStorage.setItem('isLoggedIn', 'true');
-        toast({
-          title: 'Cadastro realizado com sucesso!',
-          description: 'Seja bem-vindo à Império Pharma.',
-          duration: 3000,
-        });
-        
-        navigate(nextPath);
-      } catch (error) {
-        console.error('Auth error:', error);
-        setErrors({ form: 'Erro ao processar sua solicitação' });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-  
-  const handleGoogleLogin = async () => {
-    // Simulação de login com Google
     setLoading(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      localStorage.setItem('isLoggedIn', 'true');
-      
-      toast({
-        title: 'Login com Google realizado com sucesso!',
-        description: 'Bem-vindo à Império Pharma.',
-        duration: 3000,
-      });
-      
-      navigate(nextPath);
+      if (isLogin) {
+        await signIn(email, password);
+        
+        if (!authError) {
+          navigate(nextPath);
+        }
+      } else {
+        await signUp(email, password, name);
+        
+        if (!authError) {
+          // Após o cadastro, mantenha na página de login, mas com a caixa de login selecionada
+          setIsLogin(true);
+        }
+      }
     } catch (error) {
-      console.error('Google auth error:', error);
-      setErrors({ form: 'Erro ao realizar login com Google' });
+      console.error('Erro de autenticação:', error);
     } finally {
       setLoading(false);
     }
@@ -136,10 +100,10 @@ export const LoginPage: React.FC = () => {
               {isLogin ? 'Acesse sua Conta' : 'Criar nova conta'}
             </h1>
             
-            {error && (
+            {authError && (
               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
                 <AlertCircle size={18} className="text-imperio-red mr-2 mt-0.5" />
-                <p className="text-imperio-red text-sm">{error}</p>
+                <p className="text-imperio-red text-sm">{authError}</p>
               </div>
             )}
             
@@ -190,7 +154,7 @@ export const LoginPage: React.FC = () => {
                     placeholder="Digite seu email"
                     className={`pl-10 ${errors.email ? 'border-imperio-red' : ''}`}
                     value={email}
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
                   />
                 </div>
@@ -213,7 +177,7 @@ export const LoginPage: React.FC = () => {
                     placeholder="Digite sua senha"
                     className={`pl-10 ${errors.password ? 'border-imperio-red' : ''}`}
                     value={password}
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
                   />
                 </div>
@@ -262,28 +226,6 @@ export const LoginPage: React.FC = () => {
                 )}
               </Button>
             </form>
-            
-            <div className="mt-6 relative flex items-center justify-center">
-              <div className="border-t border-gray-200 absolute w-full"></div>
-              <span className="bg-white px-3 relative text-gray-500 text-sm">ou</span>
-            </div>
-            
-            <div className="mt-6">
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={handleGoogleLogin}
-                disabled={loading}
-              >
-                <svg viewBox="0 0 24 24" className="w-5 h-5 mr-2">
-                  <path
-                    fill="currentColor"
-                    d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
-                  />
-                </svg>
-                Continuar com Google
-              </Button>
-            </div>
             
             <div className="mt-6 text-center">
               <button

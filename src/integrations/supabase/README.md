@@ -1,37 +1,51 @@
 
-# Integração com APIs Externas
+# Integração com Supabase
 
-Esta pasta contém a configuração e código para integração com APIs externas que fornecem dados para a aplicação.
+Esta pasta contém a configuração e código para integração com o Supabase, a plataforma de backend que fornece autenticação, banco de dados e armazenamento para a aplicação Farmácia Imperio.
 
 ## Estrutura
 
-Esta pasta está organizada para facilitar a comunicação com diferentes APIs externas:
+Esta pasta está organizada para facilitar a comunicação com o Supabase:
 
-- `client.ts`: Configurações básicas para clientes HTTP
-- `types.ts`: Definições de tipos para respostas de APIs externas
+- `client.ts`: Configuração do cliente Supabase
+- `types.ts`: Definições de tipos para entidades no banco de dados Supabase
 
 ## Uso
 
-Este módulo facilita a comunicação com APIs externas:
+Este módulo facilita a comunicação com o Supabase:
 
 ```tsx
-import { configureApiClient } from '@/integrations/client';
+import { supabase } from '@/integrations/supabase/client';
 
-// Configurar cliente para uma API externa
-const apiClient = configureApiClient('https://api.exemplo.com', {
-  headers: {
-    'Authorization': 'Bearer token'
-  }
-});
-
-// Usar o cliente configurado
-async function fetchData() {
+// Exemplo de consulta ao banco de dados
+async function fetchProducts() {
   try {
-    const response = await apiClient.get('/endpoint');
-    return response.data;
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('status', 'active');
+      
+    if (error) throw error;
+    return data;
   } catch (error) {
-    console.error('Erro ao buscar dados:', error);
-    return null;
+    console.error('Erro ao buscar produtos:', error);
+    return [];
+  }
+}
+
+// Exemplo de autenticação
+async function loginUser(email, password) {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Erro de autenticação:', error);
+    throw error;
   }
 }
 ```
@@ -39,16 +53,25 @@ async function fetchData() {
 ## Funcionalidades
 
 Os módulos nesta pasta oferecem:
-- Configuração centralizada para clientes de API
-- Interceptores para tratamento uniforme de erros
-- Transformadores para padronização de respostas
-- Gerenciamento de tokens e autenticação
-- Tipos TypeScript para respostas de API
+- Configuração centralizada para o cliente Supabase
+- Autenticação de usuários (login, cadastro, recuperação de senha)
+- Acesso a dados do banco de dados PostgreSQL
+- Upload e gerenciamento de arquivos
+- Tipos TypeScript para tabelas do banco de dados
 
-## Integração com Serviços
+## Segurança
 
-Os serviços da aplicação utilizam estas integrações para se comunicar com o backend:
-- `productService` usa o cliente API para buscar produtos
-- `categoryService` para gerenciar categorias
-- `brandService` para gerenciar marcas
-- `customerService` para gerenciar clientes
+O Supabase utiliza Row Level Security (RLS) para proteger os dados:
+- Produtos, categorias e marcas estão disponíveis publicamente
+- Pedidos e dados de clientes são protegidos por políticas RLS
+- As políticas garantem que usuários só possam ver seus próprios dados
+- Operações administrativas exigem autorização especial
+
+## Autenticação
+
+O sistema de autenticação suporta:
+- Login com email/senha
+- Cadastro de novos usuários
+- Recuperação de senha
+- Verificação de email (opcional)
+- Perfis de usuário personalizados
