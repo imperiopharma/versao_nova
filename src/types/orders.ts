@@ -47,6 +47,7 @@ export interface Order {
   total: number;
   paymentMethod: PaymentMethod;
   status: OrderStatus;
+  paymentProofUrl?: string; // URL do comprovante
 }
 
 // Filter options for orders list
