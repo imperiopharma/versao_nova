@@ -1,25 +1,29 @@
 
-export type BrandCategory = 'imported' | 'premium' | 'national' | 'various';
-
+/**
+ * Representa uma marca de produto na loja
+ */
 export interface Brand {
   id: string;
   name: string;
-  logo: string;
-  description?: string;
   slug?: string;
-  status?: string;
-  category?: BrandCategory;
-  logoUrl?: string; // Campo para a URL da logo armazenada no Supabase
+  description?: string;
+  logo: string;
+  logoUrl?: string;
+  status?: 'active' | 'inactive';
+  category?: string;
 }
 
-export interface BrandCategories {
+/**
+ * Tipos de categorias de marcas
+ */
+export type BrandCategory = 'imported' | 'premium' | 'national' | 'various';
+
+/**
+ * Interface que organiza marcas por categoria
+ */
+export interface BrandsByCategory {
   imported: Brand[];
   premium: Brand[];
   national: Brand[];
   various: Brand[];
-  categories: {
-    id: string;
-    name: string;
-    icon: () => JSX.Element;
-  }[];
 }

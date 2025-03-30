@@ -1,114 +1,92 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BrandCategories, Brand, BrandCategory } from '@/types/brand';
-import { mockBrands } from '@/data/mock/brands';
-import { Pill, Heart } from 'lucide-react';
-import { getSafeImageUrl } from '@/lib/utils';
+import { Brand, BrandCategory } from '@/types/brand';
 
 export const useBrands = () => {
-  const [brands, setBrands] = useState<BrandCategories>({
-    imported: [],
-    premium: [],
-    national: [],
-    various: [],
-    categories: [
-      { id: 'emagrecedores', name: 'Emagrecedores', icon: () => <Pill className="w-8 h-8 mb-2 text-white" /> },
-      { id: 'farmacia', name: 'Produtos de Farmácia', icon: () => <Heart className="w-8 h-8 mb-2 text-white" /> },
-    ],
-  });
-  
+  const [imported, setImported] = useState<Brand[]>([]);
+  const [premium, setPremium] = useState<Brand[]>([]);
+  const [national, setNational] = useState<Brand[]>([]);
+  const [various, setVarious] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        console.log('Buscando marcas do Supabase...');
-        const { data: brandsData, error: brandsError } = await supabase
+        setLoading(true);
+        const { data, error } = await supabase
           .from('brands')
           .select('*')
-          .eq('status', 'active');
-        
-        if (brandsError) {
-          console.error('Erro ao buscar marcas do Supabase:', brandsError);
-          throw brandsError;
+          .eq('status', 'active')
+          .order('name');
+          
+        if (error) {
+          console.error('Erro ao buscar marcas:', error);
+          return;
         }
         
-        if (brandsData && brandsData.length > 0) {
-          console.log('Marcas encontradas no Supabase:', brandsData.length);
+        if (data) {
+          const importedBrands: Brand[] = [];
+          const premiumBrands: Brand[] = [];
+          const nationalBrands: Brand[] = [];
+          const variousBrands: Brand[] = [];
           
-          // Processamento dos dados por categoria
-          const importedBrands = brandsData
-            .filter(brand => brand.category === 'imported')
-            .map(brand => mapBrandData(brand));
-          
-          const premiumBrands = brandsData
-            .filter(brand => brand.category === 'premium')
-            .map(brand => mapBrandData(brand));
-          
-          const nationalBrands = brandsData
-            .filter(brand => brand.category === 'national')
-            .map(brand => mapBrandData(brand));
-          
-          const variousBrands = brandsData
-            .filter(brand => brand.category === 'various' || !brand.category)
-            .map(brand => mapBrandData(brand));
-          
-          // Atualizar o estado com os dados do Supabase
-          setBrands({
-            ...brands,
-            imported: importedBrands,
-            premium: premiumBrands,
-            national: nationalBrands,
-            various: variousBrands
+          data.forEach(brand => {
+            const brandItem: Brand = {
+              id: brand.id,
+              name: brand.name,
+              logo: '',
+              logoUrl: brand.logo_url
+            };
+            
+            // Classificar marca com base na categoria
+            switch(brand.category?.toLowerCase()) {
+              case 'imported':
+              case 'importada':
+              case 'importadas':
+                importedBrands.push(brandItem);
+                break;
+              case 'premium':
+                premiumBrands.push(brandItem);
+                break;
+              case 'national':
+              case 'nacional':
+              case 'nacionais':
+                nationalBrands.push(brandItem);
+                break;
+              default:
+                variousBrands.push(brandItem);
+                break;
+            }
           });
           
-          console.log('Marcas importadas:', importedBrands);
-        } else {
-          console.log('Nenhuma marca encontrada no Supabase, usando dados mock');
-          // Fallback para dados mockados
-          setBrands({
-            ...brands,
-            imported: mockBrands.imported,
-            premium: mockBrands.premium,
-            national: mockBrands.national,
-            various: mockBrands.various
-          });
+          setImported(importedBrands);
+          setPremium(premiumBrands);
+          setNational(nationalBrands);
+          setVarious(variousBrands);
         }
-      } catch (error) {
-        console.error('Erro ao buscar marcas:', error);
-        // Fallback para dados mockados
-        setBrands({
-          ...brands,
-          imported: mockBrands.imported,
-          premium: mockBrands.premium,
-          national: mockBrands.national,
-          various: mockBrands.various
-        });
+      } catch (err) {
+        console.error('Erro ao processar marcas:', err);
+      } finally {
+        setLoading(false);
       }
     };
     
     fetchBrands();
   }, []);
 
-  // Função para mapear dados do Supabase para o formato da aplicação
-  const mapBrandData = (brandData: any): Brand => {
-    // Garantir que todas as propriedades sejam devidamente mapeadas
-    const logoUrl = brandData.logo_url || '';
-    
-    return {
-      id: brandData.id,
-      name: brandData.name,
-      logo: getSafeImageUrl(
-        logoUrl,
-        `https://placehold.co/200x100/001f3f/ffffff?text=${encodeURIComponent(brandData.name)}`,
-        brandData.name
-      ),
-      description: brandData.description,
-      slug: brandData.slug,
-      status: brandData.status,
-      category: brandData.category as BrandCategory,
-      logoUrl: logoUrl // Garantir que logoUrl seja preenchido
-    };
+  return {
+    imported,
+    premium,
+    national,
+    various,
+    loading,
+    // Agregado para conveniência ao passar para BrandsSection
+    brands: {
+      imported,
+      premium,
+      national,
+      various
+    }
   };
-
-  return brands;
 };

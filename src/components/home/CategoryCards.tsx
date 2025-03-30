@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Category } from '@/types/category';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Pill } from 'lucide-react';
 
 interface CategoryCardsProps {
   categories: Category[];
@@ -43,7 +43,12 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
     if (typeof icon === 'function') return icon();
     if (icon) return icon;
     
-    // Fallback de ícone
+    // Fallback de ícone com base no nome da categoria
+    if (categoryName.toLowerCase().includes('emagreced')) {
+      return <Pill className="h-6 w-6" />;
+    }
+    
+    // Fallback padrão
     return <ShoppingBag className="h-6 w-6" />;
   };
   

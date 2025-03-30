@@ -9,7 +9,7 @@ import { VirtualAssistant } from '@/components/chatbot/VirtualAssistant';
 import { useHomeData } from '@/hooks/useHomeData';
 
 /**
- * Página inicial da loja
+ * Página inicial da loja Imperio Pharma
  * Composta por múltiplas seções que são renderizadas com base na configuração
  */
 export const HomePage: React.FC = () => {
@@ -17,10 +17,8 @@ export const HomePage: React.FC = () => {
     heroSlides, 
     flashSaleItems, 
     categories, 
-    homeData 
+    brands
   } = useHomeData();
-  
-  console.log("HomePage rendering with categories:", categories);
   
   // Garantir que nenhuma categoria é undefined ou null
   const validCategories = categories.filter(cat => cat !== undefined && cat !== null);
@@ -34,15 +32,15 @@ export const HomePage: React.FC = () => {
       <CategoryCards categories={validCategories} />
       
       {/* Seção de combos */}
-      {homeData.showSections.flashSale && (
-        <FlashSaleSection items={flashSaleItems} />
-      )}
+      <FlashSaleSection items={flashSaleItems} />
       
       {/* Seção de marcas - sempre visível */}
-      <BrandsSection />
+      <BrandsSection brands={brands} />
       
       {/* Assistente virtual sempre disponível */}
       <VirtualAssistant />
     </Layout>
   );
 };
+
+export default HomePage;

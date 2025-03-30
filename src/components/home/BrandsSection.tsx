@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useBrands } from '@/hooks/useBrands';
 import { getSafeImageUrl } from '@/lib/utils';
 
 interface Brand {
@@ -11,11 +10,20 @@ interface Brand {
   name: string;
   logo: string;
   logoUrl?: string;
+  category?: string;
 }
 
-export const BrandsSection: React.FC = () => {
+interface BrandsSectionProps {
+  brands: {
+    imported: Brand[];
+    premium: Brand[];
+    national: Brand[];
+    various: Brand[];
+  };
+}
+
+export const BrandsSection: React.FC<BrandsSectionProps> = ({ brands }) => {
   const isMobile = useIsMobile();
-  const brands = useBrands();
   
   // Animation variants
   const containerVariants = {

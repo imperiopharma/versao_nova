@@ -1,16 +1,16 @@
 
 export const mockHeroSlides = [
   {
-    desktopImage: "https://via.placeholder.com/1920x1080/001f3f/ffffff?text=Banner+Principal+1",
-    mobileImage: "https://via.placeholder.com/800x1200/001f3f/ffffff?text=Banner+Mobile+1",
+    desktopImage: "https://via.placeholder.com/1920x1080/001f3f/ffffff?text=Imperio+Pharma",
+    mobileImage: "https://via.placeholder.com/800x1200/001f3f/ffffff?text=Imperio+Pharma",
     title: "Qualidade garantida",
     subtitle: "Os melhores produtos farmacêuticos",
     buttonText: "Explorar Produtos",
-    buttonLink: "/marcas"
+    buttonLink: "/produtos"
   },
   {
-    desktopImage: "https://via.placeholder.com/1920x1080/193f5f/ffffff?text=Banner+Principal+2",
-    mobileImage: "https://via.placeholder.com/800x1200/193f5f/ffffff?text=Banner+Mobile+2",
+    desktopImage: "https://via.placeholder.com/1920x1080/193f5f/ffffff?text=Produtos+Importados",
+    mobileImage: "https://via.placeholder.com/800x1200/193f5f/ffffff?text=Produtos+Importados",
     title: "Produtos importados",
     subtitle: "Exclusivos para você",
     buttonText: "Ver Categorias",
@@ -18,7 +18,7 @@ export const mockHeroSlides = [
   },
   {
     desktopImage: "https://via.placeholder.com/1920x1080/e53e3e/ffffff?text=Promoções+Especiais",
-    mobileImage: "https://via.placeholder.com/800x1200/e53e3e/ffffff?text=Promoções+Mobile",
+    mobileImage: "https://via.placeholder.com/800x1200/e53e3e/ffffff?text=Promoções+Especiais",
     title: "Ofertas especiais",
     subtitle: "Aproveite nossos descontos",
     buttonText: "Ver Promoções",
