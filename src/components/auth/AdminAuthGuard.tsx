@@ -1,26 +1,18 @@
 
-import React, { useEffect } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
+import authService from '@/services/authService';
 
-export const AdminAuthGuard: React.FC = () => {
-  const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  useEffect(() => {
-    if (!isLoggedIn) {
-      toast({
-        title: 'Acesso restrito',
-        description: 'Faça login para acessar o painel administrativo.',
-        variant: 'destructive',
-      });
-    }
-  }, [isLoggedIn, toast]);
-  
-  if (!isLoggedIn) {
+interface AdminAuthGuardProps {
+  children: ReactNode;
+}
+
+export const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({ children }) => {
+  const isAdmin = authService.isLoggedIn();
+
+  if (!isAdmin) {
     return <Navigate to="/admin/login" replace />;
   }
-  
-  return <Outlet />;
+
+  return <>{children}</>;
 };

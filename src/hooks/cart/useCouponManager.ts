@@ -47,7 +47,7 @@ export function useCouponManager({
     return { valid: true, message: 'Cupom válido' };
   };
   
-  // Aplicar um cupom
+  // Aplicar um cupom - modificado para receber apenas o código
   const applyCoupon = (code: string): boolean => {
     const validation = validateCoupon(code);
     

@@ -67,7 +67,8 @@ export const CouponForm: React.FC<CouponFormProps> = ({
         return;
       }
       
-      applyCoupon(coupon.code, coupon.type, coupon.value);
+      // Modificado para passar apenas o código, conforme a interface CartContextType
+      applyCoupon(coupon.code);
       
       toast({
         title: "Cupom aplicado com sucesso!",
