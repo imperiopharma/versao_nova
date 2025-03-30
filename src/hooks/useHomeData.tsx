@@ -6,6 +6,7 @@ import { useHero } from './useHero';
 import { useProductStore } from './useProductStore';
 import { useEffect, useState } from 'react';
 import { Category } from '@/types/category';
+import { Pill, ShoppingBag, Heart, Star, Package, Tag, Sparkles } from 'lucide-react';
 
 /**
  * Hook que agrega todos os dados necessários para a página inicial
@@ -19,6 +20,20 @@ export const useHomeData = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { heroSlides } = useHero();
   const { brands } = useBrands();
+
+  // Função para renderizar o ícone baseado no nome
+  const getIconByName = (iconName: string) => {
+    switch (iconName) {
+      case 'pill': return () => <Pill className="h-6 w-6" />;
+      case 'shopping-bag': return () => <ShoppingBag className="h-6 w-6" />;
+      case 'heart': return () => <Heart className="h-6 w-6" />;
+      case 'star': return () => <Star className="h-6 w-6" />;
+      case 'package': return () => <Package className="h-6 w-6" />;
+      case 'tag': return () => <Tag className="h-6 w-6" />;
+      case 'sparkles': return () => <Sparkles className="h-6 w-6" />;
+      default: return () => <Pill className="h-6 w-6" />;
+    }
+  };
 
   // Sempre usar as categorias mockadas (defaultCategories) para a página inicial
   useEffect(() => {
@@ -44,7 +59,7 @@ export const useHomeData = () => {
           title: cat.name.toUpperCase(),
           description: cat.description || '',
           slug: cat.slug || cat.id,
-          icon: null, // Será tratado pelo renderIcon com fallback
+          icon: cat.iconName ? getIconByName(cat.iconName) : null, // Usar o ícone selecionado no admin
           link: `/categoria/${cat.slug || cat.id}`,
           color: 'bg-imperio-navy',
           active: cat.status === 'active' // Garantimos que apenas categorias ativas são mostradas

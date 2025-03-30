@@ -25,7 +25,8 @@ export function useCategoriesData() {
         slug: category.slug,
         description: category.description,
         status: category.status,
-        active: category.active // Usando o novo campo active diretamente
+        active: category.active, // Usando o novo campo active diretamente
+        iconName: category.icon_name || 'pill' // Adicionando o campo de ícone
       }));
 
       setCategories(formattedCategories);
@@ -48,7 +49,8 @@ export function useCategoriesData() {
         slug: categoryData.slug,
         description: categoryData.description,
         status: categoryData.status || 'active',
-        active: categoryData.active !== undefined ? categoryData.active : true
+        active: categoryData.active !== undefined ? categoryData.active : true,
+        icon_name: categoryData.iconName || 'pill' // Salvando o nome do ícone
       };
 
       console.log('Enviando categoria para Supabase:', supabaseCategory);
@@ -72,7 +74,8 @@ export function useCategoriesData() {
         slug: data.slug,
         description: data.description,
         status: data.status,
-        active: data.active
+        active: data.active,
+        iconName: data.icon_name || 'pill'
       };
 
       setCategories(prev => [...prev, formattedCategory]);
@@ -96,6 +99,7 @@ export function useCategoriesData() {
         description: categoryData.description,
         status: categoryData.status || 'active',
         active: categoryData.active,
+        icon_name: categoryData.iconName || 'pill', // Atualizando o nome do ícone
         updated_at: formatDateForSupabase()
       };
 
