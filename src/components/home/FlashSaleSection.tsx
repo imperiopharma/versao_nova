@@ -1,116 +1,117 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FlashSaleItem } from '@/types/product';
-import { ShoppingCart, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
+import { ShoppingBag, Package } from 'lucide-react';
+import { formatCurrency } from '@/lib/formatters';
+import { FlashSaleItem } from '@/types/product';
 
 interface FlashSaleSectionProps {
   items: FlashSaleItem[];
 }
 
 export const FlashSaleSection: React.FC<FlashSaleSectionProps> = ({ items }) => {
-  // Animation configs
-  const sectionVariants = {
+  // Se não houver itens, não renderizar nada
+  if (!items || items.length === 0) return null;
+  
+  // Animações
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
+        staggerChildren: 0.1
       }
     }
   };
   
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { y: 20, opacity: 0 },
     visible: {
-      opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut"
-      }
+      opacity: 1,
+      transition: { duration: 0.3 }
     }
   };
-
-  if (!items || items.length === 0) return null;
+  
+  const formatPrice = (price: number) => {
+    return formatCurrency(price);
+  };
+  
+  // Função para calcular o desconto
+  const calculateDiscount = (originalPrice: number, salePrice: number) => {
+    if (!originalPrice || !salePrice || originalPrice <= salePrice) return 0;
+    return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+  };
   
   return (
-    <section className="bg-gray-50 py-12 md:py-16">
-      <div className="section-container">
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-          className="flex flex-col items-center"
-        >
-          <motion.div variants={itemVariants} className="text-center mb-10">
-            <h2 className="text-2xl font-bold mb-2 text-imperio-navy tracking-tight">COMBOS</h2>
-            <p className="text-imperio-light-navy/80 max-w-2xl mx-auto">
-              Economize com nossas ofertas exclusivas de combos cuidadosamente selecionados.
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            variants={itemVariants}
-            className="grid grid-cols-2 gap-4 w-full"
+    <section className="py-4 md:py-6 bg-imperio-navy text-white">
+      <div className="section-container px-3 md:px-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <Package size={20} className="mr-2" />
+            <h2 className="text-xl font-bold">Ofertas especiais</h2>
+          </div>
+          <Link 
+            to="/combos" 
+            className="text-xs md:text-sm flex items-center bg-white/10 hover:bg-white/20 px-2 py-1 md:px-3 md:py-1.5 rounded transition-colors"
           >
-            {items.map((item) => (
-              <div 
-                key={item.id} 
-                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col"
+            Ver Promoções <span className="ml-1">→</span>
+          </Link>
+        </div>
+        
+        <motion.div 
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {items.slice(0, 4).map((item) => {
+            const discount = calculateDiscount(item.originalPrice || 0, item.price || 0);
+            
+            return (
+              <motion.div 
+                key={item.id}
+                variants={itemVariants}
+                whileHover={{ y: -4, scale: 1.02 }}
+                className="bg-white rounded-lg overflow-hidden shadow-lg text-gray-800"
               >
-                <div className="relative">
-                  <img 
-                    src={item.image || 'https://via.placeholder.com/300x300'} 
-                    alt={item.name} 
-                    className="w-full h-40 object-cover"
-                  />
-                  
-                  {item.discountPercentage && item.discountPercentage > 0 && (
-                    <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
-                      {item.discountPercentage}% OFF
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-3 flex-grow flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-medium text-sm text-imperio-navy truncate">{item.name}</h3>
-                    <div className="flex items-baseline mt-1 space-x-2">
-                      <span className="text-sm font-bold text-imperio-navy">
-                        R$ {Number(item.price).toFixed(2)}
-                      </span>
-                      {item.discountPercentage && item.discountPercentage > 0 && (
-                        <span className="text-xs text-gray-500 line-through">
-                          R$ {(Number(item.price) / (1 - item.discountPercentage / 100)).toFixed(2)}
+                <Link to={`/produto/${item.id}`} className="block">
+                  <div className="relative">
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="w-full h-28 md:h-36 object-contain bg-white p-2"
+                    />
+                    {discount > 0 && (
+                      <div className="absolute top-1 right-1 bg-imperio-red text-white text-xs font-bold px-1 py-0.5 rounded-full">
+                        -{discount}%
+                      </div>
+                    )}
+                    {item.isCombo && (
+                      <div className="absolute top-1 left-1 bg-imperio-navy text-white text-xs px-1 py-0.5 rounded-full">
+                        Combo
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-2 md:p-3">
+                    <p className="text-[10px] md:text-xs text-gray-500 truncate">{item.brand}</p>
+                    <h3 className="font-bold text-xs md:text-sm line-clamp-2 min-h-[2rem]">{item.name}</h3>
+                    <div className="mt-2">
+                      {item.originalPrice && item.originalPrice > item.price && (
+                        <span className="text-[10px] md:text-xs line-through text-gray-500 block">
+                          {formatPrice(item.originalPrice)}
                         </span>
                       )}
+                      <p className="text-imperio-red font-bold text-sm md:text-base">
+                        {formatPrice(item.price)}
+                      </p>
                     </div>
                   </div>
-                  
-                  <button 
-                    className="mt-3 py-1.5 px-3 bg-imperio-navy text-white rounded-lg text-xs flex items-center justify-center hover:bg-imperio-light-navy transition-colors duration-300"
-                  >
-                    <ShoppingCart size={14} className="mr-1" />
-                    Adicionar
-                  </button>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-          
-          <motion.div variants={itemVariants} className="mt-10">
-            <Link to="/combos">
-              <Button variant="outline" className="group">
-                Ver todos os combos
-                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </motion.div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>

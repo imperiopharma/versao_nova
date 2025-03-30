@@ -15,12 +15,12 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
   toggleMenu
 }) => {
   return (
-    <div className="flex items-center space-x-5">
+    <div className="flex items-center space-x-3 md:space-x-5">
       <button 
         className="hover:text-imperio-navy transition-colors relative group" 
         aria-label="Pesquisar"
       >
-        <Search size={20} />
+        <Search size={18} />
         <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-imperio-navy group-hover:w-full transition-all duration-300"></span>
       </button>
       
@@ -29,9 +29,9 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
         className="relative hover:text-imperio-navy transition-colors group" 
         aria-label="Carrinho"
       >
-        <ShoppingCart size={20} />
+        <ShoppingCart size={18} />
         {itemCount > 0 && (
-          <span className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center bg-imperio-red text-white text-xs rounded-full animate-pulse-subtle">
+          <span className="absolute -top-2 -right-2 w-4 h-4 flex items-center justify-center bg-imperio-red text-white text-xs rounded-full animate-pulse-subtle">
             {itemCount}
           </span>
         )}
@@ -43,7 +43,7 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
         className="hover:text-imperio-navy transition-colors group relative"
         aria-label="Minha Conta"
       >
-        <User size={20} />
+        <User size={18} />
         <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-imperio-navy group-hover:w-full transition-all duration-300"></span>
       </Link>
       
@@ -52,7 +52,7 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
         onClick={toggleMenu}
         aria-label="Menu"
       >
-        {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        {menuOpen ? <X size={22} /> : <Menu size={22} />}
       </button>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { motion } from 'framer-motion';
@@ -57,21 +58,21 @@ export const CombosPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="section-container py-6 px-4">
-        <div className="flex items-center mb-6 border-b pb-3">
-          <Package className="text-imperio-navy mr-2" size={22} />
-          <h1 className="text-2xl font-bold text-imperio-navy">Combos e Kits</h1>
+      <div className="section-container py-4 md:py-6 px-3 md:px-4">
+        <div className="flex items-center mb-4 border-b pb-2">
+          <Package className="text-imperio-navy mr-2" size={20} />
+          <h1 className="text-xl md:text-2xl font-bold text-imperio-navy">Combos e Kits</h1>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-white rounded-lg border border-gray-100 shadow-sm animate-pulse h-64">
-                <div className="h-32 bg-gray-200 rounded-t-lg"></div>
+              <div key={item} className="bg-white rounded-lg border border-gray-100 shadow-sm animate-pulse h-48 md:h-64">
+                <div className="h-24 md:h-32 bg-gray-200 rounded-t-lg"></div>
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                  <div className="h-2 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/3"></div>
                 </div>
               </div>
             ))}
@@ -83,7 +84,7 @@ export const CombosPage: React.FC = () => {
           </div>
         ) : (
           <motion.div 
-            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -110,29 +111,29 @@ export const CombosPage: React.FC = () => {
                       <img 
                         src={item.image} 
                         alt={item.name} 
-                        className="w-full h-36 object-contain p-2 rounded-t-lg"
+                        className="w-full h-28 md:h-36 object-contain p-2 rounded-t-lg"
                       />
                       {discount > 0 && (
-                        <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                        <div className="absolute top-1 right-1 bg-imperio-red text-white text-xs font-bold px-1 py-0.5 rounded-full">
                           -{discount}%
                         </div>
                       )}
                       {item.isCombo && (
-                        <div className="absolute top-2 left-2 bg-imperio-navy text-white text-xs px-1.5 py-0.5 rounded-full">
+                        <div className="absolute top-1 left-1 bg-imperio-navy text-white text-xs px-1 py-0.5 rounded-full">
                           Combo
                         </div>
                       )}
                     </div>
-                    <div className="p-3">
-                      <p className="text-xs text-gray-500 truncate">{item.brand}</p>
-                      <h3 className="font-bold text-sm line-clamp-2 min-h-[2.5rem] mb-1">{item.name}</h3>
+                    <div className="p-2 md:p-3">
+                      <p className="text-[10px] md:text-xs text-gray-500 truncate">{item.brand}</p>
+                      <h3 className="font-bold text-xs md:text-sm line-clamp-2 min-h-[2rem] mb-1">{item.name}</h3>
                       <div className="mt-1">
                         {discount > 0 && (
-                          <span className="text-xs line-through text-gray-500 block">
+                          <span className="text-[10px] md:text-xs line-through text-gray-500 block">
                             {formatCurrency(originalPrice)}
                           </span>
                         )}
-                        <p className="text-imperio-red font-bold text-base">
+                        <p className="text-imperio-red font-bold text-sm md:text-base">
                           {formatCurrency(salePrice)}
                         </p>
                       </div>

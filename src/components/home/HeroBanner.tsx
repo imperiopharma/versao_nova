@@ -58,7 +58,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
   const slide = slides[currentIndex];
   
   return (
-    <div className="relative w-full h-[45vh] md:h-[70vh] overflow-hidden bg-gray-900">
+    <div className="relative w-full h-[40vh] md:h-[50vh] overflow-hidden bg-gray-900">
       {/* Slides */}
       <AnimatePresence initial={false} mode="wait">
         <motion.div
@@ -86,7 +86,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-3xl md:text-5xl font-bold mb-2 md:mb-4 drop-shadow-md"
+                className="text-2xl md:text-4xl font-bold mb-2 md:mb-4 drop-shadow-md"
               >
                 {slide.title}
               </motion.h2>
@@ -96,7 +96,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.5 }}
-                  className="text-lg md:text-xl mb-6 max-w-2xl drop-shadow-md"
+                  className="text-sm md:text-xl mb-4 max-w-2xl drop-shadow-md"
                 >
                   {slide.subtitle}
                 </motion.p>
@@ -110,7 +110,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
                 >
                   <Link
                     to={slide.buttonLink}
-                    className="bg-imperio-navy hover:bg-imperio-light-navy text-white px-6 py-3 rounded-md font-medium transition-colors"
+                    className="bg-imperio-navy hover:bg-imperio-light-navy text-white px-4 py-2 text-sm md:px-6 md:py-3 md:text-base rounded-md font-medium transition-colors"
                   >
                     {slide.buttonText}
                   </Link>
@@ -126,28 +126,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ slides }) => {
         <>
           <button
             onClick={goToPrevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 text-white backdrop-blur-sm transition-colors z-10"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-1 md:p-2 text-white backdrop-blur-sm transition-colors z-10"
             aria-label="Slide anterior"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-4 w-4 md:h-6 md:w-6" />
           </button>
           
           <button
             onClick={goToNextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 text-white backdrop-blur-sm transition-colors z-10"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-1 md:p-2 text-white backdrop-blur-sm transition-colors z-10"
             aria-label="Próximo slide"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-4 w-4 md:h-6 md:w-6" />
           </button>
           
           {/* Indicadores de slide */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5 z-10">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`h-2 w-2 rounded-full transition-all ${
-                  index === currentIndex ? 'bg-white w-6' : 'bg-white/60'
+                className={`h-1.5 rounded-full transition-all ${
+                  index === currentIndex ? 'bg-white w-5' : 'bg-white/60 w-1.5'
                 }`}
                 aria-label={`Ir para slide ${index + 1}`}
               />

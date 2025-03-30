@@ -27,7 +27,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, withPadding = true }) 
     <div className="flex flex-col min-h-screen overflow-x-hidden bg-gray-50">
       {!isAdminPage && <Header />}
       
-      <main className={`flex-grow w-full ${!isAdminPage ? 'pt-16 sm:pt-20' : ''} ${withPadding && !isAdminPage ? 'pb-16 md:pb-8' : ''} overflow-x-hidden`}>
+      <main className={`flex-grow w-full ${!isAdminPage ? 'pt-14 sm:pt-16' : ''} ${withPadding && !isAdminPage ? 'pb-16 md:pb-8' : ''} overflow-x-hidden`}>
         {children}
       </main>
       
