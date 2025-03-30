@@ -11,8 +11,6 @@ export const BasicInfoTab: React.FC<{
   categories: any[];
 }> = ({ formData, handleInputChange, handleSelectChange, brands, categories }) => {
   console.log("Renderizando BasicInfoTab com dados:", formData);
-  console.log("Categorias disponíveis:", categories);
-  console.log("Marcas disponíveis:", brands);
   
   return (
     <div className="space-y-4 py-2">
@@ -183,6 +181,7 @@ export const ImagesTab: React.FC<{
         label="Imagem Principal"
         imageUrl={formData.image || "https://via.placeholder.com/300x300?text=Produto"}
         imageName="Imagem de produto"
+        onChange={handleImageChange}
       />
     </div>
   );

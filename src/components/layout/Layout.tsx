@@ -20,17 +20,20 @@ export const Layout: React.FC<LayoutProps> = ({ children, withPadding = true }) 
     location.pathname.includes('/resumo') || 
     location.pathname.includes('/pagamento');
   
+  // Skip mobile navbar on admin pages
+  const isAdminPage = location.pathname.includes('/admin');
+  
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden">
-      <Header />
+    <div className="flex flex-col min-h-screen overflow-x-hidden bg-gray-50">
+      {!isAdminPage && <Header />}
       
-      <main className={`flex-grow w-full pt-16 sm:pt-20 ${withPadding ? 'pb-8' : ''} overflow-x-hidden`}>
+      <main className={`flex-grow w-full ${!isAdminPage ? 'pt-16 sm:pt-20' : ''} ${withPadding && !isAdminPage ? 'pb-16 md:pb-8' : ''} overflow-x-hidden`}>
         {children}
       </main>
       
-      <Footer />
+      {!isAdminPage && <Footer />}
       
-      {!isCheckoutPage && <MobileNavBar />}
+      {!isCheckoutPage && !isAdminPage && <MobileNavBar />}
     </div>
   );
 };

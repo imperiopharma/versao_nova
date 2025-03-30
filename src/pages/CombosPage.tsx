@@ -1,14 +1,25 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { motion } from 'framer-motion';
-import { Tag } from 'lucide-react';
+import { Tag, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '@/lib/formatters';
 import { useProducts } from '@/hooks/useProducts';
 
 export const CombosPage: React.FC = () => {
-  const { flashSaleItems } = useProducts();
+  const { flashSaleItems, loading } = useProducts();
+  
+  // Filtrar apenas os itens que são combos (se a API suportar)
+  const comboItems = flashSaleItems.filter(item => item.isCombo);
+  
+  // Usar todos os itens se não houver filtro específico para combos
+  const displayItems = comboItems.length > 0 ? comboItems : flashSaleItems;
+  
+  useEffect(() => {
+    // Rolar para o topo quando o componente é montado
+    window.scrollTo(0, 0);
+  }, []);
   
   // Animação para os itens
   const containerVariants = {
@@ -39,7 +50,7 @@ export const CombosPage: React.FC = () => {
     return item.originalPrice || item.costPrice || getSalePrice(item);
   };
 
-  // Calculate discount percentage
+  // Calcular porcentagem de desconto
   const calculateDiscount = (original: number, sale: number) => {
     if (!original || !sale || original <= sale) return 0;
     return Math.round(((original - sale) / original) * 100);
@@ -47,24 +58,38 @@ export const CombosPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="section-container py-6">
-        <div className="flex items-center mb-6">
-          <Tag className="text-imperio-gold mr-2" size={20} />
-          <h1 className="text-2xl font-bold text-imperio-navy">Todos os Combos</h1>
+      <div className="section-container py-6 px-4">
+        <div className="flex items-center mb-6 border-b pb-3">
+          <Package className="text-imperio-navy mr-2" size={22} />
+          <h1 className="text-2xl font-bold text-imperio-navy">Combos e Kits</h1>
         </div>
 
-        {flashSaleItems.length === 0 ? (
-          <div className="text-center py-8">
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="bg-white rounded-lg border border-gray-100 shadow-sm animate-pulse h-64">
+                <div className="h-32 bg-gray-200 rounded-t-lg"></div>
+                <div className="p-3 space-y-2">
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : displayItems.length === 0 ? (
+          <div className="text-center py-8 bg-white rounded-lg shadow-sm">
+            <Package size={48} className="mx-auto text-gray-300 mb-4" />
             <p className="text-gray-500">Nenhum combo disponível no momento.</p>
           </div>
         ) : (
           <motion.div 
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {flashSaleItems.map((item) => {
+            {displayItems.map((item) => {
               const salePrice = getSalePrice(item);
               const originalPrice = getOriginalPrice(item);
               const discount = calculateDiscount(originalPrice, salePrice);
@@ -80,24 +105,29 @@ export const CombosPage: React.FC = () => {
                 >
                   <Link 
                     to={`/produto/${item.id}`}
-                    className="imperio-card hover-lift overflow-hidden bg-white rounded-lg border border-gray-100 shadow-sm block h-full"
+                    className="bg-white rounded-lg border border-gray-100 shadow-sm block h-full transition-all hover:shadow-md"
                   >
                     <div className="relative">
                       <img 
                         src={item.image} 
                         alt={item.name} 
-                        className="w-full h-28 sm:h-32 object-contain p-2"
+                        className="w-full h-36 object-contain p-2 rounded-t-lg"
                       />
                       {discount > 0 && (
                         <div className="absolute top-2 right-2 bg-imperio-red text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                           -{discount}%
                         </div>
                       )}
+                      {item.isCombo && (
+                        <div className="absolute top-2 left-2 bg-imperio-navy text-white text-xs px-1.5 py-0.5 rounded-full">
+                          Combo
+                        </div>
+                      )}
                     </div>
                     <div className="p-3">
-                      <p className="text-xs text-gray-500">{item.brand}</p>
-                      <h3 className="font-bold text-sm line-clamp-2 min-h-[2.5rem]">{item.name}</h3>
-                      <div className="mt-2">
+                      <p className="text-xs text-gray-500 truncate">{item.brand}</p>
+                      <h3 className="font-bold text-sm line-clamp-2 min-h-[2.5rem] mb-1">{item.name}</h3>
+                      <div className="mt-1">
                         {discount > 0 && (
                           <span className="text-xs line-through text-gray-500 block">
                             {formatCurrency(originalPrice)}

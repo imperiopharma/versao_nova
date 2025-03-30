@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { TruckIcon, TagsIcon, HomeIcon, ShoppingCartIcon, UserIcon } from 'lucide-react';
+import { Home, ShoppingCart, User, Tag, Truck, Package } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { motion } from 'framer-motion';
 
@@ -34,29 +34,34 @@ export const MobileNavBar: React.FC = () => {
   // Nav items configuration
   const navItems = [
     { 
-      path: '/marcas', 
-      icon: <TagsIcon size={20} />, 
-      label: 'Marcas' 
-    },
-    { 
-      path: '/fretes', 
-      icon: <TruckIcon size={20} />, 
-      label: 'Fretes' 
-    },
-    { 
       path: '/', 
-      icon: <HomeIcon size={20} />, 
+      icon: <Home size={18} />, 
       label: 'Início' 
     },
     { 
+      path: '/marcas', 
+      icon: <Tag size={18} />, 
+      label: 'Marcas' 
+    },
+    { 
+      path: '/combos', 
+      icon: <Package size={18} />, 
+      label: 'Combos' 
+    },
+    { 
+      path: '/fretes', 
+      icon: <Truck size={18} />, 
+      label: 'Fretes' 
+    },
+    { 
       path: '/carrinho', 
-      icon: <ShoppingCartIcon size={20} />, 
+      icon: <ShoppingCart size={18} />, 
       label: 'Carrinho',
       badge: itemCount > 0 ? itemCount : null
     },
     { 
       path: '/login', 
-      icon: <UserIcon size={20} />, 
+      icon: <User size={18} />, 
       label: 'Perfil',
       isActive: (isActive('/login') || isActive('/perfil'))
     }
@@ -64,13 +69,13 @@ export const MobileNavBar: React.FC = () => {
   
   return (
     <motion.div 
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-elevation z-50"
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-elevation z-30"
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
       <div className="grid grid-cols-5 h-16">
-        {navItems.map((item) => (
+        {navItems.slice(0, 5).map((item) => (
           <Link 
             key={item.path}
             to={item.path} 
@@ -86,7 +91,7 @@ export const MobileNavBar: React.FC = () => {
             >
               {(item.isActive ?? isActive(item.path)) && (
                 <motion.div 
-                  className="absolute -top-1 left-1/2 w-2 h-2 bg-imperio-navy rounded-full"
+                  className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-imperio-navy rounded-full"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   layoutId="navIndicator"
@@ -111,7 +116,7 @@ export const MobileNavBar: React.FC = () => {
         ))}
       </div>
       
-      {/* Efeito de brilho decorativo na borda superior */}
+      {/* Efeito de brilho na borda superior */}
       <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-imperio-navy/10 via-imperio-navy/30 to-imperio-navy/10"></div>
     </motion.div>
   );
