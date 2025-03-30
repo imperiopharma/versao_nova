@@ -42,7 +42,8 @@ export const CouponDialog: React.FC<CouponDialogProps> = ({
         min_value: coupon.min_value || 0,
         max_uses: coupon.max_uses || undefined,
         used_count: coupon.used_count,
-        expires_at: coupon.expires_at ? new Date(coupon.expires_at) : undefined,
+        // Convertemos para string caso exista, senão será undefined
+        expires_at: coupon.expires_at || undefined,
         is_active: coupon.is_active
       });
     } else {
@@ -79,10 +80,19 @@ export const CouponDialog: React.FC<CouponDialogProps> = ({
         return;
       }
 
-      if (formData.value <= 0) {
+      if (formData.value === undefined || formData.value <= 0) {
         toast({
           title: "Erro de validação",
           description: "O valor do cupom deve ser maior que zero",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!formData.type) {
+        toast({
+          title: "Erro de validação",
+          description: "O tipo do cupom é obrigatório",
           variant: "destructive",
         });
         return;
@@ -92,6 +102,10 @@ export const CouponDialog: React.FC<CouponDialogProps> = ({
       const couponData = {
         ...formData,
         code: formData.code?.toUpperCase(),
+        // Garantimos que type é um dos valores esperados
+        type: formData.type || 'percentage',
+        // Garantimos que value é um número
+        value: Number(formData.value)
       };
 
       let response;

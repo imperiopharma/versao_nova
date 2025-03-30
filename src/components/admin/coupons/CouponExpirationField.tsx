@@ -5,23 +5,26 @@ import { Label } from '@/components/ui/label';
 import { format } from 'date-fns';
 
 interface CouponExpirationFieldProps {
-  expiryDate?: Date;
-  onChange: (date: Date | undefined) => void;
+  expiryDate?: Date | string;
+  onChange: (date: string | undefined) => void;
 }
 
 export const CouponExpirationField: React.FC<CouponExpirationFieldProps> = ({ expiryDate, onChange }) => {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
-      onChange(new Date(e.target.value));
+      onChange(e.target.value); // Passa a string diretamente
     } else {
       onChange(undefined);
     }
   };
 
   // Formato da data para o input de tipo date
-  const formatDateForInput = (date?: Date) => {
+  const formatDateForInput = (date?: Date | string) => {
     if (!date) return '';
-    return format(date, 'yyyy-MM-dd');
+    
+    // Se for uma string ISO, converte para Date primeiro
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'yyyy-MM-dd');
   };
 
   return (
