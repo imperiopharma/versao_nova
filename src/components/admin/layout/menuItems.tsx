@@ -7,7 +7,8 @@ import {
   Users, 
   Banknote,
   Settings,
-  LogOut
+  LogOut,
+  Tag
 } from 'lucide-react';
 
 export type MenuItem = {
@@ -37,6 +38,11 @@ export const menuItems: MenuItem[] = [
     name: 'Clientes',
     path: '/admin/clientes',
     icon: <Users size={20} />
+  },
+  {
+    name: 'Cupons',
+    path: '/admin/cupons',
+    icon: <Tag size={20} />
   },
   {
     name: 'Financeiro',

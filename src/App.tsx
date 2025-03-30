@@ -31,6 +31,7 @@ import { ProductsPage } from "./pages/admin/ProductsPage";
 import { CustomersPage } from "./pages/admin/CustomersPage";
 import { FinancePage } from "./pages/admin/FinancePage";
 import { SettingsPage } from './pages/admin/SettingsPage';
+import { CouponsPage } from './pages/admin/CouponsPage';
 
 // Private route components
 import { AdminAuthGuard } from "./components/auth/AdminAuthGuard";
@@ -73,6 +74,7 @@ const App = () => (
                 <Route path="/admin/marcas" element={<AdminDashboard />} />
                 <Route path="/admin/estoque" element={<AdminDashboard />} />
                 <Route path="/admin/clientes" element={<CustomersPage />} />
+                <Route path="/admin/cupons" element={<CouponsPage />} />
                 <Route path="/admin/financeiro/relatorios" element={<FinancePage />} />
                 <Route path="/admin/financeiro/faturamento" element={<FinancePage />} />
                 <Route path="/admin/financeiro/pagamentos" element={<FinancePage />} />
