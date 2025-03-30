@@ -40,22 +40,8 @@ export function useCartOperations({ items, setItems }: CartState) {
     setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
-  const clearCart = (
-    setCouponCode: (code: string | null) => void,
-    setDiscountType: (type: any) => void,
-    setShippingMethod: (method: string | null) => void,
-    setShippingCost: (cost: number) => void,
-    setShipping: (shipping: number) => void,
-    setHasInsurance: (value: boolean) => void
-  ) => {
+  const clearCart = () => {
     setItems([]);
-    setCouponCode(null);
-    setDiscountType(null);
-    setShippingMethod(null);
-    setShippingCost(0);
-    setShipping(0);
-    setHasInsurance(false);
-    localStorage.removeItem('imperioCoupon');
   };
 
   return {

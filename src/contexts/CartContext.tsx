@@ -20,6 +20,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     shippingMethod,
     setShippingMethod,
     shippingCost,
+    setShippingCost,
     shipping,
     setShipping,
     hasInsurance,
@@ -27,7 +28,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   } = useCartState();
   
   // Operações do carrinho (adicionar, remover, etc)
-  const { addItem, updateQuantity, removeItem, clearCart: clearCartItems } = useCartOperations({ 
+  const { addItem, updateQuantity, removeItem, clearCart } = useCartOperations({ 
     items, 
     setItems 
   });
@@ -48,18 +49,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCouponCode,
     setDiscountType
   });
-  
-  // Método para limpar o carrinho
-  const clearCart = () => {
-    clearCartItems(
-      setCouponCode,
-      setDiscountType,
-      setShippingMethod,
-      setShippingCost,
-      setShipping,
-      setHasInsurance
-    );
-  };
 
   return (
     <CartContext.Provider
