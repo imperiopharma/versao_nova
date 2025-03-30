@@ -126,6 +126,7 @@ export function useCartState() {
     shippingMethod,
     setShippingMethod,
     shippingCost,
+    setShippingCost,
     shipping,
     setShipping,
     hasInsurance,
